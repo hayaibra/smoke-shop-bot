@@ -127,21 +127,23 @@ BTN_PAY_COD = "💵 الدفع عند الاستلام"
 BTN_PAY_DEPOSIT = "🔖 دفع عربون (جزء هلق + الباقي عند الاستلام)"
 
 # ---------------------------------------------------------------------------
+# ح-٢) اختيار وسيلة التحويل (شام كاش أو سيريتل كاش) — بيظهر بعد ما الزبون يختار
+# "دفع مسبق" أو "دفع عربون"، منشان نعرضله معلومات حساب وحدة بس (مو الاثنين سوا).
+# ---------------------------------------------------------------------------
+
+CHOOSE_CASH_SERVICE_PROMPT = "اختار الطريقة يلي بدك تحوّل فيها:"
+BTN_SHAMCASH = "💚 شام كاش"
+BTN_SYRIATELCASH = "🔴 سيريتل كاش"
+
+# ---------------------------------------------------------------------------
 # ط) الدفع المسبق
 # ---------------------------------------------------------------------------
 
-def _payment_accounts_block() -> str:
-    """بيرجع معلومات الحسابين (شام كاش وسيريتل كاش) سوا، منشان نكررهن بكل رسالة دفع."""
+def prepaid_instructions(amount_text: str, service_label: str, account_number: str, account_name: str) -> str:
     return (
-        f"💚 شام كاش:\n📱 {config.PAYMENT_SHAMCASH_NUMBER}\n👤 باسم: {config.PAYMENT_SHAMCASH_NAME}\n\n"
-        f"🔴 سيريتل كاش:\n📱 {config.PAYMENT_SYRIATELCASH_NUMBER}\n👤 باسم: {config.PAYMENT_SYRIATELCASH_NAME}"
-    )
-
-
-def prepaid_instructions(amount_text: str) -> str:
-    return (
-        f"تمام 👌 حوّل مبلغ {amount_text} عبر شام كاش أو سيريتل كاش:\n\n"
-        f"{_payment_accounts_block()}\n\n"
+        f"تمام 👌 حوّل مبلغ {amount_text} عبر {service_label} عالرقم التالي:\n\n"
+        f"📱 {account_number}\n"
+        f"👤 باسم: {account_name}\n\n"
         "بعد ما تحوّل، ابعتلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         "منستنى الصورة لنأكدلك الطلب."
     )
@@ -164,26 +166,35 @@ DEPOSIT_INTRO = (
 )
 
 
-def deposit_instructions(amount_text: str) -> str:
+def deposit_instructions(amount_text: str, service_label: str, account_number: str, account_name: str) -> str:
     """
     نسخة احتياطية بس — بتستخدم لما ما نقدر نفهم رقم واضح من رد التاجر
     (شوف deposit_instructions_split للحالة العادية: نص المبلغ بالضبط عربون).
     """
     return (
         f"تمام 👌 هلق حوّل جزء من المبلغ الإجمالي ({amount_text}) كعربون (متل ما تتفقو عليه)، "
-        "عبر شام كاش أو سيريتل كاش:\n\n"
-        f"{_payment_accounts_block()}\n\n"
+        f"عبر {service_label} عالرقم التالي:\n\n"
+        f"📱 {account_number}\n"
+        f"👤 باسم: {account_name}\n\n"
         "بعد ما تحوّل، ابعتلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         "الباقي من المبلغ بتسدده نقداً عند استلام الطلب."
     )
 
 
-def deposit_instructions_split(total_amount: int, deposit_amount: int, remaining_amount: int) -> str:
+def deposit_instructions_split(
+    total_amount: int,
+    deposit_amount: int,
+    remaining_amount: int,
+    service_label: str,
+    account_number: str,
+    account_name: str,
+) -> str:
     """الحالة العادية: فهمنا رقم واضح من رد التاجر، فمنحسب نص المبلغ بالضبط تلقائياً."""
     return (
         f"تمام 👌 قيمة الطلب الإجمالية {total_amount}.\n"
-        f"هلق حوّل مبلغ العربون {deposit_amount} عبر شام كاش أو سيريتل كاش:\n\n"
-        f"{_payment_accounts_block()}\n\n"
+        f"هلق حوّل مبلغ العربون {deposit_amount} عبر {service_label} عالرقم التالي:\n\n"
+        f"📱 {account_number}\n"
+        f"👤 باسم: {account_name}\n\n"
         "بعد ما تحوّل، ابعتلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         f"الباقي {remaining_amount} بتسدده نقداً عند استلام الطلب."
     )

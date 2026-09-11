@@ -491,8 +491,9 @@ async def cb_pay_prepaid(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     user_data = context.user_data
     user_data["payment_method"] = "prepaid"
     user_data["state"] = "awaiting_payment_photo"
-    amount_text = storage.get_last_quote(config.QUOTES_PATH, chat_id) or "المبلغ يلي تأكدلك ياه قبل شوي"
-    await context.bot.send_message(chat_id, messages.prepaid_instructions(amount_text))
+    await context.bot.send_message(
+        chat_id, messages.CHOOSE_CASH_SERVICE_PROMPT, reply_markup=kb.build_cash_service_keyboard()
+    )
     _schedule_idle_reminder(context, chat_id)
 
 
@@ -513,6 +514,46 @@ async def cb_pay_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     user_data["payment_method"] = "deposit"
     user_data["state"] = "awaiting_name"
     await context.bot.send_message(chat_id, messages.DEPOSIT_INTRO)
+    _schedule_idle_reminder(context, chat_id)
+
+
+_CASH_SERVICES = {
+    "shamcash": ("شام كاش", lambda: config.PAYMENT_SHAMCASH_NUMBER, lambda: config.PAYMENT_SHAMCASH_NAME),
+    "syriatelcash": ("سيريتل كاش", lambda: config.PAYMENT_SYRIATELCASH_NUMBER, lambda: config.PAYMENT_SYRIATELCASH_NAME),
+}
+
+
+async def cb_cash_service(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    بعد ما الزبون يختار "دفع مسبق" أو "دفع عربون"، هون بيختار وسيلة التحويل
+    (شام كاش أو سيريتل كاش)، ومنعرضله معلومات حساب وحدة بس (يلي اختارها).
+    """
+    await _answer(update)
+    chat_id = update.effective_chat.id
+    user_data = context.user_data
+
+    service_key = update.callback_query.data.split(":")[1]
+    service_label, get_number, get_name = _CASH_SERVICES[service_key]
+    account_number, account_name = get_number(), get_name()
+
+    payment_method = user_data.get("payment_method")
+    last_quote_text = storage.get_last_quote(config.QUOTES_PATH, chat_id)
+
+    if payment_method == "deposit":
+        total_amount = cl.extract_amount(last_quote_text) if last_quote_text else None
+        if total_amount is not None:
+            deposit_amount, remaining_amount = cl.split_deposit_amount(total_amount)
+            text = messages.deposit_instructions_split(
+                total_amount, deposit_amount, remaining_amount, service_label, account_number, account_name
+            )
+        else:
+            amount_text = last_quote_text or "المبلغ يلي تأكدلك ياه قبل شوي"
+            text = messages.deposit_instructions(amount_text, service_label, account_number, account_name)
+    else:  # prepaid
+        amount_text = last_quote_text or "المبلغ يلي تأكدلك ياه قبل شوي"
+        text = messages.prepaid_instructions(amount_text, service_label, account_number, account_name)
+
+    await context.bot.send_message(chat_id, text)
     _schedule_idle_reminder(context, chat_id)
 
 
@@ -564,19 +605,13 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     elif state == "awaiting_phone":
         user_data["customer_phone"] = text.strip()
         if user_data.get("payment_method") == "deposit":
-            # دفع عربون: بعد معلومات التوصيل، منحتاج كمان صورة إثبات تحويل العربون
-            # (متل الدفع المسبق بالضبط) قبل ما نأكد الطلب نهائياً. العربون = نص
-            # المبلغ يلي أكدو التاجر بالضبط (تلقائياً)، والباقي نص عند الاستلام.
+            # دفع عربون: بعد معلومات التوصيل، منحتاج منو يختار وسيلة التحويل (شام
+            # كاش أو سيريتل كاش) — التفاصيل والمبلغ بالضبط بيصيرو بعد هالاختيار
+            # (شوف cb_cash_service)، وبعدها صورة إثبات التحويل قبل ما نأكد الطلب.
             user_data["state"] = "awaiting_payment_photo"
-            last_quote_text = storage.get_last_quote(config.QUOTES_PATH, chat_id)
-            total_amount = cl.extract_amount(last_quote_text) if last_quote_text else None
-            if total_amount is not None:
-                deposit_amount, remaining_amount = cl.split_deposit_amount(total_amount)
-                deposit_text = messages.deposit_instructions_split(total_amount, deposit_amount, remaining_amount)
-            else:
-                amount_text = last_quote_text or "المبلغ يلي تأكدلك ياه قبل شوي"
-                deposit_text = messages.deposit_instructions(amount_text)
-            await context.bot.send_message(chat_id, deposit_text)
+            await context.bot.send_message(
+                chat_id, messages.CHOOSE_CASH_SERVICE_PROMPT, reply_markup=kb.build_cash_service_keyboard()
+            )
             _schedule_idle_reminder(context, chat_id)
         else:
             await _finalize_order(update, context, payment_proof=False)

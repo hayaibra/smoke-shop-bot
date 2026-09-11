@@ -97,6 +97,13 @@ def build_confirm_keyboard() -> InlineKeyboardMarkup:
     ])
 
 
+def build_cash_service_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(messages.BTN_SHAMCASH, callback_data="cash:shamcash")],
+        [InlineKeyboardButton(messages.BTN_SYRIATELCASH, callback_data="cash:syriatelcash")],
+    ])
+
+
 def build_payment_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton(messages.BTN_PAY_PREPAID, callback_data="pay:prepaid")],
