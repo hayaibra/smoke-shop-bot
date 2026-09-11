@@ -53,10 +53,10 @@ def build_variant_keyboard(catalog: dict, ci: int, ti: int) -> InlineKeyboardMar
     return InlineKeyboardMarkup(rows)
 
 
-def build_unit_keyboard(catalog: dict, ci: int) -> InlineKeyboardMarkup:
+def build_unit_keyboard(catalog: dict, ci: int, type_: str | None = None) -> InlineKeyboardMarkup:
     categories = cl.get_categories(catalog)
     category = categories[ci]
-    units = cl.get_units(catalog, category)
+    units = cl.get_units(catalog, category, type_)
     buttons = [
         InlineKeyboardButton(u["name"], callback_data=f"unit:{ci}:{ui}")
         for ui, u in enumerate(units)
@@ -80,6 +80,13 @@ def build_cart_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(messages.BTN_UNDO, callback_data="cart:undo")],
         [InlineKeyboardButton(messages.BTN_CLEAR, callback_data="cart:clear")],
         [InlineKeyboardButton(messages.BTN_PRICE_INQUIRY, callback_data="cart:price_inquiry")],
+    ])
+
+
+def build_idle_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(messages.WELCOME_BUTTON, callback_data="idle:continue")],
+        [InlineKeyboardButton(messages.BTN_IDLE_CANCEL, callback_data="idle:cancel")],
     ])
 
 

@@ -75,6 +75,8 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(CallbackQueryHandler(handlers.cb_cart_undo, pattern=r"^cart:undo$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_cart_clear, pattern=r"^cart:clear$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_cart_price_inquiry, pattern=r"^cart:price_inquiry$"))
+    application.add_handler(CallbackQueryHandler(handlers.cb_idle_continue, pattern=r"^idle:continue$"))
+    application.add_handler(CallbackQueryHandler(handlers.cb_idle_cancel, pattern=r"^idle:cancel$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_confirm_yes, pattern=r"^confirm:yes$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_confirm_no, pattern=r"^confirm:no$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_pay_prepaid, pattern=r"^pay:prepaid$"))

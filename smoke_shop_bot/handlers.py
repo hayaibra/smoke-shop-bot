@@ -61,9 +61,21 @@ def _schedule_idle_reminder(context: ContextTypes.DEFAULT_TYPE, chat_id: int) ->
 async def _idle_reminder_job(context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = context.job.chat_id
     try:
-        await context.bot.send_message(chat_id, messages.IDLE_REMINDER)
+        await context.bot.send_message(chat_id, messages.IDLE_REMINDER, reply_markup=kb.build_idle_keyboard())
     except (Forbidden, BadRequest):
         pass
+
+
+async def cb_idle_continue(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _answer(update)
+    chat_id = update.effective_chat.id
+    await context.bot.send_message(chat_id, messages.IDLE_CONTINUE_ACK)
+    _schedule_idle_reminder(context, chat_id)
+
+
+async def cb_idle_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _answer(update)
+    await _do_cancel_order(update.effective_chat.id, context)
 
 
 def _reset_cart_fields(user_data: dict) -> None:
@@ -144,8 +156,11 @@ async def _render_variant(context, chat_id, user_data, ci, ti):
 async def _render_unit(context, chat_id, user_data, ci, product_name, had_variant):
     user_data["nav"] = "unit"
     user_data["had_variant"] = had_variant
+    type_ = user_data.get("type")
     await context.bot.send_message(
-        chat_id, messages.choose_unit_prompt(product_name), reply_markup=kb.build_unit_keyboard(CATALOG, ci)
+        chat_id,
+        messages.choose_unit_prompt(product_name),
+        reply_markup=kb.build_unit_keyboard(CATALOG, ci, type_),
     )
 
 
@@ -256,7 +271,7 @@ async def cb_unit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     categories = cl.get_categories(CATALOG)
     category = categories[ci]
-    units = cl.get_units(CATALOG, category)
+    units = cl.get_units(CATALOG, category, user_data.get("type"))
     unit = units[ui]
     user_data["unit_name"] = unit["name"]
     user_data["unit_fixed"] = unit["fixed"]
