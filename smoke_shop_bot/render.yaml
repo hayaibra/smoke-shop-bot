@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: smoke-shop-bot
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python3 bot_webhook.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.15"
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_CHAT_ID
+        sync: false
+      - key: SHOP_NAME
+        sync: false
+      - key: PAYMENT_ACCOUNT_NUMBER
+        sync: false
+      - key: PAYMENT_ACCOUNT_NAME
+        sync: false
+      - key: BROADCAST_SECRET
+        sync: false

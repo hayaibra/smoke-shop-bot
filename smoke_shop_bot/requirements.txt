@@ -1,0 +1,9 @@
+python-telegram-bot[job-queue]==21.6
+python-dotenv==1.0.1
+pytz==2024.1
+
+# لازمين بس لنشر Render (نمط Webhook عبر bot_webhook.py) — سيرفر HTTP خفيف.
+# لو "version not found" وقت البناء على Render، احذف رقم النسخة (==...) وخليه
+# بس اسم المكتبة، هيك بيثبت أحدث نسخة متوفرة.
+starlette==0.37.2
+uvicorn==0.29.0

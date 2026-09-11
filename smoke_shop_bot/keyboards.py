@@ -1,0 +1,90 @@
+"""
+بناء لوحات الأزرار (Inline Keyboards) — بيستخدم فهارس (indices) بالـ callback_data
+بدل النص العربي نفسه، منشان ما نتجاوز حد الـ 64 بايت يلي تلغرام فارضه على callback_data
+(نص عربي طويل زي 'قابلة لإعادة التعبئة' لحاله ممكن ياخد أكتر من 64 بايت لو تكرر بعدة مستويات).
+"""
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+import catalog_logic as cl
+import messages
+
+
+def _rows_of_two(buttons: list[InlineKeyboardButton]) -> list[list[InlineKeyboardButton]]:
+    rows = []
+    for i in range(0, len(buttons), 2):
+        rows.append(buttons[i:i + 2])
+    return rows
+
+
+def build_category_keyboard(catalog: dict) -> InlineKeyboardMarkup:
+    categories = cl.get_categories(catalog)
+    buttons = [
+        InlineKeyboardButton(cl.category_button_label(catalog, cat), callback_data=f"cat:{i}")
+        for i, cat in enumerate(categories)
+    ]
+    return InlineKeyboardMarkup(_rows_of_two(buttons))
+
+
+def build_type_keyboard(catalog: dict, ci: int) -> InlineKeyboardMarkup:
+    categories = cl.get_categories(catalog)
+    category = categories[ci]
+    types = cl.get_types(catalog, category)
+    buttons = [
+        InlineKeyboardButton(t, callback_data=f"type:{ci}:{ti}")
+        for ti, t in enumerate(types)
+    ]
+    rows = _rows_of_two(buttons)
+    rows.append([InlineKeyboardButton(messages.BTN_BACK, callback_data="back")])
+    return InlineKeyboardMarkup(rows)
+
+
+def build_variant_keyboard(catalog: dict, ci: int, ti: int) -> InlineKeyboardMarkup:
+    categories = cl.get_categories(catalog)
+    category = categories[ci]
+    types = cl.get_types(catalog, category)
+    type_ = types[ti]
+    variants = cl.get_variants(catalog, category, type_)
+    buttons = [
+        InlineKeyboardButton(v, callback_data=f"var:{ci}:{ti}:{vi}")
+        for vi, v in enumerate(variants)
+    ]
+    rows = _rows_of_two(buttons)
+    rows.append([InlineKeyboardButton(messages.BTN_BACK, callback_data="back")])
+    return InlineKeyboardMarkup(rows)
+
+
+def build_unit_keyboard(catalog: dict, ci: int) -> InlineKeyboardMarkup:
+    categories = cl.get_categories(catalog)
+    category = categories[ci]
+    units = cl.get_units(catalog, category)
+    buttons = [
+        InlineKeyboardButton(u["name"], callback_data=f"unit:{ci}:{ui}")
+        for ui, u in enumerate(units)
+    ]
+    rows = _rows_of_two(buttons)
+    rows.append([InlineKeyboardButton(messages.BTN_BACK, callback_data="back")])
+    return InlineKeyboardMarkup(rows)
+
+
+def build_back_only_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[InlineKeyboardButton(messages.BTN_BACK, callback_data="back")]])
+
+
+def build_welcome_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([[InlineKeyboardButton(messages.WELCOME_BUTTON, callback_data="age:ok")]])
+
+
+def build_cart_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(messages.BTN_ADD_MORE, callback_data="cart:add_more")],
+        [InlineKeyboardButton(messages.BTN_UNDO, callback_data="cart:undo")],
+        [InlineKeyboardButton(messages.BTN_CLEAR, callback_data="cart:clear")],
+        [InlineKeyboardButton(messages.BTN_PRICE_INQUIRY, callback_data="cart:price_inquiry")],
+    ])
+
+
+def build_payment_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(messages.BTN_PAY_PREPAID, callback_data="pay:prepaid")],
+        [InlineKeyboardButton(messages.BTN_PAY_COD, callback_data="pay:cod")],
+    ])
