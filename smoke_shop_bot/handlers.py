@@ -168,7 +168,7 @@ async def _render_cart(context, chat_id, user_data, header_line, added_summary=N
 
 
 # ---------------------------------------------------------------------------
-# /start — البداية، الترحيب، تأكيد العمر
+# /start — البداية، الترحيب (بلا شرط تأكيد عمر، بناءً على طلب صاحبة المحل)
 # ---------------------------------------------------------------------------
 
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -178,7 +178,8 @@ async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     context.user_data.clear()
     _reset_cart_fields(context.user_data)
     _cancel_idle_reminder(context, chat_id)
-    await _render_welcome(context, chat_id)
+    await context.bot.send_message(chat_id, messages.welcome())
+    await _render_category(context, chat_id, context.user_data)
     _schedule_idle_reminder(context, chat_id)
 
 
