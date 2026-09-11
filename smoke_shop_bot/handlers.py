@@ -565,10 +565,18 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         user_data["customer_phone"] = text.strip()
         if user_data.get("payment_method") == "deposit":
             # دفع عربون: بعد معلومات التوصيل، منحتاج كمان صورة إثبات تحويل العربون
-            # (متل الدفع المسبق بالضبط) قبل ما نأكد الطلب نهائياً.
+            # (متل الدفع المسبق بالضبط) قبل ما نأكد الطلب نهائياً. العربون = نص
+            # المبلغ يلي أكدو التاجر بالضبط (تلقائياً)، والباقي نص عند الاستلام.
             user_data["state"] = "awaiting_payment_photo"
-            amount_text = storage.get_last_quote(config.QUOTES_PATH, chat_id) or "المبلغ يلي تأكدلك ياه قبل شوي"
-            await context.bot.send_message(chat_id, messages.deposit_instructions(amount_text))
+            last_quote_text = storage.get_last_quote(config.QUOTES_PATH, chat_id)
+            total_amount = cl.extract_amount(last_quote_text) if last_quote_text else None
+            if total_amount is not None:
+                deposit_amount, remaining_amount = cl.split_deposit_amount(total_amount)
+                deposit_text = messages.deposit_instructions_split(total_amount, deposit_amount, remaining_amount)
+            else:
+                amount_text = last_quote_text or "المبلغ يلي تأكدلك ياه قبل شوي"
+                deposit_text = messages.deposit_instructions(amount_text)
+            await context.bot.send_message(chat_id, deposit_text)
             _schedule_idle_reminder(context, chat_id)
         else:
             await _finalize_order(update, context, payment_proof=False)

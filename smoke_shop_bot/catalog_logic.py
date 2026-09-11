@@ -3,6 +3,7 @@
 هيك منقدر نختبرها لحالها ونتأكد إنها ١٠٠٪ صحيحة قبل ما نوصلها لكود البوت.
 """
 import json
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -95,6 +96,35 @@ def parse_count(text: str) -> Optional[int]:
     if value <= 0:
         return None
     return value
+
+
+def extract_amount(text: str) -> Optional[int]:
+    """
+    بتحاول تلاقي أول رقم واضح جوا نص (رد التاجر بالسعر مثلاً، حتى لو مكتوب وسط
+    كلام تاني زي '70000 ل.س' أو '٧٠،٠٠٠ ليرة'). بتتجاهل فواصل الآلاف (, أو .)
+    وبتحوّل الأرقام العربية لإنجليزية. بترجع None إذا ما لقت رقم صالح بالنص.
+    """
+    if not text:
+        return None
+    arabic_digits = "٠١٢٣٤٥٦٧٨٩"
+    translated = "".join(
+        str(arabic_digits.index(ch)) if ch in arabic_digits else ch for ch in text
+    )
+    match = re.search(r"\d[\d,.]*\d|\d", translated)
+    if not match:
+        return None
+    digits_only = re.sub(r"[,.]", "", match.group(0))
+    if not digits_only.isdigit():
+        return None
+    value = int(digits_only)
+    return value if value > 0 else None
+
+
+def split_deposit_amount(total_amount: int) -> tuple[int, int]:
+    """بترجع (مبلغ العربون، الباقي) — نص المبلغ بالضبط لكل وحدة، ومجموعهن = المبلغ الإجمالي تماماً."""
+    deposit = total_amount // 2
+    remaining = total_amount - deposit
+    return deposit, remaining
 
 
 def format_quantity(unit_name: str, fixed: bool, count: Optional[int] = None) -> str:

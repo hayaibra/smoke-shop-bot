@@ -156,6 +156,10 @@ DEPOSIT_INTRO = (
 
 
 def deposit_instructions(amount_text: str) -> str:
+    """
+    نسخة احتياطية بس — بتستخدم لما ما نقدر نفهم رقم واضح من رد التاجر
+    (شوف deposit_instructions_split للحالة العادية: نص المبلغ بالضبط عربون).
+    """
     return (
         f"تمام 👌 هلق حوّلي جزء من المبلغ الإجمالي ({amount_text}) كعربون (متل ما تتفقو عليه)، "
         "عبر شام كاش أو سيريتل كاش عالرقم التالي:\n\n"
@@ -163,6 +167,18 @@ def deposit_instructions(amount_text: str) -> str:
         f"👤 باسم: {config.PAYMENT_ACCOUNT_NAME}\n\n"
         "بعد ما تحوّلي، ابعتيلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         "الباقي من المبلغ بتسدديه نقداً عند استلام الطلب."
+    )
+
+
+def deposit_instructions_split(total_amount: int, deposit_amount: int, remaining_amount: int) -> str:
+    """الحالة العادية: فهمنا رقم واضح من رد التاجر، فمنحسب نص المبلغ بالضبط تلقائياً."""
+    return (
+        f"تمام 👌 قيمة الطلب الإجمالية {total_amount}.\n"
+        f"هلق حوّلي مبلغ العربون {deposit_amount} عبر شام كاش أو سيريتل كاش عالرقم التالي:\n\n"
+        f"📱 {config.PAYMENT_ACCOUNT_NUMBER}\n"
+        f"👤 باسم: {config.PAYMENT_ACCOUNT_NAME}\n\n"
+        "بعد ما تحوّلي، ابعتيلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
+        f"الباقي {remaining_amount} بتسدديه نقداً عند استلام الطلب."
     )
 
 
