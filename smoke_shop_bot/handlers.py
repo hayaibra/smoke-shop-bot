@@ -400,7 +400,7 @@ async def on_admin_price_reply(update: Update, context: ContextTypes.DEFAULT_TYP
     full_text = messages.price_reply_footer(admin_text)
 
     try:
-        await context.bot.send_message(customer_chat_id, full_text)
+        await context.bot.send_message(customer_chat_id, full_text, reply_markup=kb.build_confirm_keyboard())
     except (Forbidden, BadRequest):
         await message.reply_text("⚠️ ما قدرت أوصل الرد للزبون (يمكن يكون حظر البوت أو مسح المحادثة).")
         return
@@ -412,11 +412,11 @@ async def on_admin_price_reply(update: Update, context: ContextTypes.DEFAULT_TYP
 
 
 # ---------------------------------------------------------------------------
-# /تأكيد و /الغاء
+# /تأكيد و /الغاء — وكمان أزرار "✅ تأكيد الطلب" / "❌ إلغاء الطلب" (نفس المنطق بالضبط،
+# بس اختصار للزبون لأنه أوامر عربي ما بتنسجل بقائمة ☰ الرسمية تبع تلغرام)
 # ---------------------------------------------------------------------------
 
-async def cmd_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = update.effective_chat.id
+async def _do_confirm_order(chat_id: int, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_data = context.user_data
 
     if not user_data.get("cart"):
@@ -434,12 +434,29 @@ async def cmd_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     _schedule_idle_reminder(context, chat_id)
 
 
-async def cmd_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    chat_id = update.effective_chat.id
+async def _do_cancel_order(chat_id: int, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_data = context.user_data
     _reset_cart_fields(user_data)
     await context.bot.send_message(chat_id, messages.CANCEL_ORDER_MESSAGE)
     _cancel_idle_reminder(context, chat_id)
+
+
+async def cmd_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _do_confirm_order(update.effective_chat.id, context)
+
+
+async def cmd_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _do_cancel_order(update.effective_chat.id, context)
+
+
+async def cb_confirm_yes(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _answer(update)
+    await _do_confirm_order(update.effective_chat.id, context)
+
+
+async def cb_confirm_no(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _answer(update)
+    await _do_cancel_order(update.effective_chat.id, context)
 
 
 async def cmd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

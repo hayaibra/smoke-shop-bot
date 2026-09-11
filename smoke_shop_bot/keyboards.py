@@ -83,6 +83,13 @@ def build_cart_keyboard() -> InlineKeyboardMarkup:
     ])
 
 
+def build_confirm_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton(messages.BTN_CONFIRM_ORDER, callback_data="confirm:yes")],
+        [InlineKeyboardButton(messages.BTN_CANCEL_ORDER, callback_data="confirm:no")],
+    ])
+
+
 def build_payment_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton(messages.BTN_PAY_PREPAID, callback_data="pay:prepaid")],
