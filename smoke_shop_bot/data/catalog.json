@@ -20,9 +20,9 @@
     },
     "units": [
       {"name": "📦 باكيت", "fixed": false},
-      {"name": "🎁 كروز (١٠ علب)", "fixed": false},
+      {"name": "🎁 كروز", "fixed": false},
       {"name": "🥡 نص كروز", "fixed": true},
-      {"name": "📦📦 كرتونة (٥٠ علبة)", "fixed": false}
+      {"name": "📦📦 كرتونة", "fixed": false}
     ]
   },
 
