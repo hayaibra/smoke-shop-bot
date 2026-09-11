@@ -3,6 +3,8 @@
 كل نصوص البوت بالعامية السورية — منقولة بالحرف من الدليل الأصلي.
 القيم [بين قوسين] بالدليل تنعبى هون من config.py أو من اختيارات الزبون الفعلية.
 """
+from typing import Optional
+
 import config
 
 # ---------------------------------------------------------------------------
@@ -189,6 +191,35 @@ def deposit_instructions_split(total_amount: int, deposit_amount: int, remaining
 
 PAYMENT_LABEL_DEPOSIT = "عربون (جزء هلق + الباقي عند الاستلام)"
 
+
+def _payment_summary_line(
+    payment_method: Optional[str],
+    paid_amount: Optional[int],
+    remaining_amount: Optional[int],
+    for_admin: bool,
+) -> str:
+    """
+    سطر واحد يلخّص المدفوع والباقي، حسب طريقة الدفع. بترجع "" (بلا أي سطر) لو ما
+    عندنا رقم مبلغ واضح (يعني ما قدرنا نفهم رقم من رد التاجر) — منشان ما نطلع رقم غلط.
+    """
+    if payment_method is None or paid_amount is None or remaining_amount is None:
+        return ""
+
+    if payment_method == "prepaid":
+        if for_admin:
+            return f"💰 دفع الزبون المبلغ كامل: {paid_amount} (ما في باقي)."
+        return f"💰 دفعت المبلغ كامل ({paid_amount}) ✅ — ما عليك شي باقي."
+
+    if payment_method == "deposit":
+        if for_admin:
+            return f"💰 دفع الزبون عربون: {paid_amount} — الباقي عليه: {remaining_amount}."
+        return f"💰 دفعتي عربون {paid_amount}، وباقي عليكِ {remaining_amount} تدفعيه عند الاستلام."
+
+    # cod
+    if for_admin:
+        return f"💰 المطلوب تحصيله عند التسليم: {remaining_amount} (الزبون ما دفع شي مسبقاً)."
+    return f"💰 المبلغ المطلوب عند الاستلام: {remaining_amount} (نقداً)."
+
 # ---------------------------------------------------------------------------
 # ي) الدفع عند الاستلام
 # ---------------------------------------------------------------------------
@@ -206,11 +237,22 @@ COD_ASK_PHONE = "3️⃣ تمام، آخر شي، اكتب رقم موبايلك
 # ك) رسالة تثبيت الطلب
 # ---------------------------------------------------------------------------
 
-def order_confirmation(cart_text: str) -> str:
+def order_confirmation(
+    cart_text: str,
+    payment_method: Optional[str] = None,
+    paid_amount: Optional[int] = None,
+    remaining_amount: Optional[int] = None,
+) -> str:
+    summary_block = ""
+    line = _payment_summary_line(payment_method, paid_amount, remaining_amount, for_admin=False)
+    if line:
+        summary_block = f"\n{line}\n"
+
     return (
         "تمام يا صاحبي، طلبك وصلنا وصار قيد التجهيز ✅🎉\n\n"
         "🧾 ملخص طلبك:\n"
-        f"{cart_text}\n\n"
+        f"{cart_text}\n"
+        f"{summary_block}\n"
         "🚚 التوصيل بيمشي على جولتين باليوم:\n"
         "🕐 جولة الظهر: الساعة ١٢:٠٠ ظهراً\n"
         "🌆 جولة المسا: الساعة ٦:٠٠ مساءً\n\n"
@@ -257,8 +299,13 @@ def admin_final_order_notice(
     payment_method_label: str,
     has_payment_proof: bool,
     timestamp: str,
+    payment_method: Optional[str] = None,
+    paid_amount: Optional[int] = None,
+    remaining_amount: Optional[int] = None,
 ) -> str:
     proof_line = "مرفقة تحت 👇" if has_payment_proof else "—"
+    summary_line = _payment_summary_line(payment_method, paid_amount, remaining_amount, for_admin=True)
+    summary_block = f"{summary_line}\n" if summary_line else ""
     return (
         "🔔 طلب مؤكد جديد!\n\n"
         f"👤 الزبون: {customer_label}\n"
@@ -267,6 +314,7 @@ def admin_final_order_notice(
         "📦 تفاصيل الطلب (كل الأصناف):\n"
         f"{cart_text}\n\n"
         f"💳 طريقة الدفع: {payment_method_label}\n"
+        f"{summary_block}"
         f"🧾 صورة إشعار التحويل: {proof_line}\n\n"
         f"🕐 وقت التأكيد: {timestamp}"
     )

@@ -591,16 +591,44 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # إتمام الطلب — إشعار التاجر + رسالة تثبيت للزبون + تسجيل الطلب
 # ---------------------------------------------------------------------------
 
+def _payment_split_for(user_data: dict, chat_id: int, payment_method: str) -> tuple:
+    """
+    بترجع (total_amount, paid_amount, remaining_amount) اعتماداً على آخر سعر أكدو
+    التاجر (last_quote) وطريقة الدفع. أي قيمة بترجع None لو ما قدرنا نفهم رقم واضح
+    من رد التاجر — هيك الرسائل بتتجاهل سطر المبلغ بهدوء بدل ما تطلع رقم غلط.
+    """
+    last_quote_text = storage.get_last_quote(config.QUOTES_PATH, chat_id)
+    total_amount = cl.extract_amount(last_quote_text) if last_quote_text else None
+    if total_amount is None:
+        return None, None, None
+    if payment_method == "prepaid":
+        return total_amount, total_amount, 0
+    if payment_method == "deposit":
+        paid, remaining = cl.split_deposit_amount(total_amount)
+        return total_amount, paid, remaining
+    # cod
+    return total_amount, 0, total_amount
+
+
 async def _finalize_order(update: Update, context: ContextTypes.DEFAULT_TYPE, payment_proof: bool) -> None:
     chat_id = update.effective_chat.id
     user_data = context.user_data
     cart_text = cl.format_cart_text(user_data.get("cart", []))
+    payment_method = user_data.get("payment_method")
+    _, paid_amount, remaining_amount = _payment_split_for(user_data, chat_id, payment_method)
 
-    await context.bot.send_message(chat_id, messages.order_confirmation(cart_text))
+    await context.bot.send_message(
+        chat_id,
+        messages.order_confirmation(
+            cart_text,
+            payment_method=payment_method,
+            paid_amount=paid_amount,
+            remaining_amount=remaining_amount,
+        ),
+    )
 
     user = update.effective_user
     customer_label = _customer_label(user)
-    payment_method = user_data.get("payment_method")
 
     if payment_method == "prepaid":
         phone = messages.NOT_APPLICABLE
@@ -623,6 +651,9 @@ async def _finalize_order(update: Update, context: ContextTypes.DEFAULT_TYPE, pa
         payment_method_label=payment_label,
         has_payment_proof=payment_proof,
         timestamp=_now_str(),
+        payment_method=payment_method,
+        paid_amount=paid_amount,
+        remaining_amount=remaining_amount,
     )
 
     admin_chat_id = config.get_admin_chat_id()
