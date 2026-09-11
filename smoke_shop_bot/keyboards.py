@@ -100,5 +100,6 @@ def build_confirm_keyboard() -> InlineKeyboardMarkup:
 def build_payment_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [InlineKeyboardButton(messages.BTN_PAY_PREPAID, callback_data="pay:prepaid")],
+        [InlineKeyboardButton(messages.BTN_PAY_DEPOSIT, callback_data="pay:deposit")],
         [InlineKeyboardButton(messages.BTN_PAY_COD, callback_data="pay:cod")],
     ])

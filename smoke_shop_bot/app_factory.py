@@ -80,6 +80,7 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(CallbackQueryHandler(handlers.cb_confirm_yes, pattern=r"^confirm:yes$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_confirm_no, pattern=r"^confirm:no$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_pay_prepaid, pattern=r"^pay:prepaid$"))
+    application.add_handler(CallbackQueryHandler(handlers.cb_pay_deposit, pattern=r"^pay:deposit$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_pay_cod, pattern=r"^pay:cod$"))
 
     # --- صورة إشعار التحويل (الدفع المسبق) ---

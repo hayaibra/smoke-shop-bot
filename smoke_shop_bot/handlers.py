@@ -506,6 +506,16 @@ async def cb_pay_cod(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     _schedule_idle_reminder(context, chat_id)
 
 
+async def cb_pay_deposit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _answer(update)
+    chat_id = update.effective_chat.id
+    user_data = context.user_data
+    user_data["payment_method"] = "deposit"
+    user_data["state"] = "awaiting_name"
+    await context.bot.send_message(chat_id, messages.DEPOSIT_INTRO)
+    _schedule_idle_reminder(context, chat_id)
+
+
 # ---------------------------------------------------------------------------
 # استقبال صورة إشعار التحويل (الدفع المسبق)
 # ---------------------------------------------------------------------------
@@ -553,7 +563,15 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     elif state == "awaiting_phone":
         user_data["customer_phone"] = text.strip()
-        await _finalize_order(update, context, payment_proof=False)
+        if user_data.get("payment_method") == "deposit":
+            # دفع عربون: بعد معلومات التوصيل، منحتاج كمان صورة إثبات تحويل العربون
+            # (متل الدفع المسبق بالضبط) قبل ما نأكد الطلب نهائياً.
+            user_data["state"] = "awaiting_payment_photo"
+            amount_text = storage.get_last_quote(config.QUOTES_PATH, chat_id) or "المبلغ يلي تأكدلك ياه قبل شوي"
+            await context.bot.send_message(chat_id, messages.deposit_instructions(amount_text))
+            _schedule_idle_reminder(context, chat_id)
+        else:
+            await _finalize_order(update, context, payment_proof=False)
 
     elif state == "awaiting_payment_photo":
         await context.bot.send_message(chat_id, messages.INVALID_PAYMENT_PROOF)
@@ -580,6 +598,10 @@ async def _finalize_order(update: Update, context: ContextTypes.DEFAULT_TYPE, pa
         phone = messages.NOT_APPLICABLE
         address = messages.NOT_APPLICABLE
         payment_label = messages.PAYMENT_LABEL_PREPAID
+    elif payment_method == "deposit":
+        phone = user_data.get("customer_phone") or messages.NOT_APPLICABLE
+        address = user_data.get("customer_address") or messages.NOT_APPLICABLE
+        payment_label = messages.PAYMENT_LABEL_DEPOSIT
     else:
         phone = user_data.get("customer_phone") or messages.NOT_APPLICABLE
         address = user_data.get("customer_address") or messages.NOT_APPLICABLE
