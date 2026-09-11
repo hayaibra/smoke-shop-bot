@@ -43,20 +43,30 @@ def has_variants(catalog: dict, category: str, type_: str) -> bool:
     return len(get_variants(catalog, category, type_)) > 0
 
 
-def get_units(catalog: dict, category: str) -> list[dict]:
-    """كل وحدة عبارة عن {'name': ..., 'fixed': True/False}."""
-    return list(catalog.get(category, {}).get("units", []))
+def get_units(catalog: dict, category: str, type_: Optional[str] = None) -> list[dict]:
+    """
+    كل وحدة عبارة عن {'name': ..., 'fixed': True/False}.
+    لو النوع (type_) إلو وحدات خاصة فيه (مسجلة بقسم "type_units" جوا القسم بالكتالوج)،
+    بترجع هديك بدل وحدات القسم العامة — هيك منقدر نعمل مثلاً براند معسل ما إلو "نص كيلو".
+    لو type_ ما انبعت، أو ما إلو وحدات خاصة، بترجع وحدات القسم العامة (units) زي العادة.
+    """
+    category_data = catalog.get(category, {})
+    if type_ is not None:
+        type_units = category_data.get("type_units", {})
+        if type_ in type_units:
+            return list(type_units[type_])
+    return list(category_data.get("units", []))
 
 
-def get_unit_by_name(catalog: dict, category: str, unit_name: str) -> Optional[dict]:
-    for u in get_units(catalog, category):
+def get_unit_by_name(catalog: dict, category: str, unit_name: str, type_: Optional[str] = None) -> Optional[dict]:
+    for u in get_units(catalog, category, type_):
         if u["name"] == unit_name:
             return u
     return None
 
 
-def is_unit_fixed(catalog: dict, category: str, unit_name: str) -> bool:
-    unit = get_unit_by_name(catalog, category, unit_name)
+def is_unit_fixed(catalog: dict, category: str, unit_name: str, type_: Optional[str] = None) -> bool:
+    unit = get_unit_by_name(catalog, category, unit_name, type_)
     return bool(unit and unit.get("fixed"))
 
 
