@@ -128,11 +128,18 @@ BTN_PAY_DEPOSIT = "🔖 دفع عربون (جزء هلق + الباقي عند �
 # ط) الدفع المسبق
 # ---------------------------------------------------------------------------
 
+def _payment_accounts_block() -> str:
+    """بيرجع معلومات الحسابين (شام كاش وسيريتل كاش) سوا، منشان نكررهن بكل رسالة دفع."""
+    return (
+        f"💚 شام كاش:\n📱 {config.PAYMENT_SHAMCASH_NUMBER}\n👤 باسم: {config.PAYMENT_SHAMCASH_NAME}\n\n"
+        f"🔴 سيريتل كاش:\n📱 {config.PAYMENT_SYRIATELCASH_NUMBER}\n👤 باسم: {config.PAYMENT_SYRIATELCASH_NAME}"
+    )
+
+
 def prepaid_instructions(amount_text: str) -> str:
     return (
-        f"تمام 👌 حوّل مبلغ {amount_text} عبر شام كاش أو سيريتل كاش عالرقم التالي:\n\n"
-        f"📱 {config.PAYMENT_ACCOUNT_NUMBER}\n"
-        f"👤 باسم: {config.PAYMENT_ACCOUNT_NAME}\n\n"
+        f"تمام 👌 حوّل مبلغ {amount_text} عبر شام كاش أو سيريتل كاش:\n\n"
+        f"{_payment_accounts_block()}\n\n"
         "بعد ما تحوّل، ابعتلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         "منستنى الصورة لنأكدلك الطلب."
     )
@@ -162,9 +169,8 @@ def deposit_instructions(amount_text: str) -> str:
     """
     return (
         f"تمام 👌 هلق حوّلي جزء من المبلغ الإجمالي ({amount_text}) كعربون (متل ما تتفقو عليه)، "
-        "عبر شام كاش أو سيريتل كاش عالرقم التالي:\n\n"
-        f"📱 {config.PAYMENT_ACCOUNT_NUMBER}\n"
-        f"👤 باسم: {config.PAYMENT_ACCOUNT_NAME}\n\n"
+        "عبر شام كاش أو سيريتل كاش:\n\n"
+        f"{_payment_accounts_block()}\n\n"
         "بعد ما تحوّلي، ابعتيلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         "الباقي من المبلغ بتسدديه نقداً عند استلام الطلب."
     )
@@ -174,9 +180,8 @@ def deposit_instructions_split(total_amount: int, deposit_amount: int, remaining
     """الحالة العادية: فهمنا رقم واضح من رد التاجر، فمنحسب نص المبلغ بالضبط تلقائياً."""
     return (
         f"تمام 👌 قيمة الطلب الإجمالية {total_amount}.\n"
-        f"هلق حوّلي مبلغ العربون {deposit_amount} عبر شام كاش أو سيريتل كاش عالرقم التالي:\n\n"
-        f"📱 {config.PAYMENT_ACCOUNT_NUMBER}\n"
-        f"👤 باسم: {config.PAYMENT_ACCOUNT_NAME}\n\n"
+        f"هلق حوّلي مبلغ العربون {deposit_amount} عبر شام كاش أو سيريتل كاش:\n\n"
+        f"{_payment_accounts_block()}\n\n"
         "بعد ما تحوّلي، ابعتيلنا صورة سكرين شوت لإشعار/إيصال التحويل هون بالشات 📸\n"
         f"الباقي {remaining_amount} بتسدديه نقداً عند استلام الطلب."
     )
