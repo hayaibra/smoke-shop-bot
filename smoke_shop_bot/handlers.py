@@ -501,7 +501,7 @@ async def cb_back(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # ---------------------------------------------------------------------------
 
 async def cb_category_list(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """زر '📂 كل الأقسام' — رجوع مباشر لقائمة الأقسام من الصفر، من أي قائمة أنواع/أصناف."""
+    """زر '🏠 القائمة الرئيسية' — رجوع مباشر لقائمة الأقسام من الصفر، من أي قائمة أنواع/أصناف."""
     await _answer(update)
     chat_id = update.effective_chat.id
     user_data = context.user_data
@@ -682,6 +682,24 @@ async def cmd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     chat_id = update.effective_chat.id
     text = config.PRICES_PATH.read_text(encoding="utf-8") if config.PRICES_PATH.exists() else "لسا ما في أسعار مضافة."
     await context.bot.send_message(chat_id, text)
+
+
+async def cmd_my_cart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """🧾 استعلام عن سلتي — بيطلع للزبون آخر طلب مؤكد إلو (لو في)، وسلته الحالية
+    لو كانت لسا بانتظار رد التاجر عَ استفسار سعر."""
+    chat_id = update.effective_chat.id
+    user_data = context.user_data
+
+    pending_cart_text = None
+    if storage.is_customer_pending(config.PENDING_REPLIES_PATH, chat_id):
+        cart = user_data.get("cart", [])
+        if cart:
+            pending_cart_text = cl.format_cart_text(cart)
+
+    orders = storage.get_orders_for_customer(config.ORDERS_LOG_PATH, chat_id)
+    last_order = orders[-1] if orders else None
+
+    await context.bot.send_message(chat_id, messages.my_cart_status(pending_cart_text, last_order))
 
 
 # ---------------------------------------------------------------------------

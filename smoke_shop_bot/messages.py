@@ -93,7 +93,7 @@ BTN_BACK = "🔙 رجوع"
 
 # زر سريع بيرجع مباشرة لقائمة الأقسام من الصفر (موجود بقوائم الأنواع والأصناف،
 # منشان لو بدها تبدل قسم بالكامل ما تضطر تدوس "🔙 رجوع" أكتر من مرة).
-BTN_ALL_CATEGORIES = "📂 كل الأقسام"
+BTN_ALL_CATEGORIES = "🏠 القائمة الرئيسية"
 
 EMPTY_CART_WARNING = "السلة لسا فاضية، ضيف صنف الأول 🙏"
 
@@ -333,6 +333,37 @@ def admin_price_reminder_notice(customer_label: str) -> str:
         f"👤 الزبون: {customer_label}\n\n"
         "رجع لرسالة \"💰 استفسار سعر جديد!\" الأصلية وعمل عليها Reply بالسعر."
     )
+
+# ---------------------------------------------------------------------------
+# ٣-ج) "🧾 استعلام عن سلتي" — بيطلعلو آخر طلب مؤكد إلو، وسلته الحالية إذا كانت
+# لسا بانتظار رد التاجر عَ استفسار السعر.
+# ---------------------------------------------------------------------------
+
+NO_CART_STATUS_YET = (
+    "ما عندك أي طلب أو استفسار مسجل لهلق 🤔\n"
+    "دوس /start منشان تبلش طلب جديد."
+)
+
+
+def my_cart_status(pending_cart_text: Optional[str], last_order: Optional[dict]) -> str:
+    if pending_cart_text is None and last_order is None:
+        return NO_CART_STATUS_YET
+
+    parts = []
+    if pending_cart_text is not None:
+        parts.append(
+            "⏳ عندك استفسار سعر قيد المراجعة، بانتظار رد التاجر:\n"
+            f"{pending_cart_text}"
+        )
+    if last_order is not None:
+        cart_lines = "\n".join(last_order.get("cart") or [])
+        timestamp = last_order.get("timestamp", "")
+        parts.append(
+            "✅ آخر طلب مؤكد إلك:\n"
+            f"{cart_lines}\n"
+            f"🕐 بتاريخ: {timestamp}"
+        )
+    return "\n\n".join(parts)
 
 # ---------------------------------------------------------------------------
 # ٣-ب) إشعار "طلب مؤكد جديد" للتاجر

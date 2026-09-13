@@ -31,6 +31,7 @@ async def _post_init(application: Application) -> None:
             BotCommand("prices", "📋 شوف أسعار اليوم"),
             BotCommand("confirm", "✅ أكد الطلب بعد معرفة السعر"),
             BotCommand("cancel", "❌ تراجع عن الطلب"),
+            BotCommand("mycart", "🧾 استعلام عن سلتي"),
         ]
     )
     logger.info("تم تسجيل أوامر القائمة (☰) بنجاح.")
@@ -46,6 +47,7 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(CommandHandler("confirm", handlers.cmd_confirm))
     application.add_handler(CommandHandler("cancel", handlers.cmd_cancel))
     application.add_handler(CommandHandler("prices", handlers.cmd_prices))
+    application.add_handler(CommandHandler("mycart", handlers.cmd_my_cart))
 
     # --- نفس الأوامر بالعربي (زي ما بالدليل تماماً) — تلغرام ما بيسجلها كأمر رسمي
     #     بقائمة ☰ (بس يقبل حروف إنجليزية/أرقام/underscore بأسماء الأوامر)، بس البوت
@@ -53,6 +55,7 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(MessageHandler(filters.Regex(r"/تأكيد"), handlers.cmd_confirm))
     application.add_handler(MessageHandler(filters.Regex(r"/الغاء"), handlers.cmd_cancel))
     application.add_handler(MessageHandler(filters.Regex(r"/اسعار"), handlers.cmd_prices))
+    application.add_handler(MessageHandler(filters.Regex(r"/سلتي"), handlers.cmd_my_cart))
 
     # --- رد التاجر (Reply) على إشعار استفسار السعر — لازم تسجيلها قبل معالج
     #     النصوص العام، ومحصورة بشات التاجر بس ---
