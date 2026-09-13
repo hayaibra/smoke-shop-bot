@@ -35,21 +35,35 @@ def build_type_keyboard(catalog: dict, ci: int) -> InlineKeyboardMarkup:
     ]
     rows = _rows_of_two(buttons)
     rows.append([InlineKeyboardButton(messages.BTN_BACK, callback_data="back")])
+    rows.append([InlineKeyboardButton(messages.BTN_ALL_CATEGORIES, callback_data="catlist")])
     return InlineKeyboardMarkup(rows)
 
 
-def build_variant_keyboard(catalog: dict, ci: int, ti: int) -> InlineKeyboardMarkup:
+def build_variant_keyboard(
+    catalog: dict, ci: int, ti: int, selected: set[int] | None = None
+) -> InlineKeyboardMarkup:
+    """
+    قائمة الأصناف — Multi-select: كل زر بيتحول لعلامة ✅ لما تختاريه (تدوسي عليه
+    كمان مرة تلغي الاختيار)، وتحت في زر "➕ أضف المختار للسلة" منشان تأكدي
+    الاختيار وتبلشي تحددي الكمية لكل صنف اخترتيه.
+    """
+    selected = selected or set()
     categories = cl.get_categories(catalog)
     category = categories[ci]
     types = cl.get_types(catalog, category)
     type_ = types[ti]
     variants = cl.get_variants(catalog, category, type_)
     buttons = [
-        InlineKeyboardButton(v, callback_data=f"var:{ci}:{ti}:{vi}")
+        InlineKeyboardButton(
+            f"✅ {v}" if vi in selected else f"▫️ {v}",
+            callback_data=f"mvar:{ci}:{ti}:{vi}",
+        )
         for vi, v in enumerate(variants)
     ]
     rows = _rows_of_two(buttons)
+    rows.append([InlineKeyboardButton(messages.BTN_ADD_SELECTED, callback_data=f"mvardone:{ci}:{ti}")])
     rows.append([InlineKeyboardButton(messages.BTN_BACK, callback_data="back")])
+    rows.append([InlineKeyboardButton(messages.BTN_ALL_CATEGORIES, callback_data="catlist")])
     return InlineKeyboardMarkup(rows)
 
 
@@ -80,6 +94,7 @@ def build_cart_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(messages.BTN_UNDO, callback_data="cart:undo")],
         [InlineKeyboardButton(messages.BTN_CLEAR, callback_data="cart:clear")],
         [InlineKeyboardButton(messages.BTN_PRICE_INQUIRY, callback_data="cart:price_inquiry")],
+        [InlineKeyboardButton(messages.BTN_CART_BACK_TO_TYPES, callback_data="cart:back_to_types")],
     ])
 
 

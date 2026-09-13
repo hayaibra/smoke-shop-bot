@@ -177,9 +177,9 @@ def _reset_cart_fields(user_data: dict) -> None:
     user_data["payment_photo_file_id"] = None
 
 
-async def _answer(update: Update) -> None:
+async def _answer(update: Update, text: str | None = None, show_alert: bool = False) -> None:
     if update.callback_query is not None:
-        await update.callback_query.answer()
+        await update.callback_query.answer(text=text, show_alert=show_alert)
 
 
 async def _sync_subscribers_best_effort(context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -227,8 +227,15 @@ async def _render_variant(context, chat_id, user_data, ci, ti):
     user_data["nav"] = "variant"
     user_data["type_index"] = ti
     user_data["type"] = type_
+    # كل ما نفوت عَ قائمة أصناف جديدة (أو نرجعلها)، منصفّر اختيار الـ multi-select
+    # ومنلغي أي طابور إضافة متعددة كان شغال قبل (منشان ما تضل بقايا اختيار قديم).
+    user_data["multi_selected_variants"] = set()
+    user_data["multi_queue"] = None
+    user_data["multi_items"] = None
     await context.bot.send_message(
-        chat_id, messages.choose_variant_prompt(category, type_), reply_markup=kb.build_variant_keyboard(CATALOG, ci, ti)
+        chat_id,
+        messages.choose_variant_prompt(category, type_),
+        reply_markup=kb.build_variant_keyboard(CATALOG, ci, ti, selected=set()),
     )
 
 
@@ -341,22 +348,56 @@ async def cb_type(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     _schedule_idle_reminder(context, chat_id)
 
 
-async def cb_variant(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await _answer(update)
+async def cb_variant_toggle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Multi-select: دوسة عَ صنف بتفعّل/تلغي علامة ✅ جنبه (بدون ما نغيّر الشاشة)."""
+    query = update.callback_query
     chat_id = update.effective_chat.id
-    _, ci_s, ti_s, vi_s = update.callback_query.data.split(":")
+    _, ci_s, ti_s, vi_s = query.data.split(":")
     ci, ti, vi = int(ci_s), int(ti_s), int(vi_s)
     user_data = context.user_data
+
+    selected = user_data.setdefault("multi_selected_variants", set())
+    if vi in selected:
+        selected.discard(vi)
+    else:
+        selected.add(vi)
+    await _answer(update)
+
+    try:
+        await query.edit_message_reply_markup(
+            reply_markup=kb.build_variant_keyboard(CATALOG, ci, ti, selected=selected)
+        )
+    except (BadRequest, Forbidden):
+        pass
+    _schedule_idle_reminder(context, chat_id)
+
+
+async def cb_variant_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """زر '➕ أضف المختار للسلة' — بيبلش يسأل عن الوحدة/الكمية لكل صنف اخترتيه، وحدة وحدة."""
+    chat_id = update.effective_chat.id
+    _, ci_s, ti_s = update.callback_query.data.split(":")
+    ci, ti = int(ci_s), int(ti_s)
+    user_data = context.user_data
+
+    selected = sorted(user_data.get("multi_selected_variants") or set())
+    if not selected:
+        await _answer(update, text=messages.NEED_AT_LEAST_ONE_SELECTION, show_alert=True)
+        return
+    await _answer(update)
 
     categories = cl.get_categories(CATALOG)
     category = categories[ci]
     types_ = cl.get_types(CATALOG, category)
     type_ = types_[ti]
     variants = cl.get_variants(CATALOG, category, type_)
-    variant = variants[vi]
-    user_data["variant"] = variant
+    queue = [variants[vi] for vi in selected]
 
-    await _render_unit(context, chat_id, user_data, ci, product_name=variant, had_variant=True)
+    user_data["type"] = type_
+    user_data["multi_items"] = []
+    first_variant = queue.pop(0)
+    user_data["multi_queue"] = queue
+    user_data["variant"] = first_variant
+    await _render_unit(context, chat_id, user_data, ci, product_name=first_variant, had_variant=True)
     _schedule_idle_reminder(context, chat_id)
 
 
@@ -388,6 +429,35 @@ async def _finalize_add_to_cart(update: Update, context: ContextTypes.DEFAULT_TY
     section = user_data["section"]
     type_ = user_data["type"]
     variant = user_data.get("variant")
+
+    multi_queue = user_data.get("multi_queue")
+    if multi_queue is not None:
+        # وضع الاختيار المتعدد (multi-select): جمّعنا هالصنف، وإذا لسا في أصناف
+        # تانية بالطابور منسأل عن وحدتها/كميتها هي كمان قبل ما نضيفهن كلهن سوا.
+        user_data.setdefault("multi_items", []).append((type_, variant, quantity))
+        if multi_queue:
+            next_variant = multi_queue.pop(0)
+            user_data["variant"] = next_variant
+            ci = user_data["category_index"]
+            await _render_unit(context, chat_id, user_data, ci, product_name=next_variant, had_variant=True)
+            return
+
+        items = user_data.pop("multi_items")
+        user_data["multi_queue"] = None
+        original_cart = user_data.get("cart", [])
+        cart = list(original_cart)
+        summaries = []
+        for t_, v_, q_ in items:
+            line = cl.format_cart_line(section, t_, v_, q_)
+            cart, _ = cl.add_to_cart(cart, line)
+            summaries.append(cl.format_added_summary(t_, v_, q_))
+        user_data["cart"] = cart
+        user_data["cart_backup"] = original_cart
+        user_data["state"] = None
+
+        summary = "\n".join(summaries)
+        await _render_cart(context, chat_id, user_data, header_line="", added_summary=summary)
+        return
 
     line = cl.format_cart_line(section, type_, variant, quantity)
     new_cart, backup = cl.add_to_cart(user_data.get("cart", []), line)
@@ -452,6 +522,24 @@ async def cb_cart_add_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     user_data["state"] = None
     if not await _render_previous_list(context, chat_id, user_data):
         user_data["type"] = None
+        await _render_category(context, chat_id, user_data)
+    _schedule_idle_reminder(context, chat_id)
+
+
+async def cb_cart_back_to_types(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """زر '🔙 رجوع لقائمة الأنواع' عالسلة — بيرجعك مباشرة لقائمة أنواع نفس القسم
+    (مثلاً كل أنواع دخان)، منشان تبدلي النوع بسرعة بدون ما تفوتي عَ قائمة الأقسام."""
+    await _answer(update)
+    chat_id = update.effective_chat.id
+    user_data = context.user_data
+    ci = user_data.get("category_index")
+    user_data["type"] = None
+    user_data["variant"] = None
+    user_data["unit_name"] = None
+    user_data["state"] = None
+    if ci is not None:
+        await _render_type(context, chat_id, user_data, ci)
+    else:
         await _render_category(context, chat_id, user_data)
     _schedule_idle_reminder(context, chat_id)
 
