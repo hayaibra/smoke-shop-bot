@@ -15,6 +15,8 @@ import catalog_logic as cl
 import config
 import keyboards as kb
 import messages
+import price_sheet_logic as ps_logic
+import prices_state
 import storage
 import telegram_state
 
@@ -182,16 +184,21 @@ async def _answer(update: Update, text: str | None = None, show_alert: bool = Fa
         await update.callback_query.answer(text=text, show_alert=show_alert)
 
 
-async def _sync_subscribers_best_effort(context: ContextTypes.DEFAULT_TYPE) -> None:
+async def _sync_state_best_effort(context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    بعد أي تغيير بلائحة المشتركين، منحدث النسخة المثبتة بشات التاجر بتلغرام (مهم خصوصاً
-    على استضافات زي Render يلي بتمسح الملفات المحلية). لو صار خطأ، ما منوقف الزبون —
-    بس منسجل الخطأ ومنكمل عادي.
+    بعد أي تغيير بلائحة المشتركين أو بتعديلات الأسعار، منحدث النسخة المثبتة بشات
+    التاجر بتلغرام (مهم خصوصاً على استضافات زي Render يلي بتمسح الملفات المحلية).
+    لو صار خطأ، ما منوقف الزبون — بس منسجل الخطأ ومنكمل عادي.
     """
     try:
-        await telegram_state.sync_subscribers_to_telegram(context.bot)
+        subscribers = storage.get_subscribers(config.SUBSCRIBERS_PATH)
+        await telegram_state.sync_state_to_telegram(context.bot, subscribers, prices_state.overrides)
     except Exception:
-        logging.getLogger(__name__).exception("تعذر تحديث لائحة المشتركين المثبتة.")
+        logging.getLogger(__name__).exception("تعذر تحديث الحالة المثبتة (مشتركين/أسعار).")
+
+
+def _is_admin_chat(chat_id: int) -> bool:
+    return chat_id == config.get_admin_chat_id()
 
 
 # ---------------------------------------------------------------------------
@@ -294,7 +301,7 @@ async def _render_previous_list(context, chat_id, user_data) -> bool:
 async def cmd_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
     storage.add_subscriber(config.SUBSCRIBERS_PATH, chat_id)
-    await _sync_subscribers_best_effort(context)
+    await _sync_state_best_effort(context)
     context.user_data.clear()
     _reset_cart_fields(context.user_data)
     _cancel_idle_reminder(context, chat_id)
@@ -680,8 +687,63 @@ async def cb_confirm_no(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 async def cmd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
-    text = config.PRICES_PATH.read_text(encoding="utf-8") if config.PRICES_PATH.exists() else "لسا ما في أسعار مضافة."
-    await context.bot.send_message(chat_id, text)
+    chunks = ps_logic.format_customer_prices(
+        prices_state.FLAT_ITEMS, prices_state.current_prices(), config.SHOP_NAME, _now_str()
+    )
+    for chunk in chunks:
+        await context.bot.send_message(chat_id, chunk)
+
+
+# ---------------------------------------------------------------------------
+# /setprices — للتاجر بس: تحديث أسعار الأصناف من جوا تلغرام مباشرة، بدل ما يحتاج
+# يرفع ملفات لگيت هب في كل مرة. بيبعتلها قائمة مرجعية مرقمة، وبعدين أي رسالة منها
+# بصيغة "رقم_الصنف سعر_جديد" (سطر لكل صنف) بتتفهم وبتحدث السعر فوراً.
+# ---------------------------------------------------------------------------
+
+async def cmd_set_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = update.effective_chat.id
+    if not _is_admin_chat(chat_id):
+        return  # ما منرد إطلاقاً لغير التاجر — منشان ما نلفت الانتباه لوجود الأمر
+
+    await context.bot.send_message(chat_id, messages.SET_PRICES_INTRO)
+    chunks = ps_logic.format_admin_reference(prices_state.FLAT_ITEMS, prices_state.current_prices())
+    for chunk in chunks:
+        await context.bot.send_message(chat_id, chunk)
+    await context.bot.send_message(chat_id, messages.SET_PRICES_INSTRUCTIONS)
+
+
+async def on_admin_price_sheet_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """أي رسالة نص من التاجر (مش Reply) شكلها "رقم سعر" سطر لكل صنف — بتتفهم
+    كتحديث أسعار تلقائياً، بلا ما تحتاج أمر /setprices قبلها كل مرة.
+    (فلترة "هل شكلها تحديث أسعار أصلاً" صايرة بـ app_factory.PRICE_UPDATE_FILTER
+    قبل ما توصل لهون — الفحص تحت مجرد حماية إضافية، مش المسار الأساسي.)"""
+    text = update.message.text or ""
+    if not ps_logic.looks_like_price_update(text):
+        return
+
+    chat_id = update.effective_chat.id
+    updates, errors = ps_logic.parse_price_update_lines(text, prices_state.FLAT_ITEMS)
+
+    by_index = {item["index"]: item for item in prices_state.FLAT_ITEMS}
+    confirmations = []
+    for idx, price in updates.items():
+        prices_state.overrides[idx] = price
+        name = by_index[idx]["name"]
+        price_text = f"{price} ل.س" if price else "بلا سعر (مخفي عن الزبون)"
+        confirmations.append(f"✅ {idx}. {name} → {price_text}")
+
+    if updates:
+        await _sync_state_best_effort(context)
+
+    reply_parts = []
+    if confirmations:
+        reply_parts.append("\n".join(confirmations))
+    if errors:
+        reply_parts.append("\n".join(errors))
+    if not reply_parts:
+        reply_parts.append("ما انحدث ولا صنف — تأكدي من صيغة الأرقام.")
+
+    await context.bot.send_message(chat_id, "\n\n".join(reply_parts))
 
 
 async def cmd_my_cart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

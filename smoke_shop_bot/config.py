@@ -27,7 +27,7 @@ BROADCAST_SECRET = os.getenv("BROADCAST_SECRET", "")
 RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL", "")
 
 CATALOG_PATH = BASE_DIR / "data" / "catalog.json"
-PRICES_PATH = BASE_DIR / "data" / "prices.txt"
+PRICE_SHEET_PATH = BASE_DIR / "data" / "price_sheet.json"
 SUBSCRIBERS_PATH = BASE_DIR / "data" / "subscribers.json"
 PENDING_REPLIES_PATH = BASE_DIR / "data" / "pending_price_replies.json"
 QUOTES_PATH = BASE_DIR / "data" / "last_quotes.json"
