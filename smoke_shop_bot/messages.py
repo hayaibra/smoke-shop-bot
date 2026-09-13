@@ -345,8 +345,12 @@ NO_CART_STATUS_YET = (
 )
 
 
-def my_cart_status(pending_cart_text: Optional[str], last_order: Optional[dict]) -> str:
-    if pending_cart_text is None and last_order is None:
+def my_cart_status(
+    pending_cart_text: Optional[str],
+    quoted_cart_text: Optional[str],
+    last_order: Optional[dict],
+) -> str:
+    if pending_cart_text is None and quoted_cart_text is None and last_order is None:
         return NO_CART_STATUS_YET
 
     parts = []
@@ -354,6 +358,12 @@ def my_cart_status(pending_cart_text: Optional[str], last_order: Optional[dict])
         parts.append(
             "⏳ عندك استفسار سعر قيد المراجعة، بانتظار رد التاجر:\n"
             f"{pending_cart_text}"
+        )
+    if quoted_cart_text is not None:
+        parts.append(
+            "💰 وصلك رد التاجر على استفسار السعر، وسلتك هيك:\n"
+            f"{quoted_cart_text}\n\n"
+            "لسا ما أكدتي ولا لغيتي — رجعي لرسالة السعر يلي وصلتك وقبل فيها ✅ تأكيد الطلب أو ❌ إلغاء الطلب."
         )
     if last_order is not None:
         cart_lines = "\n".join(last_order.get("cart") or [])
