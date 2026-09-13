@@ -691,21 +691,25 @@ async def cmd_my_cart(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
     user_data = context.user_data
 
     cart = user_data.get("cart", [])
-    pending_cart_text = None
-    quoted_cart_text = None
+    cart_text = None
+    cart_state = None
     if cart:
+        cart_text = cl.format_cart_text(cart)
         if storage.is_customer_pending(config.PENDING_REPLIES_PATH, chat_id):
-            # لسا التاجر ما رد على استفسار السعر.
-            pending_cart_text = cl.format_cart_text(cart)
+            # استفسرت عن السعر، لسا التاجر ما رد.
+            cart_state = messages.CART_STATE_PENDING
         elif user_data.get("awaiting_price_confirmation"):
             # التاجر رد بالسعر، بس الزبون لسا ما دوس تأكيد ولا إلغاء.
-            quoted_cart_text = cl.format_cart_text(cart)
+            cart_state = messages.CART_STATE_QUOTED
+        else:
+            # لسا عم يضيف أصناف، ما طلب سعر بعد.
+            cart_state = messages.CART_STATE_BUILDING
 
     orders = storage.get_orders_for_customer(config.ORDERS_LOG_PATH, chat_id)
     last_order = orders[-1] if orders else None
 
     await context.bot.send_message(
-        chat_id, messages.my_cart_status(pending_cart_text, quoted_cart_text, last_order)
+        chat_id, messages.my_cart_status(cart_text, cart_state, last_order)
     )
 
 

@@ -335,8 +335,9 @@ def admin_price_reminder_notice(customer_label: str) -> str:
     )
 
 # ---------------------------------------------------------------------------
-# ٣-ج) "🧾 استعلام عن سلتي" — بيطلعلو آخر طلب مؤكد إلو، وسلته الحالية إذا كانت
-# لسا بانتظار رد التاجر عَ استفسار السعر.
+# ٣-ج) "🧾 استعلام عن سلتي" — بيطلعلو آخر طلب مؤكد إلو، وسلته الحالية (سواء لسا
+# قيد التجهيز، أو بانتظار رد التاجر عَ استفسار السعر، أو وصلها السعر وبانتظار
+# قرارها).
 # ---------------------------------------------------------------------------
 
 NO_CART_STATUS_YET = (
@@ -344,27 +345,38 @@ NO_CART_STATUS_YET = (
     "دوس /start منشان تبلش طلب جديد."
 )
 
+# قيم cart_state الممكنة لدالة my_cart_status:
+CART_STATE_BUILDING = "building"  # لسا عم تضيف أصناف، ما استفسرت عن السعر بعد
+CART_STATE_PENDING = "pending"    # استفسرت عن السعر، بانتظار رد التاجر
+CART_STATE_QUOTED = "quoted"      # التاجر رد بالسعر، بانتظار تأكيد/إلغاء الزبون
+
 
 def my_cart_status(
-    pending_cart_text: Optional[str],
-    quoted_cart_text: Optional[str],
+    cart_text: Optional[str],
+    cart_state: Optional[str],
     last_order: Optional[dict],
 ) -> str:
-    if pending_cart_text is None and quoted_cart_text is None and last_order is None:
+    if cart_text is None and last_order is None:
         return NO_CART_STATUS_YET
 
     parts = []
-    if pending_cart_text is not None:
-        parts.append(
-            "⏳ عندك استفسار سعر قيد المراجعة، بانتظار رد التاجر:\n"
-            f"{pending_cart_text}"
-        )
-    if quoted_cart_text is not None:
-        parts.append(
-            "💰 وصلك رد التاجر على استفسار السعر، وسلتك هيك:\n"
-            f"{quoted_cart_text}\n\n"
-            "لسا ما أكدتي ولا لغيتي — رجعي لرسالة السعر يلي وصلتك وقبل فيها ✅ تأكيد الطلب أو ❌ إلغاء الطلب."
-        )
+    if cart_text is not None:
+        if cart_state == CART_STATE_PENDING:
+            parts.append(
+                "⏳ عندك استفسار سعر قيد المراجعة، بانتظار رد التاجر:\n"
+                f"{cart_text}"
+            )
+        elif cart_state == CART_STATE_QUOTED:
+            parts.append(
+                "💰 وصلك رد التاجر على استفسار السعر، وسلتك هيك:\n"
+                f"{cart_text}\n\n"
+                "لسا ما أكدتي ولا لغيتي — رجعي لرسالة السعر يلي وصلتك وقبل فيها ✅ تأكيد الطلب أو ❌ إلغاء الطلب."
+            )
+        else:
+            parts.append(
+                "🛒 هيدي سلتك الحالية (لسا ما استفسرتي عن سعرها):\n"
+                f"{cart_text}"
+            )
     if last_order is not None:
         cart_lines = "\n".join(last_order.get("cart") or [])
         timestamp = last_order.get("timestamp", "")
