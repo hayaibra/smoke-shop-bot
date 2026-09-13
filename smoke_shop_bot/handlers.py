@@ -261,6 +261,25 @@ async def _render_cart(context, chat_id, user_data, header_line, added_summary=N
     await context.bot.send_message(chat_id, text, reply_markup=kb.build_cart_keyboard())
 
 
+async def _render_previous_list(context, chat_id, user_data) -> bool:
+    """
+    بعد ما نضيف صنف للسلة، وبدها تضيف صنف تاني من نفس القسم (مثلاً دخان → ماستر
+    طويل، وبعدين بنفس القسم دخان → ماستر كوين)، منرجعها مباشرة لنفس القائمة يلي
+    اختارت منها قبل شوي (قائمة الأصناف تبع النوع، أو قائمة الأنواع تبع القسم)
+    بدل ما ترجع تفوت من الأقسام من الصفر. بيرجع True لو قدر، أو False إذا ما في
+    معلومات كافية (يعني لازم نرجع لقائمة الأقسام من الصفر).
+    """
+    ci = user_data.get("category_index")
+    ti = user_data.get("type_index")
+    if ci is None or ti is None:
+        return False
+    if user_data.get("had_variant"):
+        await _render_variant(context, chat_id, user_data, ci, ti)
+    else:
+        await _render_type(context, chat_id, user_data, ci)
+    return True
+
+
 # ---------------------------------------------------------------------------
 # /start — البداية، الترحيب (بلا شرط تأكيد عمر، بناءً على طلب صاحبة المحل)
 # ---------------------------------------------------------------------------
@@ -411,7 +430,8 @@ async def cb_back(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 # شاشة السلة: ضيف صنف تاني / تراجع / امسح / استعلام عن السعر
 # ---------------------------------------------------------------------------
 
-async def cb_cart_add_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def cb_category_list(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """زر '📂 كل الأقسام' — رجوع مباشر لقائمة الأقسام من الصفر، من أي قائمة أنواع/أصناف."""
     await _answer(update)
     chat_id = update.effective_chat.id
     user_data = context.user_data
@@ -420,6 +440,19 @@ async def cb_cart_add_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     user_data["unit_name"] = None
     user_data["state"] = None
     await _render_category(context, chat_id, user_data)
+    _schedule_idle_reminder(context, chat_id)
+
+
+async def cb_cart_add_more(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await _answer(update)
+    chat_id = update.effective_chat.id
+    user_data = context.user_data
+    user_data["variant"] = None
+    user_data["unit_name"] = None
+    user_data["state"] = None
+    if not await _render_previous_list(context, chat_id, user_data):
+        user_data["type"] = None
+        await _render_category(context, chat_id, user_data)
     _schedule_idle_reminder(context, chat_id)
 
 

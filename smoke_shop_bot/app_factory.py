@@ -71,6 +71,7 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(CallbackQueryHandler(handlers.cb_variant, pattern=r"^var:\d+:\d+:\d+$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_unit, pattern=r"^unit:\d+:\d+$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_back, pattern=r"^back$"))
+    application.add_handler(CallbackQueryHandler(handlers.cb_category_list, pattern=r"^catlist$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_cart_add_more, pattern=r"^cart:add_more$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_cart_undo, pattern=r"^cart:undo$"))
     application.add_handler(CallbackQueryHandler(handlers.cb_cart_clear, pattern=r"^cart:clear$"))
