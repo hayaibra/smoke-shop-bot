@@ -23,6 +23,12 @@ TZ = pytz.timezone(config.TIMEZONE)
 
 IDLE_REMINDER_SECONDS = 10 * 60  # ١٠ دقايق، متل ما ذكر بالدليل
 
+# إذا التاجر تأخر بالرد على استفسار سعر:
+# - بعد نص ساعة منبعت للزبون رسالة صبر (منشان ما يحس إنه تم تجاهله).
+# - بعد ساعة منبعت للتاجر تذكير (منشان ما ينسى الطلب).
+PRICE_CUSTOMER_PATIENCE_SECONDS = 30 * 60
+PRICE_ADMIN_REMINDER_SECONDS = 60 * 60
+
 
 # ---------------------------------------------------------------------------
 # أدوات مساعدة عامة
@@ -62,6 +68,79 @@ async def _idle_reminder_job(context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = context.job.chat_id
     try:
         await context.bot.send_message(chat_id, messages.IDLE_REMINDER, reply_markup=kb.build_idle_keyboard())
+    except (Forbidden, BadRequest):
+        pass
+
+
+# ---------------------------------------------------------------------------
+# تذكير الصبر للزبون + تذكير التاجر، إذا تأخر الرد على استفسار سعر
+# ---------------------------------------------------------------------------
+
+def _price_customer_job_name(admin_message_id: int) -> str:
+    return f"price_customer_wait_{admin_message_id}"
+
+
+def _price_admin_job_name(admin_message_id: int) -> str:
+    return f"price_admin_wait_{admin_message_id}"
+
+
+def _cancel_price_wait_jobs(context: ContextTypes.DEFAULT_TYPE, admin_message_id: int) -> None:
+    if context.job_queue is None:
+        return
+    for name in (_price_customer_job_name(admin_message_id), _price_admin_job_name(admin_message_id)):
+        for job in context.job_queue.get_jobs_by_name(name):
+            job.schedule_removal()
+
+
+def _schedule_price_wait_jobs(
+    context: ContextTypes.DEFAULT_TYPE, admin_message_id: int, customer_chat_id: int, customer_label: str
+) -> None:
+    if context.job_queue is None:
+        return
+    data = {
+        "admin_message_id": admin_message_id,
+        "customer_chat_id": customer_chat_id,
+        "customer_label": customer_label,
+    }
+    context.job_queue.run_once(
+        _price_customer_patience_job,
+        when=PRICE_CUSTOMER_PATIENCE_SECONDS,
+        data=data,
+        name=_price_customer_job_name(admin_message_id),
+    )
+    context.job_queue.run_once(
+        _price_admin_reminder_job,
+        when=PRICE_ADMIN_REMINDER_SECONDS,
+        data=data,
+        name=_price_admin_job_name(admin_message_id),
+    )
+
+
+def _price_inquiry_still_pending(data: dict) -> bool:
+    """بيتأكد إنه التاجر لسا ما رد (يعني الطلب لسا موجود بملف pending_price_replies.json)."""
+    current = storage.peek_pending_reply(config.PENDING_REPLIES_PATH, data["admin_message_id"])
+    return current == data["customer_chat_id"]
+
+
+async def _price_customer_patience_job(context: ContextTypes.DEFAULT_TYPE) -> None:
+    data = context.job.data
+    if not _price_inquiry_still_pending(data):
+        return
+    try:
+        await context.bot.send_message(data["customer_chat_id"], messages.PRICE_WAIT_PATIENCE_MESSAGE)
+    except (Forbidden, BadRequest):
+        pass
+
+
+async def _price_admin_reminder_job(context: ContextTypes.DEFAULT_TYPE) -> None:
+    data = context.job.data
+    if not _price_inquiry_still_pending(data):
+        return
+    admin_chat_id = config.get_admin_chat_id()
+    try:
+        await context.bot.send_message(
+            admin_chat_id, messages.admin_price_reminder_notice(data["customer_label"])
+        )
     except (Forbidden, BadRequest):
         pass
 
@@ -388,6 +467,7 @@ async def cb_cart_price_inquiry(update: Update, context: ContextTypes.DEFAULT_TY
     admin_chat_id = config.get_admin_chat_id()
     sent = await context.bot.send_message(admin_chat_id, admin_text)
     storage.save_pending_reply(config.PENDING_REPLIES_PATH, admin_message_id=sent.message_id, customer_chat_id=chat_id)
+    _schedule_price_wait_jobs(context, sent.message_id, chat_id, customer_label)
 
     user_data["awaiting_price_confirmation"] = True
     _cancel_idle_reminder(context, chat_id)
@@ -410,6 +490,8 @@ async def on_admin_price_reply(update: Update, context: ContextTypes.DEFAULT_TYP
             "تأكد إنك عم تعمل Reply مباشرة على رسالة \"💰 استفسار سعر جديد!\"."
         )
         return
+
+    _cancel_price_wait_jobs(context, replied.message_id)
 
     admin_text = message.text or ""
     storage.save_last_quote(config.QUOTES_PATH, customer_chat_id, admin_text)
