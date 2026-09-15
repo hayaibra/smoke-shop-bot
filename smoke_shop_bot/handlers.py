@@ -819,7 +819,7 @@ _CASH_SERVICES = {
 
 async def cb_cash_service(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    بعد ما الزبون يختار "دفع مسبق" أو "دفع عربون"، هون بيختار وسيلة التحويل
+    بعد ما الزبون يختار "دفع مسبق" أو "دفع رعبون"، هون بيختار وسيلة التحويل
     (شام كاش أو سيريتل كاش)، ومنعرضله معلومات حساب وحدة بس (يلي اختارها).
     """
     await _answer(update)
@@ -899,7 +899,7 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     elif state == "awaiting_phone":
         user_data["customer_phone"] = text.strip()
         if user_data.get("payment_method") == "deposit":
-            # دفع عربون: بعد معلومات التوصيل، منحتاج منو يختار وسيلة التحويل (شام
+            # دفع رعبون: بعد معلومات التوصيل، منحتاج منو يختار وسيلة التحويل (شام
             # كاش أو سيريتل كاش) — التفاصيل والمبلغ بالضبط بيصيرو بعد هالاختيار
             # (شوف cb_cash_service)، وبعدها صورة إثبات التحويل قبل ما نأكد الطلب.
             user_data["state"] = "awaiting_payment_photo"
