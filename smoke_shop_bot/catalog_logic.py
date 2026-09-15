@@ -121,7 +121,7 @@ def extract_amount(text: str) -> Optional[int]:
 
 
 def split_deposit_amount(total_amount: int) -> tuple[int, int]:
-    """بترجع (مبلغ العربون، الباقي) — نص المبلغ بالضبط لكل وحدة، ومجموعهن = المبلغ الإجمالي تماماً."""
+    """بترجع (مبلغ الرعبون، الباقي) — نص المبلغ بالضبط لكل وحدة، ومجموعهن = المبلغ الإجمالي تماماً."""
     deposit = total_amount // 2
     remaining = total_amount - deposit
     return deposit, remaining
