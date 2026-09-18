@@ -14,7 +14,7 @@ import config
 def welcome() -> str:
     return (
         f"أهلا وسهلا فيك بـ{config.SHOP_NAME} 🚬💨\n"
-        "منوصلّك أجود أنواع الدخان، المعسل، القداحات، والفيبات لباب بيتك، بكل الريف الشمالي باللاذقية."
+        "منوصلّك أجود أنواع الدخان والمعسل والفحم والإكسسوارات لباب بيتك، بكل الريف الشمالي باللاذقية."
     )
 
 
@@ -314,6 +314,31 @@ IDLE_CONTINUE_ACK = "تمام 🙂 كمل من وين ما وقفت."
 # ٣-أ) إشعار "استفسار سعر جديد" للتاجر
 # ---------------------------------------------------------------------------
 
+def auto_price_quote(priced_cart_text: str, total: int) -> str:
+    """رد السعر التلقائي (بدون انتظار التاجر) — البوت حسبو لحاله من الأسعار
+    يلي حاططا التاجر."""
+    return (
+        "💰 هيدي أسعار طلبك (محسوبة تلقائياً):\n\n"
+        f"{priced_cart_text}\n\n"
+        f"💵 المجموع الكلي: {total} ل.س\n\n"
+        "لو موافق دوس الزر \"✅ تأكيد الطلب\" تحت.\n"
+        "لو بدك تراجع دوس \"❌ إلغاء الطلب\"."
+    )
+
+
+def admin_auto_priced_notice(customer_label: str, priced_cart_text: str, total: int, timestamp: str) -> str:
+    """إشعار معلوماتي بس للتاجر — السعر انحسب تلقائياً وانبعت للزبون فوراً،
+    ما بيحتاج التاجر يرد عليه إطلاقاً."""
+    return (
+        "💰 استفسار سعر — انحسب تلقائياً ✅ (ما بتحتاج ترد عليه)\n\n"
+        f"👤 الزبون: {customer_label}\n\n"
+        "📦 تفاصيل السلة والأسعار:\n"
+        f"{priced_cart_text}\n\n"
+        f"💵 المجموع الكلي: {total} ل.س\n"
+        f"🕐 وقت الاستفسار: {timestamp}"
+    )
+
+
 def admin_price_inquiry_notice(customer_label: str, cart_text: str, timestamp: str) -> str:
     return (
         "💰 استفسار سعر جديد!\n\n"
@@ -370,6 +395,19 @@ CART_STATE_PENDING = "pending"    # استفسرت عن السعر، بانتظ�
 CART_STATE_QUOTED = "quoted"      # التاجر رد بالسعر، بانتظار تأكيد/إلغاء الزبون
 
 
+def _cart_display_lines(cart_list) -> list[str]:
+    """بترجع نصوص عرض أسطر السلة، سواء كانت محفوظة قديماً كنصوص مباشرة (list[str])
+    أو بالشكل الجديد كبُنى (list[dict] فيها "display") — منشان طلبات قديمة
+    محفوظة بـ orders_log.json من قبل هالتحديث تضل تنعرض صح."""
+    lines = []
+    for item in cart_list or []:
+        if isinstance(item, dict):
+            lines.append(item.get("display", ""))
+        else:
+            lines.append(str(item))
+    return lines
+
+
 def my_cart_status(
     cart_text: Optional[str],
     cart_state: Optional[str],
@@ -397,7 +435,7 @@ def my_cart_status(
                 f"{cart_text}"
             )
     if last_order is not None:
-        cart_lines = "\n".join(last_order.get("cart") or [])
+        cart_lines = "\n".join(_cart_display_lines(last_order.get("cart")))
         timestamp = last_order.get("timestamp", "")
         parts.append(
             "✅ آخر طلب مؤكد إلك:\n"

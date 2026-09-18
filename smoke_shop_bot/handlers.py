@@ -11,6 +11,7 @@ from telegram import Update
 from telegram.error import BadRequest, Forbidden
 from telegram.ext import ContextTypes
 
+import cart_pricing
 import catalog_logic as cl
 import config
 import keyboards as kb
@@ -22,6 +23,10 @@ import telegram_state
 
 CATALOG = cl.load_catalog(config.CATALOG_PATH)
 TZ = pytz.timezone(config.TIMEZONE)
+
+# (برند، اسم صنف) → فهرس بـ price_sheet — لحساب سعر السلة تلقائياً وقت استفسار
+# السعر (شوف cb_cart_price_inquiry). مبني مرة وحدة وقت تحميل الموديول.
+PRICE_LOOKUP = cart_pricing.build_price_lookup(prices_state.FLAT_ITEMS)
 
 IDLE_REMINDER_SECONDS = 10 * 60  # ١٠ دقايق، متل ما ذكر بالدليل
 
@@ -423,25 +428,31 @@ async def cb_unit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_data["unit_fixed"] = unit["fixed"]
 
     if unit["fixed"]:
-        quantity = cl.format_quantity(unit["name"], True)
-        await _finalize_add_to_cart(update, context, quantity)
+        await _finalize_add_to_cart(update, context, unit["name"], True, None)
     else:
         await _render_count_prompt(context, chat_id, user_data, unit["name"])
     _schedule_idle_reminder(context, chat_id)
 
 
-async def _finalize_add_to_cart(update: Update, context: ContextTypes.DEFAULT_TYPE, quantity: str) -> None:
+async def _finalize_add_to_cart(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    unit_name: str,
+    unit_fixed: bool,
+    count,
+) -> None:
     chat_id = update.effective_chat.id
     user_data = context.user_data
     section = user_data["section"]
     type_ = user_data["type"]
     variant = user_data.get("variant")
+    quantity = cl.format_quantity(unit_name, unit_fixed, count)
 
     multi_queue = user_data.get("multi_queue")
     if multi_queue is not None:
         # وضع الاختيار المتعدد (multi-select): جمّعنا هالصنف، وإذا لسا في أصناف
         # تانية بالطابور منسأل عن وحدتها/كميتها هي كمان قبل ما نضيفهن كلهن سوا.
-        user_data.setdefault("multi_items", []).append((type_, variant, quantity))
+        user_data.setdefault("multi_items", []).append((type_, variant, unit_name, unit_fixed, count, quantity))
         if multi_queue:
             next_variant = multi_queue.pop(0)
             user_data["variant"] = next_variant
@@ -454,10 +465,10 @@ async def _finalize_add_to_cart(update: Update, context: ContextTypes.DEFAULT_TY
         original_cart = user_data.get("cart", [])
         cart = list(original_cart)
         summaries = []
-        for t_, v_, q_ in items:
-            line = cl.format_cart_line(section, t_, v_, q_)
+        for t_, v_, u_name, u_fixed, cnt, disp in items:
+            line = cl.format_cart_line(section, t_, v_, u_name, u_fixed, cnt, disp)
             cart, _ = cl.add_to_cart(cart, line)
-            summaries.append(cl.format_added_summary(t_, v_, q_))
+            summaries.append(cl.format_added_summary(t_, v_, disp))
         user_data["cart"] = cart
         user_data["cart_backup"] = original_cart
         user_data["state"] = None
@@ -466,7 +477,7 @@ async def _finalize_add_to_cart(update: Update, context: ContextTypes.DEFAULT_TY
         await _render_cart(context, chat_id, user_data, header_line="", added_summary=summary)
         return
 
-    line = cl.format_cart_line(section, type_, variant, quantity)
+    line = cl.format_cart_line(section, type_, variant, unit_name, unit_fixed, count, quantity)
     new_cart, backup = cl.add_to_cart(user_data.get("cart", []), line)
     user_data["cart"] = new_cart
     user_data["cart_backup"] = backup
@@ -577,6 +588,12 @@ async def cb_cart_clear(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 
 async def cb_cart_price_inquiry(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    استفسار السعر: أول شي منحاول نحسب سعر السلة تلقائياً من الأسعار يلي حاططا
+    التاجر (cart_pricing.price_cart) ونردها فوراً للزبون بلا ما ننتظر التاجر.
+    لو صنف واحد بالسلة ما إلو سعر محدد بعد، منرجع للمسار القديم اليدوي
+    (استفسار عادي بينتظر رد التاجر بـ Reply).
+    """
     await _answer(update)
     chat_id = update.effective_chat.id
     user_data = context.user_data
@@ -586,13 +603,40 @@ async def cb_cart_price_inquiry(update: Update, context: ContextTypes.DEFAULT_TY
         await context.bot.send_message(chat_id, messages.EMPTY_CART_WARNING)
         return
 
+    customer_label = _customer_label(update.effective_user)
+    admin_chat_id = config.get_admin_chat_id()
+
+    priced = cart_pricing.price_cart(cart, CATALOG, PRICE_LOOKUP, prices_state.current_prices())
+    if priced is not None:
+        line_prices, total = priced
+        priced_cart_text = cl.format_priced_cart_text(cart, line_prices)
+
+        storage.save_last_quote(config.QUOTES_PATH, chat_id, f"{total}")
+
+        await context.bot.send_message(
+            chat_id,
+            messages.auto_price_quote(priced_cart_text, total),
+            reply_markup=kb.build_confirm_keyboard(),
+        )
+        user_data["awaiting_price_confirmation"] = True
+        _cancel_idle_reminder(context, chat_id)
+
+        # إشعار معلوماتي بس للتاجر (ما بيحتاج يرد عليه — السعر انحسب وانبعت للزبون فورًا).
+        try:
+            await context.bot.send_message(
+                admin_chat_id,
+                messages.admin_auto_priced_notice(customer_label, priced_cart_text, total, _now_str()),
+            )
+        except (Forbidden, BadRequest):
+            pass
+        return
+
+    # فولباك: صنف واحد عالأقل ما إلو سعر محدد بعد — نفس المسار اليدوي القديم بالضبط.
     await context.bot.send_message(chat_id, messages.PRICE_INQUIRY_RECEIVED)
 
     cart_text = cl.format_cart_text(cart)
-    customer_label = _customer_label(update.effective_user)
     admin_text = messages.admin_price_inquiry_notice(customer_label, cart_text, _now_str())
 
-    admin_chat_id = config.get_admin_chat_id()
     sent = await context.bot.send_message(admin_chat_id, admin_text)
     storage.save_pending_reply(config.PENDING_REPLIES_PATH, admin_message_id=sent.message_id, customer_chat_id=chat_id)
     _schedule_price_wait_jobs(context, sent.message_id, chat_id, customer_label)
@@ -880,8 +924,7 @@ async def on_text(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             await context.bot.send_message(chat_id, messages.INVALID_COUNT_MESSAGE)
             return
         unit_name = user_data["unit_name"]
-        quantity = cl.format_quantity(unit_name, False, count)
-        await _finalize_add_to_cart(update, context, quantity)
+        await _finalize_add_to_cart(update, context, unit_name, False, count)
         _schedule_idle_reminder(context, chat_id)
 
     elif state == "awaiting_name":

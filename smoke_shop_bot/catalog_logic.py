@@ -17,7 +17,7 @@ def load_catalog(path: Path) -> dict:
 
 
 def get_categories(catalog: dict) -> list[str]:
-    """أسماء الأقسام الرئيسية بترتيبها بالملف (دخان، معسل، قداحات، فيبات)."""
+    """أسماء الأقسام الرئيسية بترتيبها بالملف (دخان، معسل، فحم، إكسسوارات، اراكيل الكترونية)."""
     return list(catalog.keys())
 
 
@@ -144,17 +144,42 @@ def format_quantity(unit_name: str, fixed: bool, count: Optional[int] = None) ->
 # السلة: إضافة / تراجع / مسح / تنسيق
 # ---------------------------------------------------------------------------
 
-def format_cart_line(section: str, type_: str, variant: Optional[str], quantity: str) -> str:
+def format_cart_line(
+    section: str,
+    type_: str,
+    variant: Optional[str],
+    unit_name: str,
+    unit_fixed: bool,
+    count: Optional[int],
+    quantity: Optional[str] = None,
+) -> dict:
     """
-    سطر واحد بالسلة، بنفس شكل الدليل:
-    '▫️ القسم – النوع – الصنف – الكمية'
-    إذا ما في صنف فرعي (variant فاضي)، بيتحذف من السطر تلقائياً.
+    سطر واحد بالسلة — بس هلق بشكل بنية (dict) مش نص بس، منشان نقدر نحسب سعرو
+    تلقائياً بعدين (شوف cart_pricing.py) بدل ما نعيد تفكيك النص المنسق.
+
+    - "display": نفس النص المنسق القديم بالضبط '▫️ القسم – النوع – [الصنف –] الكمية'
+      (لعرضو بالسلة/الفاتورة متل ما كان دايماً).
+    - باقي الحقول: القسم/النوع/الصنف/الوحدة/العدد الخام — منشان حساب السعر
+      وأي استخدام تاني بالمستقبل، بدون ما نحتاج نفكّك نص "display" أبداً.
+
+    إذا ما انبعت quantity (النص المنسق)، منبنيه تلقائياً من unit_name/unit_fixed/count.
     """
+    if quantity is None:
+        quantity = format_quantity(unit_name, unit_fixed, count)
     parts = [section, type_]
     if variant:
         parts.append(variant)
     parts.append(quantity)
-    return "▫️ " + " – ".join(parts)
+    display = "▫️ " + " – ".join(parts)
+    return {
+        "display": display,
+        "category": section,
+        "type": type_,
+        "variant": variant,
+        "unit_name": unit_name,
+        "unit_fixed": unit_fixed,
+        "count": count,
+    }
 
 
 def format_added_summary(type_: str, variant: Optional[str], quantity: str) -> str:
@@ -166,26 +191,46 @@ def format_added_summary(type_: str, variant: Optional[str], quantity: str) -> s
     return " – ".join(parts)
 
 
-def add_to_cart(cart: list[str], line: str) -> tuple[list[str], list[str]]:
+def add_to_cart(cart: list[dict], line: dict) -> tuple[list[dict], list[dict]]:
     """
     بترجع (سلة_جديدة، نسخة_احتياطية_قبل_الإضافة) — بالضبط متل ما بالدليل
-    (cart و cart_backup).
+    (cart و cart_backup). "cart" هلق لستة بُنى (dicts) من format_cart_line،
+    مش نصوص مباشرة.
     """
     backup = list(cart)
     new_cart = list(cart) + [line]
     return new_cart, backup
 
 
-def undo_last(backup: list[str]) -> list[str]:
+def undo_last(backup: list[dict]) -> list[dict]:
     """بترجع السلة لآخر نسخة احتياطية (تراجع عن آخر إضافة بس)."""
     return list(backup)
 
 
-def clear_cart() -> tuple[list[str], list[str]]:
+def clear_cart() -> tuple[list[dict], list[dict]]:
     return [], []
 
 
-def format_cart_text(cart: list[str]) -> str:
+def _line_display(item) -> str:
+    """بيرجع نص السطر المنسق سواء كان الصنف بُنية (dict) جديدة أو نص (str)
+    قديم — منشان التوافق مع أي بيانات طلبات قديمة محفوظة من قبل هالتحديث."""
+    if isinstance(item, dict):
+        return item.get("display", "")
+    return str(item)
+
+
+def format_cart_text(cart: list) -> str:
     if not cart:
         return "(السلة لسا فاضية)"
-    return "\n".join(cart)
+    return "\n".join(_line_display(item) for item in cart)
+
+
+def format_priced_cart_text(cart: list[dict], line_prices: list[int]) -> str:
+    """متل format_cart_text بس بيضيف سعر كل سطر جنبو — لعرض الفاتورة المحسوبة
+    تلقائياً للزبون والتاجر سوا."""
+    if not cart:
+        return "(السلة لسا فاضية)"
+    lines = [
+        f"{_line_display(item)} — {price} ل.س" for item, price in zip(cart, line_prices)
+    ]
+    return "\n".join(lines)
