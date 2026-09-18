@@ -19,36 +19,142 @@ class TestCatalogLoading(unittest.TestCase):
 
     def test_categories_order(self):
         self.assertEqual(
-            cl.get_categories(self.catalog), ["دخان", "معسل", "قداحات", "فيبات"]
+            cl.get_categories(self.catalog),
+            ["دخان", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية"],
         )
 
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")
         self.assertEqual(cl.category_button_label(self.catalog, "معسل"), "💨 معسل")
 
-    def test_types_of_section(self):
+    def test_types_of_section_are_real_brands(self):
+        # الأنواع (types) هلق هيي براندات حقيقية من نشرة أسعار التاجر، مش بيانات تجريبية.
         self.assertIn("ماستر", cl.get_types(self.catalog, "دخان"))
-        self.assertIn("حمراء", cl.get_types(self.catalog, "دخان"))
+        self.assertIn("اليغانس", cl.get_types(self.catalog, "دخان"))
+        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 30)
+        self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 8)
 
-    def test_variants_present(self):
+    def test_variants_present_match_real_items(self):
         variants = cl.get_variants(self.catalog, "دخان", "ماستر")
-        self.assertIn("ماستر طويل", variants)
-        self.assertEqual(len(variants), 8)
+        self.assertIn("ماستر طويل ورق م", variants)
+        self.assertEqual(len(variants), 11)
 
-    def test_variants_empty_for_type_without_subitems(self):
-        variants = cl.get_variants(self.catalog, "دخان", "حمراء")
-        self.assertEqual(variants, [])
-        self.assertFalse(cl.has_variants(self.catalog, "دخان", "حمراء"))
+    def test_every_type_has_at_least_one_real_variant(self):
+        # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
+        # حتى لو براند واحد بس إله صنف وحيد (متلاً "جيتان")، منشان حساب السعر
+        # التلقائي يلاقي دايماً (نوع، صنف) يطابق سطر بملف الأسعار.
+        for category in cl.get_categories(self.catalog):
+            for type_ in cl.get_types(self.catalog, category):
+                self.assertTrue(
+                    cl.has_variants(self.catalog, category, type_),
+                    f"{category} / {type_} ما إلو أصناف!",
+                )
 
-    def test_units_fixed_flag(self):
+    def test_units_fixed_flag_for_cigarettes(self):
         units = cl.get_units(self.catalog, "دخان")
         names = {u["name"]: u["fixed"] for u in units}
         self.assertTrue(names["🥡 نص كروز"])
-        self.assertFalse(names["📦 باكيت"])
+        self.assertFalse(names["🎁 كروز"])
+
+    def test_bare_category_default_has_no_carton_unit(self):
+        # وحدات القسم العامة (بلا تحديد نوع/ماركة) لسا بس كروز + نص كروز —
+        # "كرتونة" منضافة بس عبر type_units (لكل ماركة على حدا)، شوف
+        # test_every_cigarette_brand_has_carton_unit_with_default_50 تحت.
+        units = cl.get_units(self.catalog, "دخان")
+        names = {u["name"] for u in units}
+        self.assertNotIn("📦📦 كرتونة", names)
+        self.assertEqual(len(units), 2)
 
     def test_is_unit_fixed_helper(self):
         self.assertTrue(cl.is_unit_fixed(self.catalog, "دخان", "🥡 نص كروز"))
-        self.assertFalse(cl.is_unit_fixed(self.catalog, "دخان", "📦 باكيت"))
+        self.assertFalse(cl.is_unit_fixed(self.catalog, "دخان", "🎁 كروز"))
+
+    def test_dokhan_unit_multipliers(self):
+        units = {u["name"]: u["multiplier"] for u in cl.get_units(self.catalog, "دخان")}
+        self.assertEqual(units["🎁 كروز"], 1)
+        self.assertEqual(units["🥡 نص كروز"], 0.5)
+
+    def test_every_cigarette_brand_has_carton_unit_with_default_50(self):
+        # كل ماركة دخان إلها رقم كرتونة (عدد الكروزات) لحالها بالكود، منشان
+        # نقدر نصحح رقم ماركة وحدة بلا ما نأثر على الباقي لما توصلنا الأرقام
+        # الحقيقية — مؤقتاً كلهن ٥٠ (قيمة افتراضية بالانتظار).
+        for type_ in cl.get_types(self.catalog, "دخان"):
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "دخان", type_)}
+            self.assertIn("📦📦 كرتونة", units, f"{type_} ما إلها خيار كرتونة!")
+            carton = units["📦📦 كرتونة"]
+            self.assertFalse(carton["fixed"])
+            self.assertEqual(carton["multiplier"], 50)
+            # الكروز ونص الكروز لازم يضلوا موجودين كمان جنب الكرتونة.
+            self.assertIn("🎁 كروز", units)
+            self.assertIn("🥡 نص كروز", units)
+
+    def test_non_cigarette_categories_use_single_count_only_unit(self):
+        # معسل/فحم/إكسسوارات/اراكيل إلكترونية: الحجم/الوزن مبيّن جوا اسم الصنف
+        # نفسه أصلاً، فوحدتهن الوحيدة عدّاد بس (بلا تحويل وحدات).
+        for category in ("معسل", "فحم", "إكسسوارات", "اراكيل الكترونية"):
+            units = cl.get_units(self.catalog, category)
+            self.assertEqual(len(units), 1)
+            self.assertEqual(units[0]["name"], "🧮 عدد")
+            self.assertFalse(units[0]["fixed"])
+            self.assertEqual(units[0]["multiplier"], 1)
+
+    def test_get_units_falls_back_to_category_default_when_no_override(self):
+        default_units = cl.get_units(self.catalog, "معسل")
+        units_for_type = cl.get_units(self.catalog, "معسل", "الفاخر")
+        self.assertEqual(units_for_type, default_units)
+
+    def test_get_units_uses_type_override_when_present(self):
+        catalog = {
+            "معسل": {
+                "emoji": "💨",
+                "types": {"براند بدون كيلو": ["صنف"]},
+                "units": [
+                    {"name": "علبة ٥٠غ", "fixed": False, "multiplier": 1},
+                    {"name": "كيلو", "fixed": False, "multiplier": 1},
+                ],
+                "type_units": {
+                    "براند بدون كيلو": [
+                        {"name": "علبة ٥٠غ", "fixed": False, "multiplier": 1},
+                    ]
+                },
+            }
+        }
+        override_units = cl.get_units(catalog, "معسل", "براند بدون كيلو")
+        self.assertEqual([u["name"] for u in override_units], ["علبة ٥٠غ"])
+        other_units = cl.get_units(catalog, "معسل", "براند تاني")
+        self.assertEqual([u["name"] for u in other_units], ["علبة ٥٠غ", "كيلو"])
+
+
+class TestExtractAmount(unittest.TestCase):
+    def test_plain_western_digits(self):
+        self.assertEqual(cl.extract_amount("70000"), 70000)
+
+    def test_with_currency_words_around(self):
+        self.assertEqual(cl.extract_amount("السعر 70000 ل.س صافي"), 70000)
+
+    def test_arabic_indic_digits(self):
+        self.assertEqual(cl.extract_amount("٧٠٠٠٠"), 70000)
+
+    def test_thousands_separators_ignored(self):
+        self.assertEqual(cl.extract_amount("100,000"), 100000)
+        self.assertEqual(cl.extract_amount("100.000 ليرة"), 100000)
+
+    def test_no_digits_returns_none(self):
+        self.assertIsNone(cl.extract_amount("بكرا منحدد السعر"))
+
+    def test_empty_returns_none(self):
+        self.assertIsNone(cl.extract_amount(""))
+        self.assertIsNone(cl.extract_amount(None))
+
+
+class TestSplitDepositAmount(unittest.TestCase):
+    def test_even_amount_splits_equally(self):
+        self.assertEqual(cl.split_deposit_amount(70000), (35000, 35000))
+
+    def test_odd_amount_sums_back_exactly(self):
+        deposit, remaining = cl.split_deposit_amount(75001)
+        self.assertEqual(deposit + remaining, 75001)
+        self.assertEqual((deposit, remaining), (37500, 37501))
 
 
 class TestParseCount(unittest.TestCase):
@@ -82,25 +188,45 @@ class TestQuantityFormatting(unittest.TestCase):
 
 
 class TestCartOperations(unittest.TestCase):
+    """
+    السلة هلق لستة بُنى (dicts) بدل نصوص مباشرة — منشان نقدر نحسب سعر كل سطر
+    تلقائياً (شوف cart_pricing.py) بدون ما نعيد تفكيك نص "display" المنسق.
+    """
+
+    def test_format_cart_line_with_variant_builds_structured_item(self):
+        line = cl.format_cart_line("دخان", "ماستر", "ماستر طويل ورق م", "🎁 كروز", False, 3)
+        self.assertEqual(line["display"], "▫️ دخان – ماستر – ماستر طويل ورق م – 3 🎁 كروز")
+        self.assertEqual(line["category"], "دخان")
+        self.assertEqual(line["type"], "ماستر")
+        self.assertEqual(line["variant"], "ماستر طويل ورق م")
+        self.assertEqual(line["unit_name"], "🎁 كروز")
+        self.assertFalse(line["unit_fixed"])
+        self.assertEqual(line["count"], 3)
+
+    def test_format_cart_line_fixed_unit_has_no_count_in_display(self):
+        line = cl.format_cart_line("دخان", "ماستر", "ماستر طويل ورق م", "🥡 نص كروز", True, None)
+        self.assertEqual(line["display"], "▫️ دخان – ماستر – ماستر طويل ورق م – 🥡 نص كروز")
+        self.assertIsNone(line["count"])
+
+    def test_format_cart_line_without_variant(self):
+        line = cl.format_cart_line("فحم", "فحم", None, "🧮 عدد", False, 2)
+        self.assertEqual(line["display"], "▫️ فحم – فحم – 2 🧮 عدد")
+        self.assertIsNone(line["variant"])
+
     def test_add_to_cart_with_variant(self):
-        line = cl.format_cart_line("دخان", "ماستر", "ماستر طويل", "3 باكيت")
-        self.assertEqual(line, "▫️ دخان – ماستر – ماستر طويل – 3 باكيت")
+        line = cl.format_cart_line("دخان", "ماستر", "ماستر طويل ورق م", "🎁 كروز", False, 3)
         cart, backup = cl.add_to_cart([], line)
         self.assertEqual(cart, [line])
         self.assertEqual(backup, [])
 
-    def test_add_to_cart_without_variant(self):
-        line = cl.format_cart_line("قداحات", "زيبو", None, "قطعة مفردة")
-        self.assertEqual(line, "▫️ قداحات – زيبو – قطعة مفردة")
-
     def test_added_summary_without_variant(self):
-        summary = cl.format_added_summary("زيبو", None, "قطعة مفردة")
-        self.assertEqual(summary, "زيبو – قطعة مفردة")
+        summary = cl.format_added_summary("فحم", None, "2 🧮 عدد")
+        self.assertEqual(summary, "فحم – 2 🧮 عدد")
 
     def test_undo_last_reverts_one_step_only(self):
-        line1 = cl.format_cart_line("دخان", "ماستر", "ماستر طويل", "3 باكيت")
+        line1 = cl.format_cart_line("دخان", "ماستر", "ماستر طويل ورق م", "🎁 كروز", False, 3)
         cart1, backup1 = cl.add_to_cart([], line1)
-        line2 = cl.format_cart_line("معسل", "الفاخر", "تفاحتين", "2 علبة ٥٠غ")
+        line2 = cl.format_cart_line("معسل", "الفاخر", "الفاخر علكة", "🧮 عدد", False, 2)
         cart2, backup2 = cl.add_to_cart(cart1, line2)
 
         self.assertEqual(cart2, [line1, line2])
@@ -115,9 +241,29 @@ class TestCartOperations(unittest.TestCase):
     def test_format_cart_text_empty(self):
         self.assertEqual(cl.format_cart_text([]), "(السلة لسا فاضية)")
 
-    def test_format_cart_text_joins_lines(self):
+    def test_format_cart_text_joins_structured_lines(self):
+        line1 = cl.format_cart_line("دخان", "ماستر", "ماستر طويل ورق م", "🎁 كروز", False, 3)
+        line2 = cl.format_cart_line("فحم", "فحم", None, "🧮 عدد", False, 2)
+        text = cl.format_cart_text([line1, line2])
+        self.assertEqual(text, f"{line1['display']}\n{line2['display']}")
+
+    def test_format_cart_text_backward_compatible_with_old_plain_string_lines(self):
+        # طلبات قديمة محفوظة (orders_log.json) من قبل هالتحديث كانت سلتها نصوص
+        # مباشرة (list[str]) — لازم تضل تنعرض صح.
         text = cl.format_cart_text(["▫️ أ", "▫️ ب"])
         self.assertEqual(text, "▫️ أ\n▫️ ب")
+
+    def test_format_priced_cart_text_appends_price_per_line(self):
+        line1 = cl.format_cart_line("دخان", "ماستر", "ماستر طويل ورق م", "🎁 كروز", False, 3)
+        line2 = cl.format_cart_line("فحم", "فحم", None, "🧮 عدد", False, 2)
+        text = cl.format_priced_cart_text([line1, line2], [201000, 63000])
+        self.assertEqual(
+            text,
+            f"{line1['display']} — 201000 ل.س\n{line2['display']} — 63000 ل.س",
+        )
+
+    def test_format_priced_cart_text_empty(self):
+        self.assertEqual(cl.format_priced_cart_text([], []), "(السلة لسا فاضية)")
 
 
 if __name__ == "__main__":
