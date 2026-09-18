@@ -148,8 +148,18 @@ def format_admin_reference(flat_items: list[dict], prices: dict[int, int]) -> li
 # ---------------------------------------------------------------------------
 
 def format_customer_prices(
-    flat_items: list[dict], prices: dict[int, int], shop_name: str, date_str: str
+    flat_items: list[dict],
+    prices: dict[int, int],
+    shop_name: str,
+    date_str: str,
+    category_of_brand: Optional[dict[str, str]] = None,
 ) -> list[str]:
+    """
+    category_of_brand (اختياري): {اسم البرند: "إيموجي اسم القسم"} — لو انبعت،
+    القائمة بتنظم بشكل هرمي (قسم ← برند ← صنف) منشان تكون واضحة ومرتبة للزبون
+    (بدل ما تطلع كل البرندات ورا بعض بلا أي تقسيم أعلى منها). لو ما انبعت،
+    بترجع بس تقسيم برند ← صنف متل السابق.
+    """
     header = f"📋 أسعار اليوم — {shop_name}\n📅 محدثة بتاريخ: {date_str}\n"
     footer = (
         "⚠️ الأسعار قابلة للتغيير بدون إشعار مسبق. للتأكد النهائي، اطلب واستعمل "
@@ -158,8 +168,17 @@ def format_customer_prices(
 
     chunks: list[str] = []
     current = header
+    current_category = None
     current_brand = None
     any_item = False
+
+    def _append(line: str) -> None:
+        nonlocal current
+        if len(current) + len(line) > MAX_MESSAGE_CHARS:
+            chunks.append(current.rstrip())
+            current = line
+        else:
+            current += line
 
     for item in flat_items:
         idx = item["index"]
@@ -167,15 +186,19 @@ def format_customer_prices(
         if not price:
             continue  # صنف بلا سعر محدد بعد — ما منعرضه للزبون
         any_item = True
-        prefix = f"\n🔸 {item['brand']}\n" if item["brand"] != current_brand else ""
-        current_brand = item["brand"]
-        line = f"{prefix}- {item['name']}: {price} ل.س\n"
+        brand = item["brand"]
 
-        if len(current) + len(line) > MAX_MESSAGE_CHARS:
-            chunks.append(current.rstrip())
-            current = line
-        else:
-            current += line
+        category = (category_of_brand or {}).get(brand)
+        if category is not None and category != current_category:
+            _append(f"\n{category}\n{'─' * 14}\n")
+            current_category = category
+            current_brand = None  # منشان يطلع عنوان البرند من جديد تحت القسم الجديد
+
+        if brand != current_brand:
+            _append(f"🔸 {brand}\n")
+            current_brand = brand
+
+        _append(f"   • {item['name']} — {price} ل.س\n")
 
     if not any_item:
         return [header.rstrip() + "\n\nلسا ما في أسعار مضافة."]

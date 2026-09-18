@@ -732,7 +732,11 @@ async def cb_confirm_no(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 async def cmd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
     chunks = ps_logic.format_customer_prices(
-        prices_state.FLAT_ITEMS, prices_state.current_prices(), config.SHOP_NAME, _now_str()
+        prices_state.FLAT_ITEMS,
+        prices_state.current_prices(),
+        config.SHOP_NAME,
+        _now_str(),
+        category_of_brand=prices_state.CATEGORY_OF_BRAND,
     )
     for chunk in chunks:
         await context.bot.send_message(chat_id, chunk)

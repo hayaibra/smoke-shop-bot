@@ -11,6 +11,7 @@ overrides: أي تعديل سعر حفظه التاجر لاحقاً عبر تل
 الرسالة المثبتة بشات التاجر (شوف telegram_state.load_state_from_telegram)، وبيتحدث
 مباشرة كل ما التاجر يبعت تحديث سعر جديد.
 """
+import catalog_logic as cl
 import config
 import price_sheet_logic as ps
 
@@ -18,6 +19,16 @@ GROUPS = ps.load_price_sheet(config.PRICE_SHEET_PATH)
 FLAT_ITEMS = ps.flatten_items(GROUPS)
 
 overrides: dict[int, int] = {}
+
+# {اسم البرند: "إيموجي اسم القسم"} (متلاً "ماستر" → "🚬 دخان") — مبني من نفس
+# data/catalog.json يلي بيستخدمه مسار الطلب، منشان قائمة "/prices" للزبون تنعرض
+# منظمة هرمياً (قسم ← برند ← صنف) بدل ما تطلع كل البرندات ورا بعض بلا تقسيم.
+_CATALOG_FOR_CATEGORIES = cl.load_catalog(config.CATALOG_PATH)
+CATEGORY_OF_BRAND: dict[str, str] = {
+    brand: cl.category_button_label(_CATALOG_FOR_CATEGORIES, category)
+    for category in cl.get_categories(_CATALOG_FOR_CATEGORIES)
+    for brand in cl.get_types(_CATALOG_FOR_CATEGORIES, category)
+}
 
 
 def set_overrides(new_overrides: dict[int, int]) -> None:
