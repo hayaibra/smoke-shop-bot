@@ -299,43 +299,68 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
     """
-    اختبار تكامل: أصناف الفحم يلي عندها كرتونة (10 علب) لازم يضل إلها بالضبط
-    الوحدات التلاتة (كرتونة، نص كرتونة، عدد) بمضاعِفاتها الصحيحة — وباقي أصناف
-    نفس البراند (متلا باقي أوزان "الزعيم") ما لازم تتأثر إطلاقاً.
+    اختبار تكامل: كل صنف فحم (أي برند، أي وزن) لازم يطلعلو خيار كرتونة/نص
+    كرتونة بالإضافة لـ"عدد" — أصناف الكيلو الكامل (كيلو / 1 كغ / 1000 غ) عندها
+    كرتونة = 10 علب، وباقي الأوزان (نص كيلو، ربع كيلو، 250غ، 400غ، 500غ، أو بلا
+    وزن مكتوب بالاسم أصلاً) عندها الكرتونة القياسية = 50 (نفس القياسي المعتمد
+    بباقي الأقسام).
     """
 
-    CARTON_ITEMS = {
-        "سيبروس": "فحم سيبروس كيلو",
-        "الزعيم": "فحم الزعيم كيلو",
-        "يحيى كريستال": "فحم يحيى كريستال 1000 غ",
-        "الاغا": "فحم الاغا 1 كغ",
-        "كوكو 8": "فحم كوكو 8 1 كغ",
-        "بيروتي": "فحم بيروتي 1 كغ",
-        "فحم برو": "فحم برو 1 كغ",
+    # (برند، صنف) -> مضاعِف الكرتونة المتوقع لهالصنف بالضبط.
+    EXPECTED_CARTON_MULTIPLIER = {
+        ("سيبروس", "فحم سيبروس كيلو"): 10,
+        ("الزعيم", "فحم الزعيم نصف كيلو"): 50,
+        ("الزعيم", "فحم الزعيم كيلو"): 10,
+        ("الزعيم", "فحم الزعيم 500 غ"): 50,
+        ("الزعيم", "فحم الزعيم 250 غ"): 50,
+        ("الزعيم", "فحم الزعيم 400 غ"): 50,
+        ("الزعيم", "فحم الزعيم 1000 غ"): 10,
+        ("الزعيم", "فحم الزعيم 1 كغ"): 10,
+        ("ايكو نارا", "فحم إيكو نارا"): 50,
+        ("ايكو نارا", "فحم ايكو نارا اخضر احمر"): 50,
+        ("هورس", "فحم هورس 250 غ"): 50,
+        ("سارا", "فحم سارا"): 50,
+        ("سارا", "فحم سارا جوز هند"): 50,
+        ("يحيى كريستال", "فحم يحيى كريستال 1000 غ"): 10,
+        ("الرشيد", "فحم الرشيد 500 غ"): 50,
+        ("الاغا", "فحم الاغا 1 كغ"): 10,
+        ("بيروتي", "فحم بيروتي 1 كغ"): 10,
+        ("كوكو 8", "فحم كوكو 8 1 كغ"): 10,
+        ("دراغون", "فحم دراغون ربع كيلو"): 50,
+        ("ولف", "فحم ولف ربع كيلو"): 50,
+        ("اتش انش", "فحم اتش انش ربع كيلو"): 50,
+        ("فحم برو", "فحم برو"): 50,
+        ("فحم برو", "فحم برو 250 غ"): 50,
+        ("فحم برو", "فحم برو 1 كغ"): 10,
+        ("فحم برو", "فحم برو ربع كيلو"): 50,
     }
 
     def setUp(self):
         self.catalog = cl.load_catalog(CATALOG_PATH)
 
-    def test_each_carton_item_has_carton_half_carton_and_count_units(self):
-        for brand, item_name in self.CARTON_ITEMS.items():
+    def test_every_charcoal_variant_has_carton_half_carton_and_count_units(self):
+        for category in cl.get_categories(self.catalog):
+            if category != "فحم":
+                continue
+            for type_ in cl.get_types(self.catalog, category):
+                for variant in cl.get_variants(self.catalog, category, type_):
+                    key = (type_, variant)
+                    self.assertIn(key, self.EXPECTED_CARTON_MULTIPLIER, msg=f"صنف فحم جديد بلا تصنيف: {key}")
+
+        for (brand, item_name), carton_mult in self.EXPECTED_CARTON_MULTIPLIER.items():
             units = cl.get_units(self.catalog, "فحم", brand, item_name)
             by_name = {u["name"]: u for u in units}
             self.assertEqual(
                 set(by_name), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"}, msg=f"{brand} / {item_name}"
             )
-            self.assertEqual(by_name["📦📦 كرتونة"]["multiplier"], 10)
+            self.assertEqual(by_name["📦📦 كرتونة"]["multiplier"], carton_mult, msg=f"{brand} / {item_name}")
             self.assertFalse(by_name["📦📦 كرتونة"]["fixed"])
-            self.assertEqual(by_name["🥡 نص كرتونة"]["multiplier"], 5)
+            self.assertEqual(
+                by_name["🥡 نص كرتونة"]["multiplier"], carton_mult / 2, msg=f"{brand} / {item_name}"
+            )
             self.assertTrue(by_name["🥡 نص كرتونة"]["fixed"])
             self.assertEqual(by_name["🧮 عدد"]["multiplier"], 1)
             self.assertFalse(by_name["🧮 عدد"]["fixed"])
-
-    def test_sibling_variants_of_same_brand_keep_plain_count_unit_only(self):
-        # مثلا "فحم الزعيم نصف كيلو" (وزن تاني من نفس براند الزعيم) ما لازم
-        # يطلعلها خيار كرتونة إطلاقاً — الكرتونة بس لـ"فحم الزعيم كيلو" تحديداً.
-        units = cl.get_units(self.catalog, "فحم", "الزعيم", "فحم الزعيم نصف كيلو")
-        self.assertEqual({u["name"] for u in units}, {"🧮 عدد"})
 
 
 if __name__ == "__main__":

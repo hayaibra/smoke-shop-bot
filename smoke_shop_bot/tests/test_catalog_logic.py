@@ -124,6 +124,66 @@ class TestCatalogLoading(unittest.TestCase):
         other_units = cl.get_units(catalog, "معسل", "براند تاني")
         self.assertEqual([u["name"] for u in other_units], ["علبة ٥٠غ", "كيلو"])
 
+    def test_get_units_uses_variant_override_when_present_without_affecting_siblings(self):
+        # كرتونة الفحم مضافة لصنف وحد محدد بس جوا الماركة (متلاً "كيلو")، مش لكل
+        # أصناف الماركة — بعكس كرتونة الدخان يلي بتنطبق عالماركة كلها.
+        catalog = {
+            "فحم": {
+                "emoji": "🔥",
+                "types": {"ماركة فحم": ["فحم كيلو", "فحم نص كيلو"]},
+                "units": [{"name": "🧮 عدد", "fixed": False, "multiplier": 1}],
+                "variant_units": {
+                    "ماركة فحم": {
+                        "فحم كيلو": [
+                            {"name": "🧮 عدد", "fixed": False, "multiplier": 1},
+                            {"name": "📦📦 كرتونة", "fixed": False, "multiplier": 10},
+                        ]
+                    }
+                },
+            }
+        }
+        kilo_units = cl.get_units(catalog, "فحم", "ماركة فحم", "فحم كيلو")
+        self.assertEqual(
+            [u["name"] for u in kilo_units], ["🧮 عدد", "📦📦 كرتونة"]
+        )
+        half_kilo_units = cl.get_units(catalog, "فحم", "ماركة فحم", "فحم نص كيلو")
+        self.assertEqual([u["name"] for u in half_kilo_units], ["🧮 عدد"])
+        # وبلا variant، بيرجع الافتراضي العام (مش أي تسريب من صنف تاني).
+        no_variant_units = cl.get_units(catalog, "فحم", "ماركة فحم")
+        self.assertEqual([u["name"] for u in no_variant_units], ["🧮 عدد"])
+
+    def test_every_charcoal_variant_has_carton_unit_kilo_10_others_50(self):
+        # كل صنف فحم (أي برند، أي وزن) إلو خيار كرتونة/نص كرتونة بالإضافة
+        # لـ"عدد" — أصناف الكيلو الكامل (كيلو/1 كغ/1000 غ) كرتونتها ١٠ علب،
+        # وباقي الأوزان (نص كيلو، ربع كيلو، 250غ...) أو بلا وزن مكتوب أصلاً،
+        # كرتونتها القياسية ٥٠ (نفس القياسي المعتمد بباقي الأقسام).
+        kilo_variants = {
+            ("سيبروس", "فحم سيبروس كيلو"),
+            ("الزعيم", "فحم الزعيم كيلو"),
+            ("الزعيم", "فحم الزعيم 1000 غ"),
+            ("الزعيم", "فحم الزعيم 1 كغ"),
+            ("يحيى كريستال", "فحم يحيى كريستال 1000 غ"),
+            ("الاغا", "فحم الاغا 1 كغ"),
+            ("كوكو 8", "فحم كوكو 8 1 كغ"),
+            ("بيروتي", "فحم بيروتي 1 كغ"),
+            ("فحم برو", "فحم برو 1 كغ"),
+        }
+        for brand in cl.get_types(self.catalog, "فحم"):
+            for variant in cl.get_variants(self.catalog, "فحم", brand):
+                units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", brand, variant)}
+                expected_carton = 10 if (brand, variant) in kilo_variants else 50
+                self.assertIn("📦📦 كرتونة", units, f"{brand} / {variant} ما إلها كرتونة!")
+                self.assertFalse(units["📦📦 كرتونة"]["fixed"])
+                self.assertEqual(
+                    units["📦📦 كرتونة"]["multiplier"], expected_carton, f"{brand} / {variant}"
+                )
+                self.assertIn("🥡 نص كرتونة", units, f"{brand} / {variant} ما إلها نص كرتونة!")
+                self.assertTrue(units["🥡 نص كرتونة"]["fixed"])
+                self.assertEqual(
+                    units["🥡 نص كرتونة"]["multiplier"], expected_carton / 2, f"{brand} / {variant}"
+                )
+                self.assertIn("🧮 عدد", units)
+
 
 class TestExtractAmount(unittest.TestCase):
     def test_plain_western_digits(self):
