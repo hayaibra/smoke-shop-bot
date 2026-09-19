@@ -620,15 +620,9 @@ async def cb_cart_price_inquiry(update: Update, context: ContextTypes.DEFAULT_TY
         )
         user_data["awaiting_price_confirmation"] = True
         _cancel_idle_reminder(context, chat_id)
-
-        # إشعار معلوماتي بس للتاجر (ما بيحتاج يرد عليه — السعر انحسب وانبعت للزبون فورًا).
-        try:
-            await context.bot.send_message(
-                admin_chat_id,
-                messages.admin_auto_priced_notice(customer_label, priced_cart_text, total, _now_str()),
-            )
-        except (Forbidden, BadRequest):
-            pass
+        # ما منبعت إشعار للتاجر بهالحالة عن قصد — السعر انحسب تلقائياً وانبعت
+        # للزبون فوراً، فما في داعي التاجر يعرف/يرد (خلاف الفولباك تحت، يلي
+        # لسا محتاج تدخل يدوي من التاجر لأنه في صنف بلا سعر محدد).
         return
 
     # فولباك: صنف واحد عالأقل ما إلو سعر محدد بعد — نفس المسار اليدوي القديم بالضبط.
