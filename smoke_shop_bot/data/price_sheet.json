@@ -1,1524 +1,2673 @@
 [
- {
-  "brand": "جيتان",
-  "items": [
-   {
-    "name": "جيتان قصير",
-    "default_price": 99000
-   }
-  ]
- },
- {
-  "brand": "تي اس",
-  "items": [
-   {
-    "name": "تي اس طويل فضي",
-    "default_price": 40500
-   },
-   {
-    "name": "تي اس سليم فضي",
-    "default_price": 33000
-   },
-   {
-    "name": "تي اس طويل ازرق",
-    "default_price": 40500
-   }
-  ]
- },
- {
-  "brand": "ون شيستر",
-  "items": [
-   {
-    "name": "ون شيستر كوين فضي",
-    "default_price": 47000
-   },
-   {
-    "name": "ون شيستر كوين ازرق",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "نابولي",
-  "items": [
-   {
-    "name": "نابولي قصير دهبي",
-    "default_price": 54000
-   },
-   {
-    "name": "نابولي قصير ابيض",
-    "default_price": 54000
-   },
-   {
-    "name": "نابولي قصير سلفر",
-    "default_price": 54000
-   },
-   {
-    "name": "نابولي قصير احمر",
-    "default_price": 54000
-   }
-  ]
- },
- {
-  "brand": "سيدرز",
-  "items": [
-   {
-    "name": "سيدرز طويل فضي",
-    "default_price": 88000
-   },
-   {
-    "name": "سيدرز طويل ازرق",
-    "default_price": 88000
-   },
-   {
-    "name": "سيدرز قصير فضي",
-    "default_price": 89000
-   },
-   {
-    "name": "سيدرز قصير ازرق",
-    "default_price": 88000
-   },
-   {
-    "name": "سيدرز سليم فضي",
-    "default_price": 86000
-   },
-   {
-    "name": "سيدرز سليم ازرق",
-    "default_price": 86000
-   }
-  ]
- },
- {
-  "brand": "مليونير",
-  "items": [
-   {
-    "name": "مليونير طويل فضي",
-    "default_price": 45000
-   },
-   {
-    "name": "مليونير طويل ازرق",
-    "default_price": 45000
-   },
-   {
-    "name": "مليونير كوين فضي",
-    "default_price": 0
-   },
-   {
-    "name": "مليونير كوين ازرق",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "اوسكار",
-  "items": [
-   {
-    "name": "اوسكار طويل فضي",
-    "default_price": 55000
-   },
-   {
-    "name": "اوسكار سليم فضي",
-    "default_price": 48000
-   },
-   {
-    "name": "اوسكار كوين ازرق",
-    "default_price": 52000
-   }
-  ]
- },
- {
-  "brand": "اختمار",
-  "items": [
-   {
-    "name": "اختمار قصير ازرق",
-    "default_price": 50500
-   },
-   {
-    "name": "اختمار قصير فضي",
-    "default_price": 50500
-   },
-   {
-    "name": "اختمار سليم فضي",
-    "default_price": 58000
-   },
-   {
-    "name": "اختمار طويل ازرق",
-    "default_price": 58000
-   }
-  ]
- },
- {
-  "brand": "اليغانس",
-  "items": [
-   {
-    "name": "اليغانس طويل فضي غ",
-    "default_price": 55500
-   },
-   {
-    "name": "اليغانس قصير فضي",
-    "default_price": 50500
-   },
-   {
-    "name": "اليغانس طويل اسود",
-    "default_price": 59500
-   },
-   {
-    "name": "اليغانس اسود كرتون",
-    "default_price": 54000
-   },
-   {
-    "name": "اليغانس سليم فضي",
-    "default_price": 45000
-   },
-   {
-    "name": "اليغانس سليم ازرق",
-    "default_price": 44000
-   },
-   {
-    "name": "اليغانس سليم ازرق مربع",
-    "default_price": 39000
-   },
-   {
-    "name": "اليغانس سليم فضي مربع",
-    "default_price": 39000
-   },
-   {
-    "name": "اليغانس سليم نعنع جديد",
-    "default_price": 48000
-   },
-   {
-    "name": "اليغانس سليم نعنع قديم",
-    "default_price": 44000
-   },
-   {
-    "name": "اليغانس قصير طقتين",
-    "default_price": 63000
-   },
-   {
-    "name": "اليغانس كوين ازرق طقة",
-    "default_price": 53500
-   },
-   {
-    "name": "اليغانس سليم طقة موف",
-    "default_price": 0
-   },
-   {
-    "name": "اليغانس سليم طقة ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "اليغانس سليم شوكولا",
-    "default_price": 0
-   },
-   {
-    "name": "اليغانس سليم دهبي",
-    "default_price": 0
-   },
-   {
-    "name": "اليغانس كوين ازرق جديد",
-    "default_price": 43000
-   },
-   {
-    "name": "اليغانس كوين ابيض جديد",
-    "default_price": 43000
-   }
-  ]
- },
- {
-  "brand": "مالبو",
-  "items": [
-   {
-    "name": "مالبو طويل ازرق",
-    "default_price": 44500
-   },
-   {
-    "name": "مالبو كوين فضي",
-    "default_price": 0
-   },
-   {
-    "name": "مالبو طويل فضي",
-    "default_price": 44500
-   }
-  ]
- },
- {
-  "brand": "اوريس",
-  "items": [
-   {
-    "name": "اوريس كوين توت طقة غ",
-    "default_price": 58500
-   },
-   {
-    "name": "اوريس كوين فريز طقة غ",
-    "default_price": 58500
-   },
-   {
-    "name": "اوريس كوين شوكولا غ",
-    "default_price": 58500
-   },
-   {
-    "name": "اوريس كوين بطيخ غ",
-    "default_price": 58500
-   },
-   {
-    "name": "طقة بلس ازرق جديد م",
-    "default_price": 53500
-   },
-   {
-    "name": "اوريس طقة منغا غ",
-    "default_price": 53500
-   },
-   {
-    "name": "اوريس سليم طقة توت",
-    "default_price": 53500
-   },
-   {
-    "name": "اوريس سليم شوكولا",
-    "default_price": 53500
-   },
-   {
-    "name": "اوريس طقتين بلوبيري م",
-    "default_price": 61000
-   },
-   {
-    "name": "اوريس تفاح",
-    "default_price": 0
-   },
-   {
-    "name": "اوريس طقتين نعنع م",
-    "default_price": 61000
-   },
-   {
-    "name": "اوريس تشكلس",
-    "default_price": 52500
-   }
-  ]
- },
- {
-  "brand": "ويلسون",
-  "items": [
-   {
-    "name": "ويلسون احمر",
-    "default_price": 45000
-   },
-   {
-    "name": "ويلسون فضي",
-    "default_price": 45000
-   },
-   {
-    "name": "ويلسون ازرق",
-    "default_price": 45000
-   }
-  ]
- },
- {
-  "brand": "يونايتد",
-  "items": [
-   {
-    "name": "يونايتد",
-    "default_price": 54000
-   }
-  ]
- },
- {
-  "brand": "دينفر",
-  "items": [
-   {
-    "name": "دينفر اصفر",
-    "default_price": 56000
-   },
-   {
-    "name": "دينفر طويل",
-    "default_price": 56000
-   },
-   {
-    "name": "دينفر كوين",
-    "default_price": 55500
-   }
-  ]
- },
- {
-  "brand": "تيرا",
-  "items": [
-   {
-    "name": "تيرا برونز",
-    "default_price": 0
-   },
-   {
-    "name": "تيرا سينا",
-    "default_price": 299000
-   },
-   {
-    "name": "تيرا يوجين",
-    "default_price": 0
-   },
-   {
-    "name": "تيرا ابرسيتي",
-    "default_price": 299000
-   },
-   {
-    "name": "تيرا بلو",
-    "default_price": 0
-   },
-   {
-    "name": "تيرا سن بيرل",
-    "default_price": 0
-   },
-   {
-    "name": "تيرا اوسس بيرل",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "معسل مزايا",
-  "items": [
-   {
-    "name": "مزايا تفاحتين فرنسي",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا علكة",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا بولو",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا عنب",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا عنب ونعنع",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا نعنع",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا علكة ونعنع",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا لوف",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا ماكس",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا بحريني",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا مصري",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا مستكة",
-    "default_price": 102000
-   },
-   {
-    "name": "مزايا إنكليزي",
-    "default_price": 103500
-   },
-   {
-    "name": "مزايا علكة مثلج",
-    "default_price": 103500
-   },
-   {
-    "name": "مزايا علكة و نعنع مثلج",
-    "default_price": 103500
-   },
-   {
-    "name": "مزايا بلوبيري",
-    "default_price": 103500
-   },
-   {
-    "name": "مزايا تفاحتين مثلج",
-    "default_price": 110000
-   },
-   {
-    "name": "مزايا كاندي دروبس",
-    "default_price": 110000
-   },
-   {
-    "name": "مزايا كيلير كوين",
-    "default_price": 110000
-   },
-   {
-    "name": "مزايا هابي مانغو",
-    "default_price": 110000
-   },
-   {
-    "name": "مزايا ببل جيم",
-    "default_price": 103500
-   },
-   {
-    "name": "مزايا نعنع مثلج",
-    "default_price": 103500
-   },
-   {
-    "name": "مزايا كف علكة",
-    "default_price": 50500
-   },
-   {
-    "name": "مزايا كف مصري",
-    "default_price": 50500
-   },
-   {
-    "name": "مزايا كف لوف",
-    "default_price": 50500
-   },
-   {
-    "name": "مزايا كف بحريني",
-    "default_price": 50500
-   },
-   {
-    "name": "مزايا كف بولو",
-    "default_price": 50500
-   },
-   {
-    "name": "مزايا كف تريندي",
-    "default_price": 52000
-   },
-   {
-    "name": "مزايا كف روبي كراش",
-    "default_price": 52000
-   },
-   {
-    "name": "مزايا ماكس 250 غ",
-    "default_price": 51000
-   },
-   {
-    "name": "مزايا بحريني 1 كغ",
-    "default_price": 200000
-   }
-  ]
- },
- {
-  "brand": "معسل مزاج",
-  "items": [
-   {
-    "name": "مزاج نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "مزاج لوف",
-    "default_price": 0
-   },
-   {
-    "name": "مزاج تفاحتين",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "معسل العراب",
-  "items": [
-   {
-    "name": "العراب عنب ونعنع",
-    "default_price": 0
-   },
-   {
-    "name": "العراب عنب",
-    "default_price": 0
-   },
-   {
-    "name": "العراب علكة ونعنع",
-    "default_price": 0
-   },
-   {
-    "name": "العراب تفاحتين فرنسي",
-    "default_price": 0
-   },
-   {
-    "name": "العراب بولو",
-    "default_price": 0
-   },
-   {
-    "name": "العراب لوف",
-    "default_price": 0
-   },
-   {
-    "name": "كف العراب تفاحتين بحريني",
-    "default_price": 0
-   },
-   {
-    "name": "العراب علكة",
-    "default_price": 0
-   },
-   {
-    "name": "العراب تفاحتين بحريني",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "معسل اداليا",
-  "items": [
-   {
-    "name": "اداليا تفاح مثلج",
-    "default_price": 0
-   },
-   {
-    "name": "اداليا بطيخ",
-    "default_price": 0
-   },
-   {
-    "name": "اداليا ليمون مثلج",
-    "default_price": 0
-   },
-   {
-    "name": "اداليا لورد",
-    "default_price": 0
-   },
-   {
-    "name": "اداليا لوف",
-    "default_price": 0
-   },
-   {
-    "name": "اداليا السيدة",
-    "default_price": 0
-   },
-   {
-    "name": "اداليا تفاحتين بحريني",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "معسل نخلة",
-  "items": [
-   {
-    "name": "نخلة صلاحية",
-    "default_price": 206000
-   },
-   {
-    "name": "نخلة مطار",
-    "default_price": 110000
-   },
-   {
-    "name": "نخلة لبناني",
-    "default_price": 259000
-   },
-   {
-    "name": "كف نخلة صلاحية باركود",
-    "default_price": 80000
-   },
-   {
-    "name": "كف نخلة صلاحية شركة",
-    "default_price": 105000
-   },
-   {
-    "name": "كف نخلة لبناني",
-    "default_price": 120000
-   },
-   {
-    "name": "كيس نخلة صلاحية 250 غ",
-    "default_price": 65000
-   }
-  ]
- },
- {
-  "brand": "ماستر",
-  "items": [
-   {
-    "name": "ماستر طويل ورق م",
-    "default_price": 67000
-   },
-   {
-    "name": "ماستر قصير ازرق م",
-    "default_price": 61000
-   },
-   {
-    "name": "ماستر قصير فضي",
-    "default_price": 61000
-   },
-   {
-    "name": "ماستر كوين ازرق",
-    "default_price": 81500
-   },
-   {
-    "name": "ماستر كوين ابيض م",
-    "default_price": 77500
-   },
-   {
-    "name": "ماستر سليم فضي م",
-    "default_price": 62000
-   },
-   {
-    "name": "ماستر سليم بطيخ",
-    "default_price": 61000
-   },
-   {
-    "name": "ماستر سليم بلوبيري",
-    "default_price": 61000
-   },
-   {
-    "name": "ماستر سليم تفاح و نعنع",
-    "default_price": 61000
-   },
-   {
-    "name": "ماستر سليم علكة ونعنع",
-    "default_price": 61000
-   },
-   {
-    "name": "ماستر سليم نعنع مثلج",
-    "default_price": 61000
-   }
-  ]
- },
- {
-  "brand": "هيستوري",
-  "items": [
-   {
-    "name": "هيستوري طويل فضي",
-    "default_price": 47500
-   },
-   {
-    "name": "هيستوري طويل ازرق",
-    "default_price": 47500
-   },
-   {
-    "name": "هيستوري قصير فضي",
-    "default_price": 40500
-   },
-   {
-    "name": "هيستوري قصير ازرق",
-    "default_price": 40500
-   },
-   {
-    "name": "هيستوري كوين",
-    "default_price": 39000
-   },
-   {
-    "name": "هيستوري سليم فضي",
-    "default_price": 39000
-   },
-   {
-    "name": "هيستوري سليم نعنع",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "سلوفان",
-  "items": [
-   {
-    "name": "سلوفان برينتو كيس 24 قطعة",
-    "default_price": 23000
-   },
-   {
-    "name": "برينتو رول طرد",
-    "default_price": 101500
-   },
-   {
-    "name": "سلوفان الأصيل نص كيلو",
-    "default_price": 22500
-   },
-   {
-    "name": "سلوفان برينتو نص كيلو",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "مباسم",
-  "items": [
-   {
-    "name": "كيس مباسم عدد 30 قطعة",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "فحم",
-  "items": [
-   {
-    "name": "فحم سيبروس كيلو",
-    "default_price": 31500
-   },
-   {
-    "name": "فحم الزعيم نصف كيلو",
-    "default_price": 20000
-   },
-   {
-    "name": "فحم الزعيم كيلو",
-    "default_price": 36000
-   },
-   {
-    "name": "فحم برو",
-    "default_price": 0
-   },
-   {
-    "name": "فحم إيكو نارا",
-    "default_price": 0
-   },
-   {
-    "name": "فحم هورس 250 غ",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "كابتن بلاك",
-  "items": [
-   {
-    "name": "كابتن بلاك طويل مانجو",
-    "default_price": 0
-   },
-   {
-    "name": "كابتن بلاك طويل شوكولا",
-    "default_price": 152000
-   },
-   {
-    "name": "كابتن بلاك طويل تفاح",
-    "default_price": 151500
-   },
-   {
-    "name": "كابتن بلاك طويل عنب",
-    "default_price": 151500
-   },
-   {
-    "name": "كابتن كوين دهبي",
-    "default_price": 55000
-   },
-   {
-    "name": "كابتن كوين ازرق",
-    "default_price": 55000
-   },
-   {
-    "name": "كابتن كوين ون",
-    "default_price": 49500
-   },
-   {
-    "name": "كابتن سليم فضي",
-    "default_price": 39000
-   },
-   {
-    "name": "كابتن سلييم ازرق",
-    "default_price": 39000
-   },
-   {
-    "name": "كابتن كوين ون اسود",
-    "default_price": 65000
-   },
-   {
-    "name": "كابتن كوين ون ازرق",
-    "default_price": 65000
-   },
-   {
-    "name": "سيجار يلو عنب",
-    "default_price": 125500
-   },
-   {
-    "name": "سجار يلو سلفر",
-    "default_price": 125500
-   },
-   {
-    "name": "سيجار يلو فريز",
-    "default_price": 125500
-   },
-   {
-    "name": "سيجار يلو كرز",
-    "default_price": 125500
-   }
-  ]
- },
- {
-  "brand": "مانشستر",
-  "items": [
-   {
-    "name": "مانشستر كوين طقة تفاح",
-    "default_price": 52000
-   },
-   {
-    "name": "مانشستر كوين طقة فريز",
-    "default_price": 52000
-   },
-   {
-    "name": "مانشستر كوين طقة توت",
-    "default_price": 52000
-   },
-   {
-    "name": "مانشستر كوين طقة برتقال",
-    "default_price": 52000
-   },
-   {
-    "name": "مانشستر قصير ازرق",
-    "default_price": 53000
-   },
-   {
-    "name": "مانشستر قصير فضي",
-    "default_price": 48000
-   },
-   {
-    "name": "مانشستر طويل احمر",
-    "default_price": 47000
-   },
-   {
-    "name": "مانشستر طويل ازرق",
-    "default_price": 49000
-   },
-   {
-    "name": "مانشستر سليم طقة توت",
-    "default_price": 47000
-   },
-   {
-    "name": "مانشستر سليم برونز",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر سليم ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر كوين ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر كوين ابيض",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر كوين غولد",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر قصير نافي",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر قصير طقتين اسود",
-    "default_price": 72000
-   },
-   {
-    "name": "مانشستر قصير طقة ازرق",
-    "default_price": 53000
-   },
-   {
-    "name": "مانشستر قصير طقة عنبر",
-    "default_price": 0
-   },
-   {
-    "name": "مانشستر طويل فضي",
-    "default_price": 49000
-   },
-   {
-    "name": "مانشستر سليم طقة عنبر",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "بلاتينيوم",
-  "items": [
-   {
-    "name": "بلاتينيوم سليم فضي",
-    "default_price": 38000
-   },
-   {
-    "name": "بلاتينيوم سليم نعنع",
-    "default_price": 42000
-   },
-   {
-    "name": "بلاتينيوم سليم ازرق",
-    "default_price": 39000
-   },
-   {
-    "name": "بلاتينيوم طقة توت",
-    "default_price": 46500
-   },
-   {
-    "name": "بلاتينيوم طقة منغا",
-    "default_price": 46500
-   },
-   {
-    "name": "بلاتينيوم طقة برتقال",
-    "default_price": 46500
-   },
-   {
-    "name": "بلاتينيوم طقة ازرق كول",
-    "default_price": 46500
-   },
-   {
-    "name": "بلاتينيوم فضي طويل",
-    "default_price": 39000
-   },
-   {
-    "name": "بلاتينيوم ازرق طويل",
-    "default_price": 39000
-   },
-   {
-    "name": "بلاتينيوم قصير خمس نكهات طقتين",
-    "default_price": 70000
-   },
-   {
-    "name": "بلاتينيوم قصير بلوبيري و نعنع",
-    "default_price": 70000
-   },
-   {
-    "name": "بلاتينيوم قصير تفاح اخضر و نعنع طقتين",
-    "default_price": 70000
-   },
-   {
-    "name": "بلاتينيوم قصير فضي",
-    "default_price": 45000
-   },
-   {
-    "name": "بلاتينيوم قصير ازرق",
-    "default_price": 45000
-   },
-   {
-    "name": "بلاتينيوم كوين فضي",
-    "default_price": 40500
-   },
-   {
-    "name": "بلاتينيوم كوين ازرق",
-    "default_price": 40500
-   },
-   {
-    "name": "بلاتينيوم كوين بلوبيري و نعنع طقتين",
-    "default_price": 58500
-   }
-  ]
- },
- {
-  "brand": "كينغدوم",
-  "items": [
-   {
-    "name": "كينغدوم طويل",
-    "default_price": 0
-   },
-   {
-    "name": "كينغدوم سليم نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "كينغدوم سليم فضي",
-    "default_price": 0
-   },
-   {
-    "name": "كينغدوم بوكس ذهبي",
-    "default_price": 0
-   },
-   {
-    "name": "كينغدوم بوكس احمر",
-    "default_price": 0
-   },
-   {
-    "name": "كينغدوم بوكس ابيض",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "اراكيل الكترونية برو",
-  "items": [
-   {
-    "name": "برو فيب 11000 سحبة",
-    "default_price": 0
-   },
-   {
-    "name": "فيب فاخر 12000 سحبة",
-    "default_price": 168000
-   },
-   {
-    "name": "فيب فاخر 8000 سحبة",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "روز",
-  "items": [
-   {
-    "name": "روز طويل فضي",
-    "default_price": 51000
-   },
-   {
-    "name": "روز طويل ازرق",
-    "default_price": 51000
-   },
-   {
-    "name": "روز سليم فضي",
-    "default_price": 42000
-   },
-   {
-    "name": "روز قصير ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "روز قصير كولد",
-    "default_price": 47000
-   },
-   {
-    "name": "روز قصير ابيض",
-    "default_price": 0
-   },
-   {
-    "name": "روز سليم بلوبيري",
-    "default_price": 0
-   },
-   {
-    "name": "روز كلاسيك ابيض",
-    "default_price": 39000
-   }
-  ]
- },
- {
-  "brand": "الفاخر",
-  "items": [
-   {
-    "name": "الفاخر علكة",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر عنب",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر تفاحتين اسود بحريني",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر بلوبيري",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر علكة ونعنع",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر تفاحتين احمر بحريني",
-    "default_price": 125000
-   },
-   {
-    "name": "الفاخر بولو",
-    "default_price": 0
-   },
-   {
-    "name": "الفاخر عنب ونعنع",
-    "default_price": 0
-   },
-   {
-    "name": "فاخر تفاحتيبن اسود حرة كروز",
-    "default_price": 130000
-   },
-   {
-    "name": "فاخر تفاحتين اسود حرة مثلج",
-    "default_price": 130000
-   },
-   {
-    "name": "فاخر تفاحتين اسود 1 كغ حرة",
-    "default_price": 250000
-   },
-   {
-    "name": "فاخر تفاحتين اسود حرة علبة 250 غ",
-    "default_price": 68500
-   },
-   {
-    "name": "فاخر تفاحتين اسود حرة كف 250 غ",
-    "default_price": 68500
-   }
-  ]
- },
- {
-  "brand": "معسل روز",
-  "items": [
-   {
-    "name": "معسل روز كف تفاحتين",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز تفاحتين",
-    "default_price": 72000
-   },
-   {
-    "name": "معسل روز بولو",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز بلوبيري",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز علكة و نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز عنب و نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز علكة",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز تفاحتين مثلج",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز مستكة",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز بحريني",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز تفاحتين سطل 5 كيلو",
-    "default_price": 0
-   },
-   {
-    "name": "معسل روز بولو سطل 5 كيلو",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "معسل ملكي",
-  "items": [
-   {
-    "name": "معسل ملكي تفاحتين",
-    "default_price": 0
-   },
-   {
-    "name": "معسل ملكي علكة",
-    "default_price": 0
-   },
-   {
-    "name": "معسل ملكي لوف",
-    "default_price": 0
-   },
-   {
-    "name": "معسل ملكي بولو",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "كلواز 8 S",
-  "items": [
-   {
-    "name": "كلواز كوين أحمر 8 S",
-    "default_price": 78500
-   },
-   {
-    "name": "كلواز كوين أصفر 8 S",
-    "default_price": 78500
-   }
-  ]
- },
- {
-  "brand": "1970",
-  "items": [
-   {
-    "name": "طويل فضي 1970",
-    "default_price": 57000
-   },
-   {
-    "name": "طويل ازرق 1970",
-    "default_price": 57000
-   },
-   {
-    "name": "قصير فضي 1970",
-    "default_price": 55000
-   },
-   {
-    "name": "قصير ازرق 1970",
-    "default_price": 55000
-   },
-   {
-    "name": "كوين فضي 1970",
-    "default_price": 50500
-   },
-   {
-    "name": "سليم فضي 1970",
-    "default_price": 41000
-   },
-   {
-    "name": "سليم نعنع 1970",
-    "default_price": 42000
-   },
-   {
-    "name": "سليم ازرق 1970",
-    "default_price": 41500
-   }
-  ]
- },
- {
-  "brand": "كرنفال",
-  "items": [
-   {
-    "name": "كرنفال سليم فضي",
-    "default_price": 0
-   },
-   {
-    "name": "كرنفال قصير طقة",
-    "default_price": 0
-   },
-   {
-    "name": "كرنفال سليم طقة",
-    "default_price": 0
-   },
-   {
-    "name": "كرنفال قصير ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "كرنفال سليم نعنع",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "ويليامز",
-  "items": [
-   {
-    "name": "ويليامز سليم نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز طويل ورق",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز سليم نانو",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز سليم ازرق طقة",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز قصير فضي",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز طويل كرتون",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز قصير ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز سليم تفاح",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز سليم فضي",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز كوين فضي",
-    "default_price": 0
-   },
-   {
-    "name": "ويليامز كوين ازرق",
-    "default_price": 0
-   }
-  ]
- },
- {
-  "brand": "البرو",
-  "items": [
-   {
-    "name": "برو فضي طويل",
-    "default_price": 40500
-   },
-   {
-    "name": "يرو ازرق طويل",
-    "default_price": 40500
-   },
-   {
-    "name": "برو كوين فضي",
-    "default_price": 36000
-   },
-   {
-    "name": "برو طويل شوكولا",
-    "default_price": 0
-   },
-   {
-    "name": "برو طويل حليب",
-    "default_price": 0
-   },
-   {
-    "name": "برو طويل كرز",
-    "default_price": 0
-   },
-   {
-    "name": "برو كوين اسود",
-    "default_price": 0
-   },
-   {
-    "name": "برو فضي سليم",
-    "default_price": 35500
-   }
-  ]
- },
- {
-  "brand": "دخان حرة",
-  "items": [
-   {
-    "name": "مالبورو غولد حرة",
-    "default_price": 310500
-   },
-   {
-    "name": "مالبورو سلفر حرة",
-    "default_price": 359000
-   },
-   {
-    "name": "مالبورو دهبي طابع",
-    "default_price": 299000
-   },
-   {
-    "name": "مالبورو احمر طويل كرتون حرة",
-    "default_price": 264000
-   },
-   {
-    "name": "مالبورو 600 احمر",
-    "default_price": 310500
-   },
-   {
-    "name": "مالبورو طقتين دبل ايس",
-    "default_price": 276000
-   },
-   {
-    "name": "مالبورو طقتين دبل ميكس",
-    "default_price": 288000
-   },
-   {
-    "name": "مالبورو طقتين دبل فيوجين",
-    "default_price": 276000
-   },
-   {
-    "name": "مالبورو غولد تيتانيوم",
-    "default_price": 0
-   },
-   {
-    "name": "مالبورو طقتين دبل بلوسم فيوجين",
-    "default_price": 288000
-   },
-   {
-    "name": "مالبورو تاتش ون سمارت",
-    "default_price": 0
-   },
-   {
-    "name": "مالبورو دبل ايس فيستا",
-    "default_price": 288000
-   },
-   {
-    "name": "مالبورو 3 طقات لونا",
-    "default_price": 288000
-   },
-   {
-    "name": "وينستون فضي حرة",
-    "default_price": 204000
-   },
-   {
-    "name": "وينستون ازرق حرة",
-    "default_price": 215000
-   },
-   {
-    "name": "دافيدوف غولد طويل",
-    "default_price": 205000
-   },
-   {
-    "name": "دافيدوف ابيض طويل",
-    "default_price": 205000
-   },
-   {
-    "name": "دافديوف غولد سليم",
-    "default_price": 205000
-   },
-   {
-    "name": "دافيدوف سليم وايت",
-    "default_price": 205000
-   },
-   {
-    "name": "دافيدوف كلاسيك خمري طويل",
-    "default_price": 205000
-   },
-   {
-    "name": "دافيدوف كلاسيك خمري سليم",
-    "default_price": 205000
-   },
-   {
-    "name": "مور نعنع",
-    "default_price": 229000
-   },
-   {
-    "name": "برلمنت اكوا بلو",
-    "default_price": 372000
-   },
-   {
-    "name": "برلمنت نايت بلو",
-    "default_price": 372000
-   }
-  ]
- },
- {
-  "brand": "بزنس رويال",
-  "items": [
-   {
-    "name": "بزنس رويال قصير ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "بزنس رويال قصير احمر",
-    "default_price": 0
-   },
-   {
-    "name": "بزنس رويال قصير فضي",
-    "default_price": 0
-   },
-   {
-    "name": "بزنس رويال سليم ازرق",
-    "default_price": 0
-   },
-   {
-    "name": "بزنس رويال سليم فضي",
-    "default_price": 0
-   },
-   {
-    "name": "بزنس رويال سليم نعنع",
-    "default_price": 0
-   },
-   {
-    "name": "بزنس رويال طويل فضي",
-    "default_price": 35000
-   },
-   {
-    "name": "بزنس رويال طويل ازرق",
-    "default_price": 35000
-   },
-   {
-    "name": "بزنس رويال طويل احمر",
-    "default_price": 35000
-   }
-  ]
- },
- {
-  "brand": "كلواز عريض",
-  "items": [
-   {
-    "name": "كلواز احمر عريض",
-    "default_price": 78500
-   },
-   {
-    "name": "كلواز اصفر عريض",
-    "default_price": 78500
-   }
-  ]
- }
+  {
+    "brand": "جيتان",
+    "items": [
+      {
+        "name": "جيتان قصير",
+        "default_price": 99000
+      }
+    ]
+  },
+  {
+    "brand": "تي اس",
+    "items": [
+      {
+        "name": "تي اس طويل فضي",
+        "default_price": 40500
+      },
+      {
+        "name": "تي اس سليم فضي",
+        "default_price": 33000
+      },
+      {
+        "name": "تي اس طويل ازرق",
+        "default_price": 40500
+      }
+    ]
+  },
+  {
+    "brand": "ون شيستر",
+    "items": [
+      {
+        "name": "ون شيستر كوين فضي",
+        "default_price": 47000
+      },
+      {
+        "name": "ون شيستر كوين ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "ونشستر كوين",
+        "default_price": 58000
+      },
+      {
+        "name": "ونشستر سليم",
+        "default_price": 48500
+      },
+      {
+        "name": "ون شيستر كوين دهبي",
+        "default_price": 53000
+      },
+      {
+        "name": "ون شيستر كوين سيلفر",
+        "default_price": 53000
+      },
+      {
+        "name": "ون شيستر سليم اسود",
+        "default_price": 45000
+      },
+      {
+        "name": "ون شيستر سليم ازرق",
+        "default_price": 45000
+      },
+      {
+        "name": "ون شيستر سليم ابيض دهبي",
+        "default_price": 45000
+      },
+      {
+        "name": "ون شيستر سليم فضي",
+        "default_price": 45000
+      }
+    ]
+  },
+  {
+    "brand": "نابولي",
+    "items": [
+      {
+        "name": "نابولي قصير دهبي",
+        "default_price": 54000
+      },
+      {
+        "name": "نابولي قصير ابيض",
+        "default_price": 54000
+      },
+      {
+        "name": "نابولي قصير سلفر",
+        "default_price": 54000
+      },
+      {
+        "name": "نابولي قصير احمر",
+        "default_price": 54000
+      },
+      {
+        "name": "نابولي قصير",
+        "default_price": 0
+      },
+      {
+        "name": "نابولي احمر + فضي قصير",
+        "default_price": 71500
+      },
+      {
+        "name": "نابولي قصير سفر",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "سيدرز",
+    "items": [
+      {
+        "name": "سيدرز طويل فضي",
+        "default_price": 88000
+      },
+      {
+        "name": "سيدرز طويل ازرق",
+        "default_price": 88000
+      },
+      {
+        "name": "سيدرز قصير فضي",
+        "default_price": 89000
+      },
+      {
+        "name": "سيدرز قصير ازرق",
+        "default_price": 88000
+      },
+      {
+        "name": "سيدرز سليم فضي",
+        "default_price": 86000
+      },
+      {
+        "name": "سيدرز سليم ازرق",
+        "default_price": 86000
+      }
+    ]
+  },
+  {
+    "brand": "مليونير",
+    "items": [
+      {
+        "name": "مليونير طويل فضي",
+        "default_price": 45000
+      },
+      {
+        "name": "مليونير طويل ازرق",
+        "default_price": 45000
+      },
+      {
+        "name": "مليونير كوين فضي",
+        "default_price": 0
+      },
+      {
+        "name": "مليونير كوين ازرق",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "اوسكار",
+    "items": [
+      {
+        "name": "اوسكار طويل فضي",
+        "default_price": 55000
+      },
+      {
+        "name": "اوسكار سليم فضي",
+        "default_price": 48000
+      },
+      {
+        "name": "اوسكار كوين ازرق",
+        "default_price": 52000
+      },
+      {
+        "name": "اوسكار طويل",
+        "default_price": 87000
+      },
+      {
+        "name": "اوسكار كوين",
+        "default_price": 72000
+      },
+      {
+        "name": "اوسكار سليم",
+        "default_price": 72000
+      }
+    ]
+  },
+  {
+    "brand": "اختمار",
+    "items": [
+      {
+        "name": "اختمار قصير ازرق",
+        "default_price": 50500
+      },
+      {
+        "name": "اختمار قصير فضي",
+        "default_price": 50500
+      },
+      {
+        "name": "اختمار سليم فضي",
+        "default_price": 58000
+      },
+      {
+        "name": "اختمار طويل ازرق",
+        "default_price": 58000
+      },
+      {
+        "name": "اختمار طويل",
+        "default_price": 84000
+      },
+      {
+        "name": "اختمار قصير",
+        "default_price": 85500
+      }
+    ]
+  },
+  {
+    "brand": "اليغانس",
+    "items": [
+      {
+        "name": "اليغانس طويل فضي غ",
+        "default_price": 55500
+      },
+      {
+        "name": "اليغانس قصير فضي",
+        "default_price": 50500
+      },
+      {
+        "name": "اليغانس طويل اسود",
+        "default_price": 59500
+      },
+      {
+        "name": "اليغانس اسود كرتون",
+        "default_price": 54000
+      },
+      {
+        "name": "اليغانس سليم فضي",
+        "default_price": 45000
+      },
+      {
+        "name": "اليغانس سليم ازرق",
+        "default_price": 44000
+      },
+      {
+        "name": "اليغانس سليم ازرق مربع",
+        "default_price": 39000
+      },
+      {
+        "name": "اليغانس سليم فضي مربع",
+        "default_price": 39000
+      },
+      {
+        "name": "اليغانس سليم نعنع جديد",
+        "default_price": 48000
+      },
+      {
+        "name": "اليغانس سليم نعنع قديم",
+        "default_price": 44000
+      },
+      {
+        "name": "اليغانس قصير طقتين",
+        "default_price": 63000
+      },
+      {
+        "name": "اليغانس كوين ازرق طقة",
+        "default_price": 53500
+      },
+      {
+        "name": "اليغانس سليم طقة موف",
+        "default_price": 0
+      },
+      {
+        "name": "اليغانس سليم طقة ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "اليغانس سليم شوكولا",
+        "default_price": 0
+      },
+      {
+        "name": "اليغانس سليم دهبي",
+        "default_price": 0
+      },
+      {
+        "name": "اليغانس كوين ازرق جديد",
+        "default_price": 43000
+      },
+      {
+        "name": "اليغانس كوين ابيض جديد",
+        "default_price": 43000
+      },
+      {
+        "name": "اليغانس طويل فضي غ م",
+        "default_price": 83000
+      },
+      {
+        "name": "اليغانس قصير اسود",
+        "default_price": 78500
+      },
+      {
+        "name": "اليغانس قصير ابيض",
+        "default_price": 50000
+      },
+      {
+        "name": "اليغانس كوين",
+        "default_price": 74500
+      },
+      {
+        "name": "اليغانس طويل فضي مخصص",
+        "default_price": 0
+      },
+      {
+        "name": "اليغانس سليم فضي ازرق نعنع قديم",
+        "default_price": 77500
+      },
+      {
+        "name": "اليغانس سليم مربع",
+        "default_price": 69000
+      }
+    ]
+  },
+  {
+    "brand": "مالبو",
+    "items": [
+      {
+        "name": "مالبو طويل ازرق",
+        "default_price": 44500
+      },
+      {
+        "name": "مالبو كوين فضي",
+        "default_price": 0
+      },
+      {
+        "name": "مالبو طويل فضي",
+        "default_price": 44500
+      }
+    ]
+  },
+  {
+    "brand": "اوريس",
+    "items": [
+      {
+        "name": "اوريس كوين توت طقة غ",
+        "default_price": 58500
+      },
+      {
+        "name": "اوريس كوين فريز طقة غ",
+        "default_price": 58500
+      },
+      {
+        "name": "اوريس كوين شوكولا غ",
+        "default_price": 58500
+      },
+      {
+        "name": "اوريس كوين بطيخ غ",
+        "default_price": 58500
+      },
+      {
+        "name": "طقة بلس ازرق جديد م",
+        "default_price": 53500
+      },
+      {
+        "name": "اوريس طقة منغا غ",
+        "default_price": 53500
+      },
+      {
+        "name": "اوريس سليم طقة توت",
+        "default_price": 53500
+      },
+      {
+        "name": "اوريس سليم شوكولا",
+        "default_price": 53500
+      },
+      {
+        "name": "اوريس طقتين بلوبيري م",
+        "default_price": 61000
+      },
+      {
+        "name": "اوريس تفاح",
+        "default_price": 0
+      },
+      {
+        "name": "اوريس طقتين نعنع م",
+        "default_price": 61000
+      },
+      {
+        "name": "اوريس تشكلس",
+        "default_price": 52500
+      },
+      {
+        "name": "اوريس سليم",
+        "default_price": 90000
+      },
+      {
+        "name": "اوريس طقتين",
+        "default_price": 95000
+      },
+      {
+        "name": "اوريس كوين",
+        "default_price": 81500
+      },
+      {
+        "name": "اوريس قصير بطيخ",
+        "default_price": 77000
+      },
+      {
+        "name": "اوريس كلاسيك ابيض",
+        "default_price": 69500
+      }
+    ]
+  },
+  {
+    "brand": "ويلسون",
+    "items": [
+      {
+        "name": "ويلسون احمر",
+        "default_price": 45000
+      },
+      {
+        "name": "ويلسون فضي",
+        "default_price": 45000
+      },
+      {
+        "name": "ويلسون ازرق",
+        "default_price": 45000
+      }
+    ]
+  },
+  {
+    "brand": "يونايتد",
+    "items": [
+      {
+        "name": "يونايتد",
+        "default_price": 54000
+      }
+    ]
+  },
+  {
+    "brand": "دينفر",
+    "items": [
+      {
+        "name": "دينفر اصفر",
+        "default_price": 56000
+      },
+      {
+        "name": "دينفر طويل",
+        "default_price": 56000
+      },
+      {
+        "name": "دينفر كوين",
+        "default_price": 55500
+      }
+    ]
+  },
+  {
+    "brand": "تيرا",
+    "items": [
+      {
+        "name": "تيرا برونز",
+        "default_price": 0
+      },
+      {
+        "name": "تيرا سينا",
+        "default_price": 299000
+      },
+      {
+        "name": "تيرا يوجين",
+        "default_price": 0
+      },
+      {
+        "name": "تيرا ابرسيتي",
+        "default_price": 299000
+      },
+      {
+        "name": "تيرا بلو",
+        "default_price": 0
+      },
+      {
+        "name": "تيرا سن بيرل",
+        "default_price": 0
+      },
+      {
+        "name": "تيرا اوسس بيرل",
+        "default_price": 0
+      },
+      {
+        "name": "تيرا بلو / سينا / اوسن بيرل حرة",
+        "default_price": 345000
+      }
+    ]
+  },
+  {
+    "brand": "معسل مزايا",
+    "items": [
+      {
+        "name": "مزايا تفاحتين فرنسي",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا علكة",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا بولو",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا عنب",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا عنب ونعنع",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا نعنع",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا علكة ونعنع",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا لوف",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا ماكس",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا بحريني",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا مصري",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا مستكة",
+        "default_price": 102000
+      },
+      {
+        "name": "مزايا إنكليزي",
+        "default_price": 103500
+      },
+      {
+        "name": "مزايا علكة مثلج",
+        "default_price": 103500
+      },
+      {
+        "name": "مزايا علكة و نعنع مثلج",
+        "default_price": 103500
+      },
+      {
+        "name": "مزايا بلوبيري",
+        "default_price": 103500
+      },
+      {
+        "name": "مزايا تفاحتين مثلج",
+        "default_price": 110000
+      },
+      {
+        "name": "مزايا كاندي دروبس",
+        "default_price": 110000
+      },
+      {
+        "name": "مزايا كيلير كوين",
+        "default_price": 110000
+      },
+      {
+        "name": "مزايا هابي مانغو",
+        "default_price": 110000
+      },
+      {
+        "name": "مزايا ببل جيم",
+        "default_price": 103500
+      },
+      {
+        "name": "مزايا نعنع مثلج",
+        "default_price": 103500
+      },
+      {
+        "name": "مزايا كف علكة",
+        "default_price": 50500
+      },
+      {
+        "name": "مزايا كف مصري",
+        "default_price": 50500
+      },
+      {
+        "name": "مزايا كف لوف",
+        "default_price": 50500
+      },
+      {
+        "name": "مزايا كف بحريني",
+        "default_price": 50500
+      },
+      {
+        "name": "مزايا كف بولو",
+        "default_price": 50500
+      },
+      {
+        "name": "مزايا كف تريندي",
+        "default_price": 52000
+      },
+      {
+        "name": "مزايا كف روبي كراش",
+        "default_price": 52000
+      },
+      {
+        "name": "مزايا ماكس 250 غ",
+        "default_price": 51000
+      },
+      {
+        "name": "مزايا بحريني 1 كغ",
+        "default_price": 200000
+      },
+      {
+        "name": "مزايا فرنسي",
+        "default_price": 169000
+      },
+      {
+        "name": "مزايا نكهات",
+        "default_price": 169000
+      },
+      {
+        "name": "كف بحريني / كف بولو",
+        "default_price": 84000
+      },
+      {
+        "name": "كف مصري / كف لوف",
+        "default_price": 84000
+      },
+      {
+        "name": "معسل مزايا فرنسي تفاحتين",
+        "default_price": 167500
+      },
+      {
+        "name": "مزايا روبي كراش",
+        "default_price": 167500
+      }
+    ]
+  },
+  {
+    "brand": "معسل مزاج",
+    "items": [
+      {
+        "name": "مزاج نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "مزاج لوف",
+        "default_price": 0
+      },
+      {
+        "name": "مزاج تفاحتين",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "معسل العراب",
+    "items": [
+      {
+        "name": "العراب عنب ونعنع",
+        "default_price": 0
+      },
+      {
+        "name": "العراب عنب",
+        "default_price": 0
+      },
+      {
+        "name": "العراب علكة ونعنع",
+        "default_price": 0
+      },
+      {
+        "name": "العراب تفاحتين فرنسي",
+        "default_price": 0
+      },
+      {
+        "name": "العراب بولو",
+        "default_price": 0
+      },
+      {
+        "name": "العراب لوف",
+        "default_price": 0
+      },
+      {
+        "name": "كف العراب تفاحتين بحريني",
+        "default_price": 0
+      },
+      {
+        "name": "العراب علكة",
+        "default_price": 0
+      },
+      {
+        "name": "العراب تفاحتين بحريني",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "معسل اداليا",
+    "items": [
+      {
+        "name": "اداليا تفاح مثلج",
+        "default_price": 0
+      },
+      {
+        "name": "اداليا بطيخ",
+        "default_price": 0
+      },
+      {
+        "name": "اداليا ليمون مثلج",
+        "default_price": 0
+      },
+      {
+        "name": "اداليا لورد",
+        "default_price": 0
+      },
+      {
+        "name": "اداليا لوف",
+        "default_price": 0
+      },
+      {
+        "name": "اداليا السيدة",
+        "default_price": 0
+      },
+      {
+        "name": "اداليا تفاحتين بحريني",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "معسل نخلة",
+    "items": [
+      {
+        "name": "نخلة صلاحية",
+        "default_price": 206000
+      },
+      {
+        "name": "نخلة مطار",
+        "default_price": 110000
+      },
+      {
+        "name": "نخلة لبناني",
+        "default_price": 259000
+      },
+      {
+        "name": "كف نخلة صلاحية باركود",
+        "default_price": 80000
+      },
+      {
+        "name": "كف نخلة صلاحية شركة",
+        "default_price": 105000
+      },
+      {
+        "name": "كف نخلة لبناني",
+        "default_price": 120000
+      },
+      {
+        "name": "كيس نخلة صلاحية 250 غ",
+        "default_price": 65000
+      }
+    ]
+  },
+  {
+    "brand": "ماستر",
+    "items": [
+      {
+        "name": "ماستر طويل ورق م",
+        "default_price": 67000
+      },
+      {
+        "name": "ماستر قصير ازرق م",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر قصير فضي",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر كوين ازرق",
+        "default_price": 81500
+      },
+      {
+        "name": "ماستر كوين ابيض م",
+        "default_price": 77500
+      },
+      {
+        "name": "ماستر سليم فضي م",
+        "default_price": 62000
+      },
+      {
+        "name": "ماستر سليم بطيخ",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر سليم بلوبيري",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر سليم تفاح و نعنع",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر سليم علكة ونعنع",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر سليم نعنع مثلج",
+        "default_price": 61000
+      },
+      {
+        "name": "ماستر طويل ورق",
+        "default_price": 99000
+      },
+      {
+        "name": "ماستر طويل كرتون",
+        "default_price": 0
+      },
+      {
+        "name": "ماستر قصير ازرق",
+        "default_price": 103000
+      },
+      {
+        "name": "ماستر كوين ابيض",
+        "default_price": 135000
+      },
+      {
+        "name": "ماستر سليم ازرق",
+        "default_price": 79500
+      },
+      {
+        "name": "ماستر سليم فضي",
+        "default_price": 79500
+      },
+      {
+        "name": "ماستر طقتين دبل ايس ميكس",
+        "default_price": 313000
+      },
+      {
+        "name": "ماستر طقتين دبل سمر",
+        "default_price": 353500
+      },
+      {
+        "name": "ماستر طقتين دبل فيوجين سمر",
+        "default_price": 353500
+      },
+      {
+        "name": "ماستر طقتين دبل بلوسم فيوجين",
+        "default_price": 326500
+      },
+      {
+        "name": "ماستر قصير فضي م",
+        "default_price": 96000
+      },
+      {
+        "name": "ماستر سليم ازرق م",
+        "default_price": 79500
+      }
+    ]
+  },
+  {
+    "brand": "هيستوري",
+    "items": [
+      {
+        "name": "هيستوري طويل فضي",
+        "default_price": 47500
+      },
+      {
+        "name": "هيستوري طويل ازرق",
+        "default_price": 47500
+      },
+      {
+        "name": "هيستوري قصير فضي",
+        "default_price": 40500
+      },
+      {
+        "name": "هيستوري قصير ازرق",
+        "default_price": 40500
+      },
+      {
+        "name": "هيستوري كوين",
+        "default_price": 39000
+      },
+      {
+        "name": "هيستوري سليم فضي",
+        "default_price": 39000
+      },
+      {
+        "name": "هيستوري سليم نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "هيستوري طويل",
+        "default_price": 77000
+      },
+      {
+        "name": "هيستوري قصير",
+        "default_price": 56500
+      },
+      {
+        "name": "هيستوري سليم",
+        "default_price": 59500
+      }
+    ]
+  },
+  {
+    "brand": "سلوفان",
+    "items": [
+      {
+        "name": "سلوفان برينتو كيس 24 قطعة",
+        "default_price": 23000
+      },
+      {
+        "name": "برينتو رول طرد",
+        "default_price": 101500
+      },
+      {
+        "name": "سلوفان الأصيل نص كيلو",
+        "default_price": 22500
+      },
+      {
+        "name": "سلوفان برينتو نص كيلو",
+        "default_price": 0
+      },
+      {
+        "name": "سلوفان عدة 10 الأصيل سي دي",
+        "default_price": 35000
+      },
+      {
+        "name": "سلوفان 0.5 كغ الأصيل",
+        "default_price": 23500
+      },
+      {
+        "name": "سلوفان 1 كغ الأصيل",
+        "default_price": 13000
+      },
+      {
+        "name": "سلوفان رول الأصيل",
+        "default_price": 6500
+      },
+      {
+        "name": "سلوفان قصير ازرق",
+        "default_price": 204000
+      },
+      {
+        "name": "سلوفان الزعيم 24 طرد",
+        "default_price": 122500
+      },
+      {
+        "name": "برينتو 8 عدة كيس",
+        "default_price": 31500
+      },
+      {
+        "name": "برينتو 125 غ",
+        "default_price": 6000
+      }
+    ]
+  },
+  {
+    "brand": "مباسم",
+    "items": [
+      {
+        "name": "كيس مباسم عدد 30 قطعة",
+        "default_price": 0
+      },
+      {
+        "name": "مباسم اركيلة",
+        "default_price": 4000
+      },
+      {
+        "name": "كيس مباسم 30 قطعة",
+        "default_price": 5500
+      }
+    ]
+  },
+  {
+    "brand": "فحم",
+    "items": [
+      {
+        "name": "فحم سيبروس كيلو",
+        "default_price": 31500
+      },
+      {
+        "name": "فحم الزعيم نصف كيلو",
+        "default_price": 20000
+      },
+      {
+        "name": "فحم الزعيم كيلو",
+        "default_price": 36000
+      },
+      {
+        "name": "فحم برو",
+        "default_price": 0
+      },
+      {
+        "name": "فحم إيكو نارا",
+        "default_price": 0
+      },
+      {
+        "name": "فحم هورس 250 غ",
+        "default_price": 0
+      },
+      {
+        "name": "فحم سارا",
+        "default_price": 125000
+      },
+      {
+        "name": "فحم سارا جوز هند",
+        "default_price": 82000
+      },
+      {
+        "name": "فحم الزعيم 500 غ",
+        "default_price": 82000
+      },
+      {
+        "name": "فحم الزعيم 250 غ",
+        "default_price": 66000
+      },
+      {
+        "name": "فحم الزعيم 400 غ",
+        "default_price": 193000
+      },
+      {
+        "name": "فحم الزعيم 1000 غ",
+        "default_price": 87000
+      },
+      {
+        "name": "فحم يحيى كريستال 1000 غ",
+        "default_price": 44000
+      },
+      {
+        "name": "فحم الرشيد 500 غ",
+        "default_price": 23000
+      },
+      {
+        "name": "فحم ايكو نارا اخضر احمر",
+        "default_price": 28000
+      },
+      {
+        "name": "فحم برو 250 غ",
+        "default_price": 12000
+      },
+      {
+        "name": "فحم الزعيم 1 كغ",
+        "default_price": 46000
+      },
+      {
+        "name": "فحم الاغا 1 كغ",
+        "default_price": 22000
+      },
+      {
+        "name": "فحم برو 1 كغ",
+        "default_price": 0
+      },
+      {
+        "name": "فحم بيروتي 1 كغ",
+        "default_price": 38000
+      },
+      {
+        "name": "فحم كوكو 8 1 كغ",
+        "default_price": 41000
+      },
+      {
+        "name": "فحم برو ربع كيلو",
+        "default_price": 12500
+      },
+      {
+        "name": "فحم دراغون ربع كيلو",
+        "default_price": 8000
+      },
+      {
+        "name": "فحم ولف ربع كيلو",
+        "default_price": 7500
+      },
+      {
+        "name": "فحم اتش انش ربع كيلو",
+        "default_price": 10500
+      }
+    ]
+  },
+  {
+    "brand": "كابتن بلاك",
+    "items": [
+      {
+        "name": "كابتن بلاك طويل مانجو",
+        "default_price": 0
+      },
+      {
+        "name": "كابتن بلاك طويل شوكولا",
+        "default_price": 152000
+      },
+      {
+        "name": "كابتن بلاك طويل تفاح",
+        "default_price": 151500
+      },
+      {
+        "name": "كابتن بلاك طويل عنب",
+        "default_price": 151500
+      },
+      {
+        "name": "كابتن كوين دهبي",
+        "default_price": 55000
+      },
+      {
+        "name": "كابتن كوين ازرق",
+        "default_price": 55000
+      },
+      {
+        "name": "كابتن كوين ون",
+        "default_price": 49500
+      },
+      {
+        "name": "كابتن سليم فضي",
+        "default_price": 39000
+      },
+      {
+        "name": "كابتن سلييم ازرق",
+        "default_price": 39000
+      },
+      {
+        "name": "كابتن كوين ون اسود",
+        "default_price": 65000
+      },
+      {
+        "name": "كابتن كوين ون ازرق",
+        "default_price": 65000
+      },
+      {
+        "name": "سيجار يلو عنب",
+        "default_price": 125500
+      },
+      {
+        "name": "سجار يلو سلفر",
+        "default_price": 125500
+      },
+      {
+        "name": "سيجار يلو فريز",
+        "default_price": 125500
+      },
+      {
+        "name": "سيجار يلو كرز",
+        "default_price": 125500
+      },
+      {
+        "name": "كابتن بلاك ابيض",
+        "default_price": 83000
+      },
+      {
+        "name": "كابتن بلاك ازرق",
+        "default_price": 82000
+      },
+      {
+        "name": "كابتن بلاك ذهبي",
+        "default_price": 82000
+      },
+      {
+        "name": "كابتن بلاك سليم",
+        "default_price": 66000
+      },
+      {
+        "name": "كابتن بلاك مسلف",
+        "default_price": 87000
+      },
+      {
+        "name": "سيجار يلو قهوة",
+        "default_price": 143000
+      }
+    ]
+  },
+  {
+    "brand": "مانشستر",
+    "items": [
+      {
+        "name": "مانشستر كوين طقة تفاح",
+        "default_price": 52000
+      },
+      {
+        "name": "مانشستر كوين طقة فريز",
+        "default_price": 52000
+      },
+      {
+        "name": "مانشستر كوين طقة توت",
+        "default_price": 52000
+      },
+      {
+        "name": "مانشستر كوين طقة برتقال",
+        "default_price": 52000
+      },
+      {
+        "name": "مانشستر قصير ازرق",
+        "default_price": 53000
+      },
+      {
+        "name": "مانشستر قصير فضي",
+        "default_price": 48000
+      },
+      {
+        "name": "مانشستر طويل احمر",
+        "default_price": 47000
+      },
+      {
+        "name": "مانشستر طويل ازرق",
+        "default_price": 49000
+      },
+      {
+        "name": "مانشستر سليم طقة توت",
+        "default_price": 47000
+      },
+      {
+        "name": "مانشستر سليم برونز",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر سليم ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر كوين ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر كوين ابيض",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر كوين غولد",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر قصير نافي",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر قصير طقتين اسود",
+        "default_price": 72000
+      },
+      {
+        "name": "مانشستر قصير طقة ازرق",
+        "default_price": 53000
+      },
+      {
+        "name": "مانشستر قصير طقة عنبر",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر طويل فضي",
+        "default_price": 49000
+      },
+      {
+        "name": "مانشستر سليم طقة عنبر",
+        "default_price": 0
+      },
+      {
+        "name": "مانشستر كوين فريز طقة",
+        "default_price": 79000
+      },
+      {
+        "name": "مانشستر كوين برتقال",
+        "default_price": 79000
+      },
+      {
+        "name": "مانشستر سليم توت",
+        "default_price": 58500
+      },
+      {
+        "name": "مانشستر قصير طقة ازرق عنبر",
+        "default_price": 62500
+      }
+    ]
+  },
+  {
+    "brand": "بلاتينيوم",
+    "items": [
+      {
+        "name": "بلاتينيوم سليم فضي",
+        "default_price": 38000
+      },
+      {
+        "name": "بلاتينيوم سليم نعنع",
+        "default_price": 42000
+      },
+      {
+        "name": "بلاتينيوم سليم ازرق",
+        "default_price": 39000
+      },
+      {
+        "name": "بلاتينيوم طقة توت",
+        "default_price": 46500
+      },
+      {
+        "name": "بلاتينيوم طقة منغا",
+        "default_price": 46500
+      },
+      {
+        "name": "بلاتينيوم طقة برتقال",
+        "default_price": 46500
+      },
+      {
+        "name": "بلاتينيوم طقة ازرق كول",
+        "default_price": 46500
+      },
+      {
+        "name": "بلاتينيوم فضي طويل",
+        "default_price": 39000
+      },
+      {
+        "name": "بلاتينيوم ازرق طويل",
+        "default_price": 39000
+      },
+      {
+        "name": "بلاتينيوم قصير خمس نكهات طقتين",
+        "default_price": 70000
+      },
+      {
+        "name": "بلاتينيوم قصير بلوبيري و نعنع",
+        "default_price": 70000
+      },
+      {
+        "name": "بلاتينيوم قصير تفاح اخضر و نعنع طقتين",
+        "default_price": 70000
+      },
+      {
+        "name": "بلاتينيوم قصير فضي",
+        "default_price": 45000
+      },
+      {
+        "name": "بلاتينيوم قصير ازرق",
+        "default_price": 45000
+      },
+      {
+        "name": "بلاتينيوم كوين فضي",
+        "default_price": 40500
+      },
+      {
+        "name": "بلاتينيوم كوين ازرق",
+        "default_price": 40500
+      },
+      {
+        "name": "بلاتينيوم كوين بلوبيري و نعنع طقتين",
+        "default_price": 58500
+      },
+      {
+        "name": "بلاتينيوم طويل",
+        "default_price": 62000
+      },
+      {
+        "name": "بلاتينيوم قصير",
+        "default_price": 50000
+      },
+      {
+        "name": "بلاتينيوم قصير طقة",
+        "default_price": 79000
+      },
+      {
+        "name": "بلاتينيوم قصير 5 نكهات",
+        "default_price": 79000
+      },
+      {
+        "name": "بلاتينيوم كوين",
+        "default_price": 55000
+      },
+      {
+        "name": "بلاتينيوم طقة كوين بلوبيري",
+        "default_price": 65000
+      },
+      {
+        "name": "بلاتينيوم سليم فضي ازرق",
+        "default_price": 55000
+      },
+      {
+        "name": "بلاتينيوم سليم طقة",
+        "default_price": 62000
+      },
+      {
+        "name": "بلاتينيوم سليم طقتين",
+        "default_price": 69000
+      },
+      {
+        "name": "بلاتينيوم طويل فضي",
+        "default_price": 62500
+      },
+      {
+        "name": "بلاتينيوم طويل ازرق",
+        "default_price": 62500
+      },
+      {
+        "name": "بلاتينيوم سليم ازرق طقة توت",
+        "default_price": 53000
+      },
+      {
+        "name": "بلاتينيوم قصير بلوبيري ونعنع طقتين",
+        "default_price": 79000
+      }
+    ]
+  },
+  {
+    "brand": "كينغدوم",
+    "items": [
+      {
+        "name": "كينغدوم طويل",
+        "default_price": 0
+      },
+      {
+        "name": "كينغدوم سليم نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "كينغدوم سليم فضي",
+        "default_price": 0
+      },
+      {
+        "name": "كينغدوم بوكس ذهبي",
+        "default_price": 0
+      },
+      {
+        "name": "كينغدوم بوكس احمر",
+        "default_price": 0
+      },
+      {
+        "name": "كينغدوم بوكس ابيض",
+        "default_price": 0
+      },
+      {
+        "name": "كينغ دوم قصير",
+        "default_price": 0
+      },
+      {
+        "name": "كينغ دوم كوين",
+        "default_price": 76000
+      },
+      {
+        "name": "كينغ دوم سليم",
+        "default_price": 67500
+      },
+      {
+        "name": "كينغ دوم طويل فضي",
+        "default_price": 85000
+      },
+      {
+        "name": "كينغ دوم طويل ازرق",
+        "default_price": 83000
+      },
+      {
+        "name": "كينغ دوم طويل ورق",
+        "default_price": 68000
+      },
+      {
+        "name": "كينغ دوم قصير كرتون",
+        "default_price": 54500
+      },
+      {
+        "name": "كينغ دوم قصير نعنع",
+        "default_price": 54500
+      },
+      {
+        "name": "كينغ دوم سليم كوين ابيض",
+        "default_price": 62500
+      },
+      {
+        "name": "كينغ دوم سليم ازرق",
+        "default_price": 62500
+      }
+    ]
+  },
+  {
+    "brand": "اراكيل الكترونية برو",
+    "items": [
+      {
+        "name": "برو فيب 11000 سحبة",
+        "default_price": 0
+      },
+      {
+        "name": "فيب فاخر 12000 سحبة",
+        "default_price": 168000
+      },
+      {
+        "name": "فيب فاخر 8000 سحبة",
+        "default_price": 0
+      },
+      {
+        "name": "فيب مزايا 80000 سحبة",
+        "default_price": 245000
+      },
+      {
+        "name": "فيب مزايا 50000 سحبة",
+        "default_price": 190500
+      },
+      {
+        "name": "فيب فاخر 60000 سحبة",
+        "default_price": 245000
+      },
+      {
+        "name": "فيب اكس بار 40000 سحبة",
+        "default_price": 149500
+      }
+    ]
+  },
+  {
+    "brand": "روز",
+    "items": [
+      {
+        "name": "روز طويل فضي",
+        "default_price": 51000
+      },
+      {
+        "name": "روز طويل ازرق",
+        "default_price": 51000
+      },
+      {
+        "name": "روز سليم فضي",
+        "default_price": 42000
+      },
+      {
+        "name": "روز قصير ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "روز قصير كولد",
+        "default_price": 47000
+      },
+      {
+        "name": "روز قصير ابيض",
+        "default_price": 0
+      },
+      {
+        "name": "روز سليم بلوبيري",
+        "default_price": 0
+      },
+      {
+        "name": "روز كلاسيك ابيض",
+        "default_price": 39000
+      },
+      {
+        "name": "روز طويل",
+        "default_price": 84000
+      },
+      {
+        "name": "روز قصير",
+        "default_price": 51000
+      },
+      {
+        "name": "روز سليم كومفورت / عادي",
+        "default_price": 45500
+      }
+    ]
+  },
+  {
+    "brand": "الفاخر",
+    "items": [
+      {
+        "name": "الفاخر علكة",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر عنب",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر تفاحتين اسود بحريني",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر بلوبيري",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر علكة ونعنع",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر تفاحتين احمر بحريني",
+        "default_price": 125000
+      },
+      {
+        "name": "الفاخر بولو",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر عنب ونعنع",
+        "default_price": 0
+      },
+      {
+        "name": "فاخر تفاحتيبن اسود حرة كروز",
+        "default_price": 130000
+      },
+      {
+        "name": "فاخر تفاحتين اسود حرة مثلج",
+        "default_price": 130000
+      },
+      {
+        "name": "فاخر تفاحتين اسود 1 كغ حرة",
+        "default_price": 250000
+      },
+      {
+        "name": "فاخر تفاحتين اسود حرة علبة 250 غ",
+        "default_price": 68500
+      },
+      {
+        "name": "فاخر تفاحتين اسود حرة كف 250 غ",
+        "default_price": 68500
+      },
+      {
+        "name": "الفاخر فيب",
+        "default_price": 195000
+      },
+      {
+        "name": "الفاخر احمر",
+        "default_price": 105000
+      },
+      {
+        "name": "الفاخر 250 غ",
+        "default_price": 201000
+      },
+      {
+        "name": "الفاخر اسود + مثلج",
+        "default_price": 0
+      },
+      {
+        "name": "الفاخر تفاحتين اسود حرة كروز",
+        "default_price": 204000
+      },
+      {
+        "name": "الفاخر تفاحتين احمر",
+        "default_price": 198500
+      },
+      {
+        "name": "الفاخر تفاحتين اسود مثلج حرة كروز",
+        "default_price": 204000
+      },
+      {
+        "name": "طقة بلس ازرق 1 كغ حرة",
+        "default_price": 385000
+      }
+    ]
+  },
+  {
+    "brand": "معسل روز",
+    "items": [
+      {
+        "name": "معسل روز كف تفاحتين",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز تفاحتين",
+        "default_price": 72000
+      },
+      {
+        "name": "معسل روز بولو",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز بلوبيري",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز علكة و نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز عنب و نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز علكة",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز تفاحتين مثلج",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز مستكة",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز بحريني",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز تفاحتين سطل 5 كيلو",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز بولو سطل 5 كيلو",
+        "default_price": 0
+      },
+      {
+        "name": "معسل روز مشكل",
+        "default_price": 86500
+      },
+      {
+        "name": "معسل روز",
+        "default_price": 135000
+      },
+      {
+        "name": "كف روز",
+        "default_price": 69000
+      },
+      {
+        "name": "معسل روز تفاحتين مصري",
+        "default_price": 114500
+      }
+    ]
+  },
+  {
+    "brand": "معسل ملكي",
+    "items": [
+      {
+        "name": "معسل ملكي تفاحتين",
+        "default_price": 0
+      },
+      {
+        "name": "معسل ملكي علكة",
+        "default_price": 0
+      },
+      {
+        "name": "معسل ملكي لوف",
+        "default_price": 0
+      },
+      {
+        "name": "معسل ملكي بولو",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "كلواز 8 S",
+    "items": [
+      {
+        "name": "كلواز كوين أحمر 8 S",
+        "default_price": 78500
+      },
+      {
+        "name": "كلواز كوين أصفر 8 S",
+        "default_price": 78500
+      },
+      {
+        "name": "كلواز قصير حرة",
+        "default_price": 112000
+      },
+      {
+        "name": "كلواز احمر عريض",
+        "default_price": 112000
+      },
+      {
+        "name": "كلواز اصفر عريض",
+        "default_price": 112000
+      }
+    ]
+  },
+  {
+    "brand": "1970",
+    "items": [
+      {
+        "name": "طويل فضي 1970",
+        "default_price": 57000
+      },
+      {
+        "name": "طويل ازرق 1970",
+        "default_price": 57000
+      },
+      {
+        "name": "قصير فضي 1970",
+        "default_price": 55000
+      },
+      {
+        "name": "قصير ازرق 1970",
+        "default_price": 55000
+      },
+      {
+        "name": "كوين فضي 1970",
+        "default_price": 50500
+      },
+      {
+        "name": "سليم فضي 1970",
+        "default_price": 41000
+      },
+      {
+        "name": "سليم نعنع 1970",
+        "default_price": 42000
+      },
+      {
+        "name": "سليم ازرق 1970",
+        "default_price": 41500
+      },
+      {
+        "name": "1970 قصير فضي",
+        "default_price": 64500
+      },
+      {
+        "name": "1970 قصير ازرق",
+        "default_price": 78000
+      },
+      {
+        "name": "1970 كوين ابيض",
+        "default_price": 58000
+      },
+      {
+        "name": "1970 كوين ازرق",
+        "default_price": 51000
+      },
+      {
+        "name": "1970 كوين اسود",
+        "default_price": 73000
+      },
+      {
+        "name": "1970 سليم فضي",
+        "default_price": 15500
+      },
+      {
+        "name": "1970 سليم ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "1970 سليم نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "1970 طويل فضي",
+        "default_price": 88500
+      },
+      {
+        "name": "1970 طويل ازرق",
+        "default_price": 88500
+      },
+      {
+        "name": "1970 كوين فضي",
+        "default_price": 77500
+      },
+      {
+        "name": "1970 سليم فضي كراش",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "كرنفال",
+    "items": [
+      {
+        "name": "كرنفال سليم فضي",
+        "default_price": 0
+      },
+      {
+        "name": "كرنفال قصير طقة",
+        "default_price": 0
+      },
+      {
+        "name": "كرنفال سليم طقة",
+        "default_price": 0
+      },
+      {
+        "name": "كرنفال قصير ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "كرنفال سليم نعنع",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "ويليامز",
+    "items": [
+      {
+        "name": "ويليامز سليم نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز طويل ورق",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز سليم نانو",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز سليم ازرق طقة",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز قصير فضي",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز طويل كرتون",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز قصير ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز سليم تفاح",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز سليم فضي",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز كوين فضي",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز كوين ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "ويليامز سليم تفاح م",
+        "default_price": 47500
+      },
+      {
+        "name": "ويليامز فريز",
+        "default_price": 47500
+      },
+      {
+        "name": "ويليامز كوين فريز وليمون",
+        "default_price": 47500
+      },
+      {
+        "name": "ويليامز كوين تفاحتين مثلج",
+        "default_price": 47500
+      }
+    ]
+  },
+  {
+    "brand": "البرو",
+    "items": [
+      {
+        "name": "برو فضي طويل",
+        "default_price": 40500
+      },
+      {
+        "name": "يرو ازرق طويل",
+        "default_price": 40500
+      },
+      {
+        "name": "برو كوين فضي",
+        "default_price": 36000
+      },
+      {
+        "name": "برو طويل شوكولا",
+        "default_price": 0
+      },
+      {
+        "name": "برو طويل حليب",
+        "default_price": 0
+      },
+      {
+        "name": "برو طويل كرز",
+        "default_price": 0
+      },
+      {
+        "name": "برو كوين اسود",
+        "default_price": 0
+      },
+      {
+        "name": "برو فضي سليم",
+        "default_price": 35500
+      }
+    ]
+  },
+  {
+    "brand": "دخان حرة",
+    "items": [
+      {
+        "name": "مالبورو غولد حرة",
+        "default_price": 310500
+      },
+      {
+        "name": "مالبورو سلفر حرة",
+        "default_price": 359000
+      },
+      {
+        "name": "مالبورو دهبي طابع",
+        "default_price": 299000
+      },
+      {
+        "name": "مالبورو احمر طويل كرتون حرة",
+        "default_price": 264000
+      },
+      {
+        "name": "مالبورو 600 احمر",
+        "default_price": 310500
+      },
+      {
+        "name": "مالبورو طقتين دبل ايس",
+        "default_price": 276000
+      },
+      {
+        "name": "مالبورو طقتين دبل ميكس",
+        "default_price": 288000
+      },
+      {
+        "name": "مالبورو طقتين دبل فيوجين",
+        "default_price": 276000
+      },
+      {
+        "name": "مالبورو غولد تيتانيوم",
+        "default_price": 0
+      },
+      {
+        "name": "مالبورو طقتين دبل بلوسم فيوجين",
+        "default_price": 288000
+      },
+      {
+        "name": "مالبورو تاتش ون سمارت",
+        "default_price": 0
+      },
+      {
+        "name": "مالبورو دبل ايس فيستا",
+        "default_price": 288000
+      },
+      {
+        "name": "مالبورو 3 طقات لونا",
+        "default_price": 288000
+      },
+      {
+        "name": "وينستون فضي حرة",
+        "default_price": 204000
+      },
+      {
+        "name": "وينستون ازرق حرة",
+        "default_price": 215000
+      },
+      {
+        "name": "دافيدوف غولد طويل",
+        "default_price": 205000
+      },
+      {
+        "name": "دافيدوف ابيض طويل",
+        "default_price": 205000
+      },
+      {
+        "name": "دافديوف غولد سليم",
+        "default_price": 205000
+      },
+      {
+        "name": "دافيدوف سليم وايت",
+        "default_price": 205000
+      },
+      {
+        "name": "دافيدوف كلاسيك خمري طويل",
+        "default_price": 205000
+      },
+      {
+        "name": "دافيدوف كلاسيك خمري سليم",
+        "default_price": 205000
+      },
+      {
+        "name": "مور نعنع",
+        "default_price": 229000
+      },
+      {
+        "name": "برلمنت اكوا بلو",
+        "default_price": 372000
+      },
+      {
+        "name": "برلمنت نايت بلو",
+        "default_price": 372000
+      },
+      {
+        "name": "مالبورو ابيض كرتون طابع نظامي حرة",
+        "default_price": 320000
+      },
+      {
+        "name": "مالبورو احمر كرتون حرة",
+        "default_price": 415000
+      },
+      {
+        "name": "مالبورو سيلفر كرتون حرة",
+        "default_price": 442000
+      },
+      {
+        "name": "مالبورو وايت كرتون حرة",
+        "default_price": 400000
+      },
+      {
+        "name": "مالبورو طقتين + 3 طاقات كل النكهات",
+        "default_price": 335000
+      },
+      {
+        "name": "مالبورو كوين تاتش خمري دهبي حرة",
+        "default_price": 221000
+      },
+      {
+        "name": "كنت فضي ازرق حرة",
+        "default_price": 166000
+      },
+      {
+        "name": "مور حرة",
+        "default_price": 0
+      },
+      {
+        "name": "دافيدوف طويل حرة",
+        "default_price": 335000
+      },
+      {
+        "name": "دافيدوف سليم حرة",
+        "default_price": 280000
+      },
+      {
+        "name": "سيجار باك وودز حرة",
+        "default_price": 0
+      },
+      {
+        "name": "سيجاريلو كابتن بلاك حرة",
+        "default_price": 105000
+      },
+      {
+        "name": "مالبورو كوين تاتش سمارت ون حرة",
+        "default_price": 305000
+      },
+      {
+        "name": "مالبورو كوين ازرق حرة",
+        "default_price": 345000
+      },
+      {
+        "name": "برلمنت بلاتينيوم / نايت بلو / اكو بلو حرة",
+        "default_price": 375000
+      },
+      {
+        "name": "برلمنت سيلفر بلو حرة",
+        "default_price": 435000
+      },
+      {
+        "name": "مالبورو جامبو ابيض كرتون حرة",
+        "default_price": 415000
+      },
+      {
+        "name": "مالبورو فلتر بلاس ون حرة",
+        "default_price": 390000
+      },
+      {
+        "name": "دنهل طويل ايفوك حرة",
+        "default_price": 345000
+      },
+      {
+        "name": "مالبورو دهبي طابع حرة",
+        "default_price": 258500
+      },
+      {
+        "name": "مالبورو احمر شنتة حرة",
+        "default_price": 453500
+      },
+      {
+        "name": "مالبورو غولد شنتة حرة",
+        "default_price": 453500
+      },
+      {
+        "name": "مالبورو وايت حرة",
+        "default_price": 435000
+      },
+      {
+        "name": "مالبورو كوين دهبي حرة",
+        "default_price": 245000
+      },
+      {
+        "name": "مالبورو كوين احمر حرة",
+        "default_price": 245000
+      },
+      {
+        "name": "دينهل طويل ايفوك",
+        "default_price": 353500
+      },
+      {
+        "name": "برلمنت سلفر بلو",
+        "default_price": 0
+      },
+      {
+        "name": "كنت فضي حرة",
+        "default_price": 170000
+      },
+      {
+        "name": "كنت ازرق حرة",
+        "default_price": 170000
+      }
+    ]
+  },
+  {
+    "brand": "بزنس رويال",
+    "items": [
+      {
+        "name": "بزنس رويال قصير ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال قصير احمر",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال قصير فضي",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال سليم ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال سليم فضي",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال سليم نعنع",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال طويل فضي",
+        "default_price": 35000
+      },
+      {
+        "name": "بزنس رويال طويل ازرق",
+        "default_price": 35000
+      },
+      {
+        "name": "بزنس رويال طويل احمر",
+        "default_price": 35000
+      },
+      {
+        "name": "بزنس رويال طويل",
+        "default_price": 0
+      },
+      {
+        "name": "بزنس رويال سليم قصير",
+        "default_price": 43000
+      },
+      {
+        "name": "بزنس رويال سليم طقة عنب",
+        "default_price": 47500
+      }
+    ]
+  },
+  {
+    "brand": "كلواز عريض",
+    "items": [
+      {
+        "name": "كلواز احمر عريض",
+        "default_price": 78500
+      },
+      {
+        "name": "كلواز اصفر عريض",
+        "default_price": 78500
+      }
+    ]
+  },
+  {
+    "brand": "نباريج",
+    "items": [
+      {
+        "name": "نباريج بلاستيك",
+        "default_price": 2000
+      },
+      {
+        "name": "نباريج مزايا",
+        "default_price": 5000
+      },
+      {
+        "name": "نباريج خشب مزايا فاخرة جداً",
+        "default_price": 50000
+      }
+    ]
+  },
+  {
+    "brand": "كي رايتر",
+    "items": [
+      {
+        "name": "كي رايتر كوين طعمات",
+        "default_price": 76000
+      },
+      {
+        "name": "كي رايتر سليم طعمات",
+        "default_price": 76000
+      },
+      {
+        "name": "كي رايتر كوين شوكولا",
+        "default_price": 90000
+      },
+      {
+        "name": "كي رايتر سليم شوكولا",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "قداحات",
+    "items": [
+      {
+        "name": "قداحات ضو",
+        "default_price": 49000
+      }
+    ]
+  },
+  {
+    "brand": "كاسات",
+    "items": [
+      {
+        "name": "كاسات ص 5.5 + 6 اونص",
+        "default_price": 5500
+      },
+      {
+        "name": "كاسات كبيرة 9 اونص",
+        "default_price": 9000
+      },
+      {
+        "name": "كاسات اندومي 16 اونص",
+        "default_price": 28000
+      },
+      {
+        "name": "كاسات بلاستيك 10 اونص مع طبات",
+        "default_price": 28000
+      },
+      {
+        "name": "كاسات بلاستيك 16 اونص مع طبات",
+        "default_price": 31000
+      },
+      {
+        "name": "كاسات بلاستيك 22 اونص مع طبات",
+        "default_price": 43000
+      }
+    ]
+  },
+  {
+    "brand": "مصافي",
+    "items": [
+      {
+        "name": "مصافي اخضر",
+        "default_price": 0
+      },
+      {
+        "name": "مصافي احمر",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "أكياس",
+    "items": [
+      {
+        "name": "أكياس نايلون",
+        "default_price": 22000
+      },
+      {
+        "name": "رول شفاف",
+        "default_price": 2500
+      },
+      {
+        "name": "أكياس قمامة",
+        "default_price": 13000
+      },
+      {
+        "name": "رول قمامة",
+        "default_price": 2000
+      }
+    ]
+  },
+  {
+    "brand": "أدوات",
+    "items": [
+      {
+        "name": "ملاقط شوك حراكات",
+        "default_price": 21000
+      }
+    ]
+  },
+  {
+    "brand": "معسل الفخامة",
+    "items": [
+      {
+        "name": "معسل الفخامة كروز",
+        "default_price": 110000
+      },
+      {
+        "name": "كف الفخامة",
+        "default_price": 0
+      },
+      {
+        "name": "فخامة كف تفاحتين",
+        "default_price": 58500
+      }
+    ]
+  },
+  {
+    "brand": "اردن",
+    "items": [
+      {
+        "name": "اردن طويل",
+        "default_price": 0
+      },
+      {
+        "name": "اردن قصير",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "معسل الأسطورة",
+    "items": [
+      {
+        "name": "معسل الأسطورة",
+        "default_price": 110000
+      }
+    ]
+  },
+  {
+    "brand": "ماكدو",
+    "items": [
+      {
+        "name": "ماكدو كوين 5 قداحات",
+        "default_price": 45000
+      }
+    ]
+  },
+  {
+    "brand": "حمراء",
+    "items": [
+      {
+        "name": "حمراء قصيرة كرتون",
+        "default_price": 0
+      },
+      {
+        "name": "حمراء جديدة",
+        "default_price": 76000
+      },
+      {
+        "name": "حمراء قصيرة زاوية",
+        "default_price": 76000
+      }
+    ]
+  },
+  {
+    "brand": "معسل الصفوة",
+    "items": [
+      {
+        "name": "معسل الصفوة",
+        "default_price": 86500
+      }
+    ]
+  },
+  {
+    "brand": "جتان",
+    "items": [
+      {
+        "name": "جتان قصير",
+        "default_price": 135000
+      },
+      {
+        "name": "جتان كوين",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "برو",
+    "items": [
+      {
+        "name": "برو طويل فضي",
+        "default_price": 68500
+      },
+      {
+        "name": "برو طويل ازرق",
+        "default_price": 55000
+      },
+      {
+        "name": "برو كوين كيلر",
+        "default_price": 68500
+      },
+      {
+        "name": "برو ازرق هابي مانغو",
+        "default_price": 53000
+      },
+      {
+        "name": "برو كوين فضي",
+        "default_price": 167500
+      },
+      {
+        "name": "برو بل جيم",
+        "default_price": 0
+      },
+      {
+        "name": "برو هافانا",
+        "default_price": 167500
+      },
+      {
+        "name": "برو طويل شوكولا",
+        "default_price": 54500
+      },
+      {
+        "name": "برو طويل حليب ترينيدي",
+        "default_price": 54500
+      },
+      {
+        "name": "برو طويل كرز موهيتو",
+        "default_price": 54500
+      },
+      {
+        "name": "برو كوين اسود لوف",
+        "default_price": 46000
+      },
+      {
+        "name": "برو سليم فضي بحريني",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "فان",
+    "items": [
+      {
+        "name": "فان",
+        "default_price": 70000
+      }
+    ]
+  },
+  {
+    "brand": "MT",
+    "items": [
+      {
+        "name": "MT كوين",
+        "default_price": 58000
+      }
+    ]
+  },
+  {
+    "brand": "مادوكس",
+    "items": [
+      {
+        "name": "مادوكس كوين",
+        "default_price": 51000
+      }
+    ]
+  },
+  {
+    "brand": "دفتر شام",
+    "items": [
+      {
+        "name": "دفتر شام",
+        "default_price": 15500
+      }
+    ]
+  },
+  {
+    "brand": "بالميرا",
+    "items": [
+      {
+        "name": "فلتر بالميرا",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "معسل الخلة",
+    "items": [
+      {
+        "name": "صلاحية كروز شهر 3",
+        "default_price": 251000
+      },
+      {
+        "name": "كف صلاحية شهر 3",
+        "default_price": 0
+      },
+      {
+        "name": "معسل تفاحة كروز",
+        "default_price": 187000
+      }
+    ]
+  },
+  {
+    "brand": "كارتير",
+    "items": [
+      {
+        "name": "كارتير كوين كوفي",
+        "default_price": 0
+      },
+      {
+        "name": "كارتير كوين سليم",
+        "default_price": 83000
+      },
+      {
+        "name": "كارتير سليم بطيخ",
+        "default_price": 69500
+      },
+      {
+        "name": "كارتير سليم كرز",
+        "default_price": 69500
+      },
+      {
+        "name": "كارتير سليم زبيب",
+        "default_price": 69500
+      },
+      {
+        "name": "كارتير كوين كرز",
+        "default_price": 69500
+      },
+      {
+        "name": "كارتير كوين عنب",
+        "default_price": 69500
+      },
+      {
+        "name": "كارتير كوين بطيخ",
+        "default_price": 69500
+      }
+    ]
+  },
+  {
+    "brand": "ناشفال",
+    "items": [
+      {
+        "name": "ناشفال ازرق",
+        "default_price": 72000
+      },
+      {
+        "name": "ناشفال طويل",
+        "default_price": 58500
+      }
+    ]
+  },
+  {
+    "brand": "معسل دينفر",
+    "items": [
+      {
+        "name": "معسل دينفر بولو",
+        "default_price": 83000
+      },
+      {
+        "name": "معسل دينفر بلوبيري",
+        "default_price": 83000
+      },
+      {
+        "name": "معسل دينفر علكة و نعنع",
+        "default_price": 83000
+      },
+      {
+        "name": "معسل دينفر مستكة",
+        "default_price": 90000
+      }
+    ]
+  },
+  {
+    "brand": "معسل تيرا",
+    "items": [
+      {
+        "name": "مزاج تيرا نعنع",
+        "default_price": 79500
+      },
+      {
+        "name": "مزاج تيرا لوف",
+        "default_price": 79500
+      },
+      {
+        "name": "مزاج تيرا تفاحتين",
+        "default_price": 79500
+      },
+      {
+        "name": "فخامة تيرا بيرل ويف",
+        "default_price": 353500
+      },
+      {
+        "name": "فخامة تيرا برينت",
+        "default_price": 353500
+      },
+      {
+        "name": "فخامة تيرا تفاحتين",
+        "default_price": 115500
+      }
+    ]
+  }
 ]
