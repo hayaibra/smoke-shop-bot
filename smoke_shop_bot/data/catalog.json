@@ -1408,7 +1408,142 @@
         "fixed": false,
         "multiplier": 1
       }
-    ]
+    ],
+    "variant_units": {
+      "سيبروس": {
+        "فحم سيبروس كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "الزعيم": {
+        "فحم الزعيم كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "يحيى كريستال": {
+        "فحم يحيى كريستال 1000 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "الاغا": {
+        "فحم الاغا 1 كغ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "كوكو 8": {
+        "فحم كوكو 8 1 كغ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "بيروتي": {
+        "فحم بيروتي 1 كغ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "فحم برو": {
+        "فحم برو 1 كغ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      }
+    }
   },
   "إكسسوارات": {
     "emoji": "🧰",
