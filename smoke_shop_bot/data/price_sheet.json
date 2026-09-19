@@ -976,12 +976,17 @@
     ]
   },
   {
-    "brand": "فحم",
+    "brand": "سيبروس",
     "items": [
       {
         "name": "فحم سيبروس كيلو",
         "default_price": 31500
-      },
+      }
+    ]
+  },
+  {
+    "brand": "الزعيم",
+    "items": [
       {
         "name": "فحم الزعيم نصف كيلو",
         "default_price": 20000
@@ -989,19 +994,39 @@
       {
         "name": "فحم الزعيم كيلو",
         "default_price": 36000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "فحم برو",
+    "items": [
       {
         "name": "فحم برو",
         "default_price": 0
-      },
+      }
+    ]
+  },
+  {
+    "brand": "ايكو نارا",
+    "items": [
       {
         "name": "فحم إيكو نارا",
         "default_price": 0
-      },
+      }
+    ]
+  },
+  {
+    "brand": "هورس",
+    "items": [
       {
         "name": "فحم هورس 250 غ",
         "default_price": 0
-      },
+      }
+    ]
+  },
+  {
+    "brand": "سارا",
+    "items": [
       {
         "name": "فحم سارا",
         "default_price": 125000
@@ -1009,7 +1034,12 @@
       {
         "name": "فحم سارا جوز هند",
         "default_price": 82000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "الزعيم",
+    "items": [
       {
         "name": "فحم الزعيم 500 غ",
         "default_price": 82000
@@ -1025,55 +1055,120 @@
       {
         "name": "فحم الزعيم 1000 غ",
         "default_price": 87000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "يحيى كريستال",
+    "items": [
       {
         "name": "فحم يحيى كريستال 1000 غ",
         "default_price": 44000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "الرشيد",
+    "items": [
       {
         "name": "فحم الرشيد 500 غ",
         "default_price": 23000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "ايكو نارا",
+    "items": [
       {
         "name": "فحم ايكو نارا اخضر احمر",
         "default_price": 28000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "فحم برو",
+    "items": [
       {
         "name": "فحم برو 250 غ",
         "default_price": 12000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "الزعيم",
+    "items": [
       {
         "name": "فحم الزعيم 1 كغ",
         "default_price": 46000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "الاغا",
+    "items": [
       {
         "name": "فحم الاغا 1 كغ",
         "default_price": 22000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "فحم برو",
+    "items": [
       {
         "name": "فحم برو 1 كغ",
         "default_price": 0
-      },
+      }
+    ]
+  },
+  {
+    "brand": "بيروتي",
+    "items": [
       {
         "name": "فحم بيروتي 1 كغ",
         "default_price": 38000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "كوكو 8",
+    "items": [
       {
         "name": "فحم كوكو 8 1 كغ",
         "default_price": 41000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "فحم برو",
+    "items": [
       {
         "name": "فحم برو ربع كيلو",
         "default_price": 12500
-      },
+      }
+    ]
+  },
+  {
+    "brand": "دراغون",
+    "items": [
       {
         "name": "فحم دراغون ربع كيلو",
         "default_price": 8000
-      },
+      }
+    ]
+  },
+  {
+    "brand": "ولف",
+    "items": [
       {
         "name": "فحم ولف ربع كيلو",
         "default_price": 7500
-      },
+      }
+    ]
+  },
+  {
+    "brand": "اتش انش",
+    "items": [
       {
         "name": "فحم اتش انش ربع كيلو",
         "default_price": 10500
@@ -2456,7 +2551,7 @@
     ]
   },
   {
-    "brand": "برو",
+    "brand": "البرو",
     "items": [
       {
         "name": "برو طويل فضي",
@@ -2475,20 +2570,12 @@
         "default_price": 53000
       },
       {
-        "name": "برو كوين فضي",
-        "default_price": 167500
-      },
-      {
         "name": "برو بل جيم",
         "default_price": 0
       },
       {
         "name": "برو هافانا",
         "default_price": 167500
-      },
-      {
-        "name": "برو طويل شوكولا",
-        "default_price": 54500
       },
       {
         "name": "برو طويل حليب ترينيدي",
