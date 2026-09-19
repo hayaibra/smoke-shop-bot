@@ -20,7 +20,7 @@ class TestCatalogLoading(unittest.TestCase):
     def test_categories_order(self):
         self.assertEqual(
             cl.get_categories(self.catalog),
-            ["دخان", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية"],
+            ["دخان", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية", "قداحات"],
         )
 
     def test_category_button_label(self):
@@ -31,13 +31,13 @@ class TestCatalogLoading(unittest.TestCase):
         # الأنواع (types) هلق هيي براندات حقيقية من نشرة أسعار التاجر، مش بيانات تجريبية.
         self.assertIn("ماستر", cl.get_types(self.catalog, "دخان"))
         self.assertIn("اليغانس", cl.get_types(self.catalog, "دخان"))
-        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 30)
-        self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 8)
+        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 41)
+        self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 14)
 
     def test_variants_present_match_real_items(self):
         variants = cl.get_variants(self.catalog, "دخان", "ماستر")
         self.assertIn("ماستر طويل ورق م", variants)
-        self.assertEqual(len(variants), 11)
+        self.assertEqual(len(variants), 23)
 
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
@@ -91,7 +91,7 @@ class TestCatalogLoading(unittest.TestCase):
     def test_non_cigarette_categories_use_single_count_only_unit(self):
         # معسل/فحم/إكسسوارات/اراكيل إلكترونية: الحجم/الوزن مبيّن جوا اسم الصنف
         # نفسه أصلاً، فوحدتهن الوحيدة عدّاد بس (بلا تحويل وحدات).
-        for category in ("معسل", "فحم", "إكسسوارات", "اراكيل الكترونية"):
+        for category in ("معسل", "فحم", "إكسسوارات", "اراكيل الكترونية", "قداحات"):
             units = cl.get_units(self.catalog, category)
             self.assertEqual(len(units), 1)
             self.assertEqual(units[0]["name"], "🧮 عدد")

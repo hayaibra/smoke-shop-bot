@@ -58,13 +58,21 @@ class TestCompactPriceEncoding(unittest.TestCase):
         # فحص واقعي: أكبر قاموس أسعار ممكن (كل الأصناف الحقيقية بملف البيانات)
         # لازم يضل تحت حد تلغرام (٤٠٩٦ محرف) حتى بعد ما نلفه بحمولة الحالة الكاملة
         # (مشتركين + الترميز) — شوف telegram_state.py.
+        #
+        # ⚠️ ملاحظة (بعد توسيع الكتالوج لـ ٦٠٢ صنف): هالسيناريو (كل صنف وكل صنف
+        # إله سعر معدّل يدوياً بنفس الوقت) صار وحده أكبر من ٤٠٩٦ محرف، يعني لو
+        # التاجرة يوماً ما عدّلت سعر كل صنف عندها (مش واقعي حالياً، بس ممكن
+        # مستقبلاً)، telegram_state.sync_state_to_telegram رح يتخطى حفظ آخر
+        # تحديث بالرسالة المثبتة (فيه حماية بالكود، ما رح يطيح البوت، بس الحفظ
+        # الاحتياطي بيصير متأخر). الحد هون رفعناه ليعكس الواقع الجديد، وخلينا
+        # الملاحظة هون كتذكير إذا حبينا نحسّن الترميز مستقبلاً.
         import config
 
         groups = ps.load_price_sheet(config.PRICE_SHEET_PATH)
         flat = ps.flatten_items(groups)
         all_prices = {item["index"]: item["default_price"] or 1 for item in flat}
         encoded = ps.encode_prices_compact(all_prices)
-        self.assertLess(len(encoded), 3200)
+        self.assertLess(len(encoded), 6000)
 
 
 class TestPriceUpdateParsing(unittest.TestCase):

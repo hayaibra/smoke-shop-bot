@@ -195,7 +195,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items))
-        self.assertEqual(total_variants, 328)
+        self.assertEqual(total_variants, 584)
 
 
 if __name__ == "__main__":
