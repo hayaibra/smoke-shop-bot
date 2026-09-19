@@ -116,6 +116,26 @@ def parse_price_update_lines(
 
 
 # ---------------------------------------------------------------------------
+# ترتيب العرض: تجميع الأصناف حسب البرند (أول ظهور لهالبرند بالملف) — منشان
+# لو نفس اسم البرند موجود بأكتر من مجموعة متفرقة بـ price_sheet.json (صار هيك
+# لما إضافات لاحقة ضلت تلحق بآخر الملف بدل ما تندمج بمكان البرند الأصلي، منشان
+# ما نحرك مواقع/أرقام (index) أصناف موجودة أصلاً وما نخرب أسعار محفوظة سابقاً
+# عبر /setprices)، ما يطلعلنا عنوان البرند مكرر أكتر من مرة بالقائمة المعروضة
+# للتاجر أو للزبون. رقم الصنف (index) نفسه ما بيتغير إطلاقاً — بس ترتيب العرض
+# هو يلي بينجمع.
+# ---------------------------------------------------------------------------
+
+def _grouped_by_brand(flat_items: list[dict]) -> list[dict]:
+    groups: dict[str, list[dict]] = {}
+    for item in flat_items:
+        groups.setdefault(item["brand"], []).append(item)
+    ordered: list[dict] = []
+    for items in groups.values():
+        ordered.extend(items)
+    return ordered
+
+
+# ---------------------------------------------------------------------------
 # نص القائمة المرجعية للتاجر (بعد /setprices) — مقسومة لعدة رسائل لو لزم
 # ---------------------------------------------------------------------------
 
@@ -124,7 +144,7 @@ def format_admin_reference(flat_items: list[dict], prices: dict[int, int]) -> li
     current = "📒 قائمة الأصناف الحالية (رقم الصنف — السعر):\n"
     current_brand = None
 
-    for item in flat_items:
+    for item in _grouped_by_brand(flat_items):
         idx = item["index"]
         price = prices.get(idx, item["default_price"])
         price_text = f"{price} ل.س" if price else "⚠️ ما انحط سعر بعد"
@@ -180,7 +200,7 @@ def format_customer_prices(
         else:
             current += line
 
-    for item in flat_items:
+    for item in _grouped_by_brand(flat_items):
         idx = item["index"]
         price = prices.get(idx, item["default_price"])
         if not price:
