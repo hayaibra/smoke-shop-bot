@@ -1430,6 +1430,23 @@
         ]
       },
       "الزعيم": {
+        "فحم الزعيم نصف كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
         "فحم الزعيم كيلو": [
           {
             "name": "📦📦 كرتونة",
@@ -1440,6 +1457,182 @@
             "name": "🥡 نص كرتونة",
             "fixed": true,
             "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم الزعيم 500 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم الزعيم 250 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم الزعيم 400 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم الزعيم 1000 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم الزعيم 1 كغ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "ايكو نارا": {
+        "فحم إيكو نارا": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم ايكو نارا اخضر احمر": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "هورس": {
+        "فحم هورس 250 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "سارا": {
+        "فحم سارا": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم سارا جوز هند": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
           },
           {
             "name": "🧮 عدد",
@@ -1467,17 +1660,17 @@
           }
         ]
       },
-      "الاغا": {
-        "فحم الاغا 1 كغ": [
+      "الرشيد": {
+        "فحم الرشيد 500 غ": [
           {
             "name": "📦📦 كرتونة",
             "fixed": false,
-            "multiplier": 10
+            "multiplier": 50
           },
           {
             "name": "🥡 نص كرتونة",
             "fixed": true,
-            "multiplier": 5
+            "multiplier": 25
           },
           {
             "name": "🧮 عدد",
@@ -1486,8 +1679,8 @@
           }
         ]
       },
-      "كوكو 8": {
-        "فحم كوكو 8 1 كغ": [
+      "الاغا": {
+        "فحم الاغا 1 كغ": [
           {
             "name": "📦📦 كرتونة",
             "fixed": false,
@@ -1524,7 +1717,117 @@
           }
         ]
       },
+      "كوكو 8": {
+        "فحم كوكو 8 1 كغ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "دراغون": {
+        "فحم دراغون ربع كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "ولف": {
+        "فحم ولف ربع كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
+      "اتش انش": {
+        "فحم اتش انش ربع كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      },
       "فحم برو": {
+        "فحم برو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم برو 250 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
         "فحم برو 1 كغ": [
           {
             "name": "📦📦 كرتونة",
@@ -1535,6 +1838,23 @@
             "name": "🥡 نص كرتونة",
             "fixed": true,
             "multiplier": 5
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "فحم برو ربع كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
           },
           {
             "name": "🧮 عدد",
