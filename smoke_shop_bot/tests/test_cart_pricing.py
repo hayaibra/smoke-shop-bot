@@ -125,6 +125,105 @@ class TestHiddenCartonMultiplierPerBrand(unittest.TestCase):
         self.assertNotIn("📦📦 كرتونة", {u["name"] for u in units})
 
 
+class TestHiddenCartonMultiplierPerVariant(unittest.TestCase):
+    """
+    كرتونة الفحم — بعكس كرتونة الدخان (يلي بتنطبق عالماركة كلها) — بتنطبق على
+    صنف وحد محدد بس جوا الماركة (متلاً "فحم كيلو" بس، مش "فحم نص كيلو")،
+    عن طريق "variant_units" بالكتالوج.
+    """
+
+    def setUp(self):
+        self.catalog = {
+            "فحم": {
+                "emoji": "🔥",
+                "types": {"ماركة فحم": ["فحم كيلو", "فحم نص كيلو"]},
+                "units": [{"name": "🧮 عدد", "fixed": False, "multiplier": 1}],
+                "variant_units": {
+                    "ماركة فحم": {
+                        "فحم كيلو": [
+                            {"name": "🧮 عدد", "fixed": False, "multiplier": 1},
+                            {"name": "📦📦 كرتونة", "fixed": False, "multiplier": 10},
+                        ]
+                    }
+                },
+            }
+        }
+        self.lookup = cp.build_price_lookup(
+            [
+                {"index": 0, "brand": "ماركة فحم", "name": "فحم كيلو", "default_price": 30000},
+                {"index": 1, "brand": "ماركة فحم", "name": "فحم نص كيلو", "default_price": 16000},
+            ]
+        )
+        self.prices = {0: 30000, 1: 16000}
+
+    def test_variant_with_carton_override_computes_hidden_multiplier(self):
+        item = cl.format_cart_line("فحم", "ماركة فحم", "فحم كيلو", "📦📦 كرتونة", False, 3)
+        price = cp.price_cart_item(item, self.catalog, self.lookup, self.prices)
+        self.assertEqual(price, 30000 * 10 * 3)
+
+    def test_sibling_variant_without_override_has_no_carton_unit_available(self):
+        units = cl.get_units(self.catalog, "فحم", "ماركة فحم", "فحم نص كيلو")
+        self.assertNotIn("📦📦 كرتونة", {u["name"] for u in units})
+
+
+class TestHalfCartonFixedUnitForCharcoal(unittest.TestCase):
+    """
+    بعض أصناف الفحم (متلا "فحم سيبروس كيلو") إلها 3 وحدات عبر "variant_units":
+    كرتونة (10 علب، مش ثابتة — الزبون بيحدد كم كرتونة)، نص كرتونة (وحدة ثابتة =
+    نص الكرتونة تماماً = 5 علب، بلا ما تطلب عدد)، وعدد (عدد محدد من العلب،
+    مضاعِف 1). هالاختبار بيتأكد إن نص الكرتونة فعلاً نص سعر الكرتونة بالضبط،
+    وإنها ما بتتأثر بالعدد إطلاقاً (وحدة ثابتة).
+    """
+
+    def setUp(self):
+        self.catalog = {
+            "فحم": {
+                "emoji": "🔥",
+                "types": {"سيبروس": ["فحم سيبروس كيلو"]},
+                "units": [{"name": "🧮 عدد", "fixed": False, "multiplier": 1}],
+                "variant_units": {
+                    "سيبروس": {
+                        "فحم سيبروس كيلو": [
+                            {"name": "📦📦 كرتونة", "fixed": False, "multiplier": 10},
+                            {"name": "🥡 نص كرتونة", "fixed": True, "multiplier": 5},
+                            {"name": "🧮 عدد", "fixed": False, "multiplier": 1},
+                        ]
+                    }
+                },
+            }
+        }
+        self.lookup = cp.build_price_lookup(
+            [{"index": 0, "brand": "سيبروس", "name": "فحم سيبروس كيلو", "default_price": 31500}]
+        )
+        self.prices = {0: 31500}
+
+    def test_full_carton_multiplies_by_ten_and_count(self):
+        item = cl.format_cart_line("فحم", "سيبروس", "فحم سيبروس كيلو", "📦📦 كرتونة", False, 2)
+        price = cp.price_cart_item(item, self.catalog, self.lookup, self.prices)
+        self.assertEqual(price, 31500 * 10 * 2)
+
+    def test_half_carton_is_exactly_half_of_full_carton_and_ignores_count(self):
+        full_carton = cp.price_cart_item(
+            cl.format_cart_line("فحم", "سيبروس", "فحم سيبروس كيلو", "📦📦 كرتونة", False, 1),
+            self.catalog,
+            self.lookup,
+            self.prices,
+        )
+        half_carton = cp.price_cart_item(
+            cl.format_cart_line("فحم", "سيبروس", "فحم سيبروس كيلو", "🥡 نص كرتونة", True, None),
+            self.catalog,
+            self.lookup,
+            self.prices,
+        )
+        self.assertEqual(half_carton, full_carton / 2)
+        self.assertEqual(half_carton, 31500 * 5)
+
+    def test_specific_count_unit_still_available_at_single_bag_price(self):
+        item = cl.format_cart_line("فحم", "سيبروس", "فحم سيبروس كيلو", "🧮 عدد", False, 3)
+        price = cp.price_cart_item(item, self.catalog, self.lookup, self.prices)
+        self.assertEqual(price, 31500 * 3)
+
+
 class TestPriceCart(unittest.TestCase):
     def setUp(self):
         self.catalog = _fake_catalog()
@@ -196,6 +295,47 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         )
         self.assertEqual(total_variants, len(self.flat_items))
         self.assertEqual(total_variants, 582)
+
+
+class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
+    """
+    اختبار تكامل: أصناف الفحم يلي عندها كرتونة (10 علب) لازم يضل إلها بالضبط
+    الوحدات التلاتة (كرتونة، نص كرتونة، عدد) بمضاعِفاتها الصحيحة — وباقي أصناف
+    نفس البراند (متلا باقي أوزان "الزعيم") ما لازم تتأثر إطلاقاً.
+    """
+
+    CARTON_ITEMS = {
+        "سيبروس": "فحم سيبروس كيلو",
+        "الزعيم": "فحم الزعيم كيلو",
+        "يحيى كريستال": "فحم يحيى كريستال 1000 غ",
+        "الاغا": "فحم الاغا 1 كغ",
+        "كوكو 8": "فحم كوكو 8 1 كغ",
+        "بيروتي": "فحم بيروتي 1 كغ",
+        "فحم برو": "فحم برو 1 كغ",
+    }
+
+    def setUp(self):
+        self.catalog = cl.load_catalog(CATALOG_PATH)
+
+    def test_each_carton_item_has_carton_half_carton_and_count_units(self):
+        for brand, item_name in self.CARTON_ITEMS.items():
+            units = cl.get_units(self.catalog, "فحم", brand, item_name)
+            by_name = {u["name"]: u for u in units}
+            self.assertEqual(
+                set(by_name), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"}, msg=f"{brand} / {item_name}"
+            )
+            self.assertEqual(by_name["📦📦 كرتونة"]["multiplier"], 10)
+            self.assertFalse(by_name["📦📦 كرتونة"]["fixed"])
+            self.assertEqual(by_name["🥡 نص كرتونة"]["multiplier"], 5)
+            self.assertTrue(by_name["🥡 نص كرتونة"]["fixed"])
+            self.assertEqual(by_name["🧮 عدد"]["multiplier"], 1)
+            self.assertFalse(by_name["🧮 عدد"]["fixed"])
+
+    def test_sibling_variants_of_same_brand_keep_plain_count_unit_only(self):
+        # مثلا "فحم الزعيم نصف كيلو" (وزن تاني من نفس براند الزعيم) ما لازم
+        # يطلعلها خيار كرتونة إطلاقاً — الكرتونة بس لـ"فحم الزعيم كيلو" تحديداً.
+        units = cl.get_units(self.catalog, "فحم", "الزعيم", "فحم الزعيم نصف كيلو")
+        self.assertEqual({u["name"] for u in units}, {"🧮 عدد"})
 
 
 if __name__ == "__main__":
