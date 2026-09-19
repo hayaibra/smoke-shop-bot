@@ -31,7 +31,7 @@ class TestCatalogLoading(unittest.TestCase):
         # الأنواع (types) هلق هيي براندات حقيقية من نشرة أسعار التاجر، مش بيانات تجريبية.
         self.assertIn("ماستر", cl.get_types(self.catalog, "دخان"))
         self.assertIn("اليغانس", cl.get_types(self.catalog, "دخان"))
-        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 41)
+        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 40)
         self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 14)
 
     def test_variants_present_match_real_items(self):

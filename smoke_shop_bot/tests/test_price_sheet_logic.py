@@ -141,6 +141,34 @@ class TestFormatting(unittest.TestCase):
         self.assertIn("🔸 جيتان", joined)
         self.assertIn("🔸 تي اس", joined)
 
+    def test_same_brand_scattered_across_multiple_groups_shows_header_once(self):
+        # لو نفس اسم البرند موجود بأكتر من مجموعة متفرقة بالملف (صار هيك فعلياً
+        # لبعض ماركات الفحم بعد إضافات لاحقة، لتفادي تحريك مواقع أصناف موجودة)،
+        # لازم القائمة المعروضة (للتاجر وللزبون) تجمعهم تحت عنوان وحد، مش
+        # تكرر عنوان البرند بمكانين مختلفين بنفس القائمة.
+        groups = [
+            {"brand": "الزعيم", "items": [{"name": "الزعيم أ", "default_price": 10000}]},
+            {"brand": "برند وسط", "items": [{"name": "صنف وسط", "default_price": 5000}]},
+            {"brand": "الزعيم", "items": [{"name": "الزعيم ب", "default_price": 12000}]},
+        ]
+        flat = ps.flatten_items(groups)
+        prices = ps.effective_prices(flat, {})
+
+        admin_chunks = ps.format_admin_reference(flat, prices)
+        admin_joined = "\n".join(admin_chunks)
+        self.assertEqual(admin_joined.count("🔸 الزعيم"), 1)
+        self.assertIn("الزعيم أ", admin_joined)
+        self.assertIn("الزعيم ب", admin_joined)
+        # رقم الصنف (index) ضل متل ما هو، بلا أي تحريك.
+        self.assertIn("0. الزعيم أ", admin_joined)
+        self.assertIn("2. الزعيم ب", admin_joined)
+
+        customer_chunks = ps.format_customer_prices(flat, prices, "محل هيا", "2026-09-13")
+        customer_joined = "\n".join(customer_chunks)
+        self.assertEqual(customer_joined.count("🔸 الزعيم"), 1)
+        self.assertIn("الزعيم أ", customer_joined)
+        self.assertIn("الزعيم ب", customer_joined)
+
     def test_customer_prices_without_category_mapping_falls_back_to_old_layout(self):
         # لو ما انبعت category_of_brand إطلاقاً، نفس التقسيم القديم (برند ← صنف بس).
         flat = ps.flatten_items(SAMPLE_GROUPS)

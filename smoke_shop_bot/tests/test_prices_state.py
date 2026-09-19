@@ -22,7 +22,7 @@ class TestCategoryOfBrand(unittest.TestCase):
     def test_known_brands_map_to_expected_categories(self):
         self.assertEqual(prices_state.CATEGORY_OF_BRAND["ماستر"], "🚬 دخان")
         self.assertEqual(prices_state.CATEGORY_OF_BRAND["معسل مزايا"], "💨 معسل")
-        self.assertEqual(prices_state.CATEGORY_OF_BRAND["فحم"], "🔥 فحم")
+        self.assertEqual(prices_state.CATEGORY_OF_BRAND["الزعيم"], "🔥 فحم")
         self.assertEqual(prices_state.CATEGORY_OF_BRAND["مباسم"], "🧰 إكسسوارات")
         self.assertEqual(
             prices_state.CATEGORY_OF_BRAND["اراكيل الكترونية برو"], "🔋 اراكيل الكترونية"
