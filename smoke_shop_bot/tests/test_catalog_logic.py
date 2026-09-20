@@ -82,6 +82,21 @@ class TestCatalogLoading(unittest.TestCase):
         # صنف تاني بنفس الاسم الجزئي ("طويل فضي غ" بلا "م") ما لازم يتأثر.
         self.assertIn("اليغانس طويل فضي غ", variants)
 
+    def test_oris_variants_after_cleanup_and_rename(self):
+        # التاجرة حذفت ٤ أصناف من "اوريس" (سليم، كوين، طقتين، قصير بطيخ —
+        # كلهن بلا وصف إضافي)، وبدّلت اسم "اوريس طقة منغا غ" لـ"اوريس سليم
+        # طقة منغا" (تبديل اسم بمكانه، مش حذف/إضافة).
+        variants = cl.get_variants(self.catalog, "دخان", "اوريس")
+        self.assertEqual(len(variants), 13)
+        self.assertNotIn("اوريس سليم", variants)
+        self.assertNotIn("اوريس كوين", variants)
+        self.assertNotIn("اوريس طقتين", variants)
+        self.assertNotIn("اوريس قصير بطيخ", variants)
+        self.assertNotIn("اوريس طقة منغا غ", variants)
+        self.assertIn("اوريس سليم طقة منغا", variants)
+        # صنف تاني بنفس الاسم الجزئي ("سليم طقة توت") ما لازم يتأثر.
+        self.assertIn("اوريس سليم طقة توت", variants)
+
     def test_napoli_variants_after_cleanup(self):
         # التاجرة حذفت 3 أصناف مكررة/زايدة من "نابولي" (قصير ابيض، قصير بس،
         # احمر + فضي قصير) وبدّلت اسم "قصير سلفر" لـ"قصير فضي" بتنضيف سابق،

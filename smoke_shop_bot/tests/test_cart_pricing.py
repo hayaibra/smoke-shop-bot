@@ -283,6 +283,10 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("اليغانس", "اليغانس كوين"),
         ("اليغانس", "اليغانس طويل فضي غ م"),
         ("اليغانس", "اليغانس سليم مربع"),
+        ("اوريس", "اوريس سليم"),
+        ("اوريس", "اوريس كوين"),
+        ("اوريس", "اوريس طقتين"),
+        ("اوريس", "اوريس قصير بطيخ"),
     }
 
     def setUp(self):
@@ -337,6 +341,10 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("اليغانس", "اليغانس طويل فضي غ م"): 58,
             ("اليغانس", "اليغانس كوين"): 61,
             ("اليغانس", "اليغانس سليم مربع"): 64,
+            ("اوريس", "اوريس سليم"): 80,
+            ("اوريس", "اوريس طقتين"): 81,
+            ("اوريس", "اوريس كوين"): 82,
+            ("اوريس", "اوريس قصير بطيخ"): 83,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -380,6 +388,20 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "اليغانس قصير اسود", "اليغانس قصير ابيض", "اليغانس كوين",
             "اليغانس طويل فضي مخصص", "اليغانس سليم فضي ازرق نعنع قديم", "اليغانس سليم مربع",
         ])
+        # وباقي أصناف "اوريس" (١٧ صنف) — بنفس الترتيب والفهرس، ما عدا صنف واحد
+        # اتغيّر اسمه بس (بدون ما يتحرك مكانه/فهرسه): "اوريس طقة منغا غ" صار
+        # اسمه "اوريس سليم طقة منغا" (تبديل بالمكان بملف الأسعار والكتالوج سوا،
+        # مش حذف/إضافة — فهرس ٧٣ ضل زي ما هو).
+        oris_items = [item for item in self.flat_items if item["brand"] == "اوريس"]
+        self.assertEqual([item["name"] for item in oris_items], [
+            "اوريس كوين توت طقة غ", "اوريس كوين فريز طقة غ", "اوريس كوين شوكولا غ",
+            "اوريس كوين بطيخ غ", "طقة بلس ازرق جديد م", "اوريس سليم طقة منغا",
+            "اوريس سليم طقة توت", "اوريس سليم شوكولا", "اوريس طقتين بلوبيري م",
+            "اوريس تفاح", "اوريس طقتين نعنع م", "اوريس تشكلس", "اوريس سليم",
+            "اوريس طقتين", "اوريس كوين", "اوريس قصير بطيخ", "اوريس كلاسيك ابيض",
+        ])
+        renamed_item = next(item for item in oris_items if item["name"] == "اوريس سليم طقة منغا")
+        self.assertEqual(renamed_item["index"], 73)
 
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
@@ -388,7 +410,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 563)
+        self.assertEqual(total_variants, 559)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
