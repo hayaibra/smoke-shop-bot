@@ -257,14 +257,20 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
     (برند، اسم) مطابق تماماً بـ data/price_sheet.json — هاد أهم ضمانة إن حساب
     السعر التلقائي رح يلاقي كل صنف رجوع بالفعل، لأي زبون حقيقي بيستخدم البوت.
 
-    استثناء واحد متعمَّد: "نابولي قصير سفر" — التاجرة طلبت حذفه نهائياً من
-    الكتالوج (ما عاد يظهر/ينختار بالبوت إطلاقاً)، بس تركناه هو نفسه بمكانه
-    بملف price_sheet.json (بلا حذف السطر ولا تحريكه) منشان رقمه (index) يضل
-    زي ما هو ورقم كل صنف بعده (٥٦١ صنف) ما يتحرك — لأن لو تحرك ممكن يخرب أي
-    سعر محفوظ سابقاً عبر /setprices (محفوظ بالرسالة المثبتة برقم الصنف بالضبط).
+    استثناءات متعمَّدة: أصناف التاجرة طلبت حذفها نهائياً من الكتالوج (ما عادوا
+    يظهروا/ينختاروا بالبوت إطلاقاً)، بس تركناهن هني بمكانهن بالضبط بملف
+    price_sheet.json (بلا حذف السطر ولا تحريكه) منشان رقمهن (index) يضل زي ما
+    هو ورقم كل صنف بعدهن ما يتحرك — لأن لو تحرك ممكن يخرب أي سعر محفوظ سابقاً
+    عبر /setprices (محفوظ بالرسالة المثبتة برقم الصنف بالضبط).
     """
 
-    ORPHANED_PRICE_SHEET_ITEMS = {("نابولي", "نابولي قصير سفر")}
+    ORPHANED_PRICE_SHEET_ITEMS = {
+        ("نابولي", "نابولي قصير سفر"),
+        ("ون شيستر", "ونشستر سليم"),
+        ("ون شيستر", "ونشستر كوين"),
+        ("ون شيستر", "ون شيستر كوين سيلفر"),
+        ("ون شيستر", "ون شيستر سليم ابيض دهبي"),
+    }
 
     def setUp(self):
         self.catalog = cl.load_catalog(CATALOG_PATH)
@@ -297,18 +303,31 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ]
         self.assertEqual(missing, [])
 
-    def test_orphaned_item_still_sits_at_its_original_index_untouched(self):
-        # هاد الفحص الأهم: التأكد إن الصنف المحذوف من الكتالوج لسا بمكانه تماماً
-        # بملف price_sheet.json (نفس الفهرس، نفس السعر) — يعني ولا صنف تاني
-        # بعده تحرك رقمه.
-        orphan = next(
-            item for item in self.flat_items if (item["brand"], item["name"]) == ("نابولي", "نابولي قصير سفر")
-        )
-        self.assertEqual(orphan["index"], 17)
-        # وباقي أصناف نابولي (دهبي/فضي/احمر) ضلوا زي ما كانوا بالضبط.
+    def test_orphaned_items_still_sit_at_their_original_index_untouched(self):
+        # هاد الفحص الأهم: التأكد إن كل الأصناف المحذوفة من الكتالوج لسا بمكانها
+        # تماماً بملف price_sheet.json (نفس الفهرس، نفس السعر) — يعني ولا صنف
+        # تاني بعدها تحرك رقمه.
+        expected_indexes = {
+            ("نابولي", "نابولي قصير سفر"): 17,
+            ("ون شيستر", "ونشستر كوين"): 6,
+            ("ون شيستر", "ونشستر سليم"): 7,
+            ("ون شيستر", "ون شيستر كوين سيلفر"): 9,
+            ("ون شيستر", "ون شيستر سليم ابيض دهبي"): 12,
+        }
+        for key, expected_idx in expected_indexes.items():
+            orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
+            self.assertEqual(orphan["index"], expected_idx, msg=key)
+
+        # وباقي أصناف نابولي (دهبي/فضي/احمر) وون شيستر (٦ أصناف) ضلوا زي ما كانوا بالضبط.
         naboli_items = [item for item in self.flat_items if item["brand"] == "نابولي"]
         self.assertEqual([item["name"] for item in naboli_items], [
             "نابولي قصير دهبي", "نابولي قصير فضي", "نابولي قصير احمر", "نابولي قصير سفر",
+        ])
+        winchester_items = [item for item in self.flat_items if item["brand"] == "ون شيستر"]
+        self.assertEqual([item["name"] for item in winchester_items], [
+            "ون شيستر كوين فضي", "ون شيستر كوين ازرق", "ونشستر كوين", "ونشستر سليم",
+            "ون شيستر كوين دهبي", "ون شيستر كوين سيلفر", "ون شيستر سليم اسود",
+            "ون شيستر سليم ازرق", "ون شيستر سليم ابيض دهبي", "ون شيستر سليم فضي",
         ])
 
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
@@ -318,7 +337,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 578)
+        self.assertEqual(total_variants, 574)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

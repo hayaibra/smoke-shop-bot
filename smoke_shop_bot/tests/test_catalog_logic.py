@@ -57,6 +57,27 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertNotIn("نابولي احمر + فضي قصير", variants)
         self.assertNotIn("نابولي قصير سفر", variants)
 
+    def test_winchester_variants_after_cleanup(self):
+        # التاجرة حذفت ٤ أصناف زايدة/مكررة من "ون شيستر" — نفس أسلوب حذف
+        # "نابولي قصير سفر" فوق: محذوفين من الكتالوج بس، ولسا موجودين بمكانهن
+        # تماماً بملف price_sheet.json منشان ترقيم باقي الأصناف ما يتحرك.
+        variants = cl.get_variants(self.catalog, "دخان", "ون شيستر")
+        self.assertEqual(
+            variants,
+            [
+                "ون شيستر كوين فضي",
+                "ون شيستر كوين ازرق",
+                "ون شيستر كوين دهبي",
+                "ون شيستر سليم اسود",
+                "ون شيستر سليم ازرق",
+                "ون شيستر سليم فضي",
+            ],
+        )
+        self.assertNotIn("ونشستر سليم", variants)
+        self.assertNotIn("ونشستر كوين", variants)
+        self.assertNotIn("ون شيستر كوين سيلفر", variants)
+        self.assertNotIn("ون شيستر سليم ابيض دهبي", variants)
+
     def test_variants_present_match_real_items(self):
         variants = cl.get_variants(self.catalog, "دخان", "ماستر")
         self.assertIn("ماستر طويل ورق م", variants)
