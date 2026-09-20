@@ -135,9 +135,36 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertNotIn("ون شيستر سليم ابيض دهبي", variants)
 
     def test_variants_present_match_real_items(self):
+        variants = cl.get_variants(self.catalog, "دخان", "جيتان")
+        self.assertIn("جيتان قصير", variants)
+        self.assertEqual(len(variants), 1)
+
+    def test_master_variants_replaced_with_simplified_lineup(self):
+        # التاجرة استبدلت كامل تشكيلة "ماستر" (كانت ٢٣ صنف بأسماء/لواحق كتير
+        # مربكة زي "م"، "طقتين دبل ...") بـ٧ أصناف بسيطة بس. ٦ من السبعة كانوا
+        # موجودين أصلاً بنفس الاسم بالضبط (سعرهن القديم ضل زي ما هو)، وصنف
+        # واحد بس جديد كلياً ("ماستر طويل" بلا أي وصف ورق/كرتون).
         variants = cl.get_variants(self.catalog, "دخان", "ماستر")
-        self.assertIn("ماستر طويل ورق م", variants)
-        self.assertEqual(len(variants), 23)
+        self.assertEqual(
+            variants,
+            [
+                "ماستر طويل",
+                "ماستر قصير ازرق",
+                "ماستر قصير فضي",
+                "ماستر كوين ابيض",
+                "ماستر كوين ازرق",
+                "ماستر سليم فضي",
+                "ماستر سليم ازرق",
+            ],
+        )
+        for old in [
+            "ماستر طويل ورق م", "ماستر قصير ازرق م", "ماستر كوين ابيض م", "ماستر سليم فضي م",
+            "ماستر سليم بطيخ", "ماستر سليم بلوبيري", "ماستر سليم تفاح و نعنع",
+            "ماستر سليم علكة ونعنع", "ماستر سليم نعنع مثلج", "ماستر طويل ورق", "ماستر طويل كرتون",
+            "ماستر طقتين دبل ايس ميكس", "ماستر طقتين دبل سمر", "ماستر طقتين دبل فيوجين سمر",
+            "ماستر طقتين دبل بلوسم فيوجين", "ماستر قصير فضي م", "ماستر سليم ازرق م",
+        ]:
+            self.assertNotIn(old, variants, msg=old)
 
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل

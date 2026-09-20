@@ -65,6 +65,23 @@ class TestVisibleFlatItems(unittest.TestCase):
             ("اوريس", "اوريس كوين"),
             ("اوريس", "اوريس طقتين"),
             ("اوريس", "اوريس قصير بطيخ"),
+            ("ماستر", "ماستر طويل ورق م"),
+            ("ماستر", "ماستر قصير ازرق م"),
+            ("ماستر", "ماستر كوين ابيض م"),
+            ("ماستر", "ماستر سليم فضي م"),
+            ("ماستر", "ماستر سليم بطيخ"),
+            ("ماستر", "ماستر سليم بلوبيري"),
+            ("ماستر", "ماستر سليم تفاح و نعنع"),
+            ("ماستر", "ماستر سليم علكة ونعنع"),
+            ("ماستر", "ماستر سليم نعنع مثلج"),
+            ("ماستر", "ماستر طويل ورق"),
+            ("ماستر", "ماستر طويل كرتون"),
+            ("ماستر", "ماستر طقتين دبل ايس ميكس"),
+            ("ماستر", "ماستر طقتين دبل سمر"),
+            ("ماستر", "ماستر طقتين دبل فيوجين سمر"),
+            ("ماستر", "ماستر طقتين دبل بلوسم فيوجين"),
+            ("ماستر", "ماستر قصير فضي م"),
+            ("ماستر", "ماستر سليم ازرق م"),
         ]
         for pair in orphans:
             self.assertNotIn(pair, visible_pairs, msg=pair)
@@ -76,9 +93,11 @@ class TestVisibleFlatItems(unittest.TestCase):
         self.assertIn(("جيتان", "جيتان قصير"), visible_by_pair)
         # الفهرس (index) ما تغير — لسا نفس رقمه الأصلي بملف price_sheet.json.
         self.assertEqual(visible_by_pair[("جيتان", "جيتان قصير")]["index"], 0)
+        # صنف "ماستر" الجديد (المضاف بآخر price_sheet.json) ظاهر برقمه الجديد.
+        self.assertEqual(visible_by_pair[("ماستر", "ماستر طويل")]["index"], 579)
 
     def test_visible_count_is_full_count_minus_orphans(self):
-        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 20)
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 37)
 
 
 if __name__ == "__main__":

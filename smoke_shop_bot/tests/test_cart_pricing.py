@@ -287,6 +287,24 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("اوريس", "اوريس كوين"),
         ("اوريس", "اوريس طقتين"),
         ("اوريس", "اوريس قصير بطيخ"),
+        # التاجرة بسّطت "ماستر" من ٢٣ صنف لـ٧ بس — الـ١٧ الباقيين محذوفين.
+        ("ماستر", "ماستر طويل ورق م"),
+        ("ماستر", "ماستر قصير ازرق م"),
+        ("ماستر", "ماستر كوين ابيض م"),
+        ("ماستر", "ماستر سليم فضي م"),
+        ("ماستر", "ماستر سليم بطيخ"),
+        ("ماستر", "ماستر سليم بلوبيري"),
+        ("ماستر", "ماستر سليم تفاح و نعنع"),
+        ("ماستر", "ماستر سليم علكة ونعنع"),
+        ("ماستر", "ماستر سليم نعنع مثلج"),
+        ("ماستر", "ماستر طويل ورق"),
+        ("ماستر", "ماستر طويل كرتون"),
+        ("ماستر", "ماستر طقتين دبل ايس ميكس"),
+        ("ماستر", "ماستر طقتين دبل سمر"),
+        ("ماستر", "ماستر طقتين دبل فيوجين سمر"),
+        ("ماستر", "ماستر طقتين دبل بلوسم فيوجين"),
+        ("ماستر", "ماستر قصير فضي م"),
+        ("ماستر", "ماستر سليم ازرق م"),
     }
 
     def setUp(self):
@@ -345,6 +363,23 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("اوريس", "اوريس طقتين"): 81,
             ("اوريس", "اوريس كوين"): 82,
             ("اوريس", "اوريس قصير بطيخ"): 83,
+            ("ماستر", "ماستر طويل ورق م"): 163,
+            ("ماستر", "ماستر قصير ازرق م"): 164,
+            ("ماستر", "ماستر كوين ابيض م"): 167,
+            ("ماستر", "ماستر سليم فضي م"): 168,
+            ("ماستر", "ماستر سليم بطيخ"): 169,
+            ("ماستر", "ماستر سليم بلوبيري"): 170,
+            ("ماستر", "ماستر سليم تفاح و نعنع"): 171,
+            ("ماستر", "ماستر سليم علكة ونعنع"): 172,
+            ("ماستر", "ماستر سليم نعنع مثلج"): 173,
+            ("ماستر", "ماستر طويل ورق"): 174,
+            ("ماستر", "ماستر طويل كرتون"): 175,
+            ("ماستر", "ماستر طقتين دبل ايس ميكس"): 180,
+            ("ماستر", "ماستر طقتين دبل سمر"): 181,
+            ("ماستر", "ماستر طقتين دبل فيوجين سمر"): 182,
+            ("ماستر", "ماستر طقتين دبل بلوسم فيوجين"): 183,
+            ("ماستر", "ماستر قصير فضي م"): 184,
+            ("ماستر", "ماستر سليم ازرق م"): 185,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -403,6 +438,16 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         renamed_item = next(item for item in oris_items if item["name"] == "اوريس سليم طقة منغا")
         self.assertEqual(renamed_item["index"], 73)
 
+        # "ماستر" (استبدال كامل، ٢٣ -> ٧ أصناف): الـ٢٣ القدام لسا موجودين بملف
+        # الأسعار بمكانهن الأصلي (١٦٣-١٨٥) بلا أي حذف/تحريك، وصنف واحد جديد
+        # ("ماستر طويل") انضاف كمجموعة جديدة بآخر الملف تماماً (فهرس ٥٧٩)
+        # منشان صفر تأثير على أي فهرس تاني بالملف كلو.
+        master_items = [item for item in self.flat_items if item["brand"] == "ماستر"]
+        self.assertEqual(len(master_items), 24)  # ٢٣ قدام (orphans) + ١ جديد
+        new_master_item = next(item for item in master_items if item["name"] == "ماستر طويل")
+        self.assertEqual(new_master_item["index"], 579)
+        self.assertEqual(new_master_item["default_price"], 0)
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -410,7 +455,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 559)
+        self.assertEqual(total_variants, 543)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
