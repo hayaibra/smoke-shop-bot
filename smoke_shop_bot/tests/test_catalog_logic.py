@@ -61,6 +61,15 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertNotIn("اختمار قصير", variants)
         self.assertNotIn("اختمار طويل", variants)
 
+    def test_oscar_variants_after_cleanup(self):
+        # التاجرة حذفت ٣ أصناف من "اوسكار" (طويل، كوين، سليم — بلا وصف لون)،
+        # وخلت بس الأصناف الموصوفة (طويل فضي، سليم فضي، كوين ازرق).
+        variants = cl.get_variants(self.catalog, "دخان", "اوسكار")
+        self.assertEqual(variants, ["اوسكار طويل فضي", "اوسكار سليم فضي", "اوسكار كوين ازرق"])
+        self.assertNotIn("اوسكار طويل", variants)
+        self.assertNotIn("اوسكار كوين", variants)
+        self.assertNotIn("اوسكار سليم", variants)
+
     def test_napoli_variants_after_cleanup(self):
         # التاجرة حذفت 3 أصناف مكررة/زايدة من "نابولي" (قصير ابيض، قصير بس،
         # احمر + فضي قصير) وبدّلت اسم "قصير سلفر" لـ"قصير فضي" بتنضيف سابق،
