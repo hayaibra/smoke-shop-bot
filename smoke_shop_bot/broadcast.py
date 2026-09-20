@@ -25,7 +25,7 @@ async def send_daily_broadcast(bot: Bot) -> tuple[int, int]:
     من رسالة متتالية إذا كانت قائمة الأسعار طويلة (شوف price_sheet_logic.py)."""
     date_str = dt.datetime.now(_TZ).strftime("%Y-%m-%d %H:%M")
     chunks = ps_logic.format_customer_prices(
-        prices_state.FLAT_ITEMS,
+        prices_state.visible_flat_items(),
         prices_state.current_prices(),
         config.SHOP_NAME,
         date_str,

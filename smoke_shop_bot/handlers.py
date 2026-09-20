@@ -255,10 +255,11 @@ async def _render_unit(context, chat_id, user_data, ci, product_name, had_varian
     user_data["nav"] = "unit"
     user_data["had_variant"] = had_variant
     type_ = user_data.get("type")
+    variant = user_data.get("variant")
     await context.bot.send_message(
         chat_id,
         messages.choose_unit_prompt(product_name),
-        reply_markup=kb.build_unit_keyboard(CATALOG, ci, type_),
+        reply_markup=kb.build_unit_keyboard(CATALOG, ci, type_, variant),
     )
 
 
@@ -422,7 +423,7 @@ async def cb_unit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     categories = cl.get_categories(CATALOG)
     category = categories[ci]
-    units = cl.get_units(CATALOG, category, user_data.get("type"))
+    units = cl.get_units(CATALOG, category, user_data.get("type"), user_data.get("variant"))
     unit = units[ui]
     user_data["unit_name"] = unit["name"]
     user_data["unit_fixed"] = unit["fixed"]
@@ -726,7 +727,7 @@ async def cb_confirm_no(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 async def cmd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
     chunks = ps_logic.format_customer_prices(
-        prices_state.FLAT_ITEMS,
+        prices_state.visible_flat_items(),
         prices_state.current_prices(),
         config.SHOP_NAME,
         _now_str(),
