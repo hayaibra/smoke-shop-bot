@@ -256,7 +256,15 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
     اختبار تكامل: كل (نوع، صنف) موجود فعلياً بـ data/catalog.json لازم يكون إلو
     (برند، اسم) مطابق تماماً بـ data/price_sheet.json — هاد أهم ضمانة إن حساب
     السعر التلقائي رح يلاقي كل صنف رجوع بالفعل، لأي زبون حقيقي بيستخدم البوت.
+
+    استثناء واحد متعمَّد: "نابولي قصير سفر" — التاجرة طلبت حذفه نهائياً من
+    الكتالوج (ما عاد يظهر/ينختار بالبوت إطلاقاً)، بس تركناه هو نفسه بمكانه
+    بملف price_sheet.json (بلا حذف السطر ولا تحريكه) منشان رقمه (index) يضل
+    زي ما هو ورقم كل صنف بعده (٥٦١ صنف) ما يتحرك — لأن لو تحرك ممكن يخرب أي
+    سعر محفوظ سابقاً عبر /setprices (محفوظ بالرسالة المثبتة برقم الصنف بالضبط).
     """
+
+    ORPHANED_PRICE_SHEET_ITEMS = {("نابولي", "نابولي قصير سفر")}
 
     def setUp(self):
         self.catalog = cl.load_catalog(CATALOG_PATH)
@@ -273,8 +281,9 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
                         missing.append((category, type_, variant))
         self.assertEqual(missing, [])
 
-    def test_every_price_sheet_item_has_a_matching_catalog_variant(self):
-        # بالاتجاه المعاكس كمان: ما في صنف بملف الأسعار ضايع وما وصل الكتالوج.
+    def test_every_price_sheet_item_has_a_matching_catalog_variant_or_is_a_known_orphan(self):
+        # بالاتجاه المعاكس كمان: ما في صنف بملف الأسعار ضايع وما وصل الكتالوج،
+        # ما عدا الاستثناء الموثّق فوق (ORPHANED_PRICE_SHEET_ITEMS).
         catalog_pairs = set()
         for category in cl.get_categories(self.catalog):
             for type_ in cl.get_types(self.catalog, category):
@@ -284,17 +293,32 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             (item["brand"], item["name"])
             for item in self.flat_items
             if (item["brand"], item["name"]) not in catalog_pairs
+            and (item["brand"], item["name"]) not in self.ORPHANED_PRICE_SHEET_ITEMS
         ]
         self.assertEqual(missing, [])
 
-    def test_total_variant_count_matches_price_sheet_item_count(self):
+    def test_orphaned_item_still_sits_at_its_original_index_untouched(self):
+        # هاد الفحص الأهم: التأكد إن الصنف المحذوف من الكتالوج لسا بمكانه تماماً
+        # بملف price_sheet.json (نفس الفهرس، نفس السعر) — يعني ولا صنف تاني
+        # بعده تحرك رقمه.
+        orphan = next(
+            item for item in self.flat_items if (item["brand"], item["name"]) == ("نابولي", "نابولي قصير سفر")
+        )
+        self.assertEqual(orphan["index"], 17)
+        # وباقي أصناف نابولي (دهبي/فضي/احمر) ضلوا زي ما كانوا بالضبط.
+        naboli_items = [item for item in self.flat_items if item["brand"] == "نابولي"]
+        self.assertEqual([item["name"] for item in naboli_items], [
+            "نابولي قصير دهبي", "نابولي قصير فضي", "نابولي قصير احمر", "نابولي قصير سفر",
+        ])
+
+    def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
             for category in cl.get_categories(self.catalog)
             for type_ in cl.get_types(self.catalog, category)
         )
-        self.assertEqual(total_variants, len(self.flat_items))
-        self.assertEqual(total_variants, 582)
+        self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
+        self.assertEqual(total_variants, 578)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

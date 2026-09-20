@@ -41,6 +41,22 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertEqual(types[:5], ["ماستر", "كابتن بلاك", "كلواز 8 S", "البرو", "روز"])
         self.assertEqual(len(types), 40)  # ما ضاعت ولا انضافت ولا تكررت ولا ماركة
 
+    def test_napoli_variants_after_cleanup(self):
+        # التاجرة حذفت 3 أصناف مكررة/زايدة من "نابولي" (قصير ابيض، قصير بس،
+        # احمر + فضي قصير) وبدّلت اسم "قصير سلفر" لـ"قصير فضي" بتنضيف سابق،
+        # وبعدين حذفت "نابولي قصير سفر" نهائياً كمان (بقيت دهبي/فضي/احمر بس).
+        # ⚠️ "نابولي قصير سفر" محذوف من الكتالوج (ما عاد يظهر/ينختار بالبوت)،
+        # بس لسا موجود لحاله بملف price_sheet.json (بلا حذف السطر) منشان رقم
+        # (index) باقي الأصناف بعده ما يتحرك ويخرب أسعار محفوظة سابقاً — شوف
+        # TestRealCatalogAndPriceSheetConsistency بـ test_cart_pricing.py.
+        variants = cl.get_variants(self.catalog, "دخان", "نابولي")
+        self.assertEqual(variants, ["نابولي قصير دهبي", "نابولي قصير فضي", "نابولي قصير احمر"])
+        self.assertNotIn("نابولي قصير سلفر", variants)
+        self.assertNotIn("نابولي قصير ابيض", variants)
+        self.assertNotIn("نابولي قصير", variants)
+        self.assertNotIn("نابولي احمر + فضي قصير", variants)
+        self.assertNotIn("نابولي قصير سفر", variants)
+
     def test_variants_present_match_real_items(self):
         variants = cl.get_variants(self.catalog, "دخان", "ماستر")
         self.assertIn("ماستر طويل ورق م", variants)
