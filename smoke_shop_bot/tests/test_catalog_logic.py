@@ -34,6 +34,13 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 40)
         self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 14)
 
+    def test_dukhan_priority_brands_appear_first_in_requested_order(self):
+        # التاجرة طلبت هالخمس ماركات تطلع أول شي بقائمة اختيار النوع (دخان)،
+        # بنفس الترتيب يلي حددتو، وباقي الماركات بعدهن (بترتيبهن القديم).
+        types = cl.get_types(self.catalog, "دخان")
+        self.assertEqual(types[:5], ["ماستر", "كابتن بلاك", "كلواز 8 S", "البرو", "روز"])
+        self.assertEqual(len(types), 40)  # ما ضاعت ولا انضافت ولا تكررت ولا ماركة
+
     def test_variants_present_match_real_items(self):
         variants = cl.get_variants(self.catalog, "دخان", "ماستر")
         self.assertIn("ماستر طويل ورق م", variants)
