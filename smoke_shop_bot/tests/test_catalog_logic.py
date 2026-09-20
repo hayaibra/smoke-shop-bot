@@ -70,6 +70,18 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertNotIn("اوسكار كوين", variants)
         self.assertNotIn("اوسكار سليم", variants)
 
+    def test_elegance_variants_after_cleanup(self):
+        # التاجرة حذفت ٤ أصناف من "اليغانس" (اسود كرتون، كوين بلا وصف، طويل
+        # فضي غ م، سليم مربع) — بلا ما تأثر باقي أصنافها (٢١ صنف).
+        variants = cl.get_variants(self.catalog, "دخان", "اليغانس")
+        self.assertEqual(len(variants), 21)
+        self.assertNotIn("اليغانس اسود كرتون", variants)
+        self.assertNotIn("اليغانس كوين", variants)
+        self.assertNotIn("اليغانس طويل فضي غ م", variants)
+        self.assertNotIn("اليغانس سليم مربع", variants)
+        # صنف تاني بنفس الاسم الجزئي ("طويل فضي غ" بلا "م") ما لازم يتأثر.
+        self.assertIn("اليغانس طويل فضي غ", variants)
+
     def test_napoli_variants_after_cleanup(self):
         # التاجرة حذفت 3 أصناف مكررة/زايدة من "نابولي" (قصير ابيض، قصير بس،
         # احمر + فضي قصير) وبدّلت اسم "قصير سلفر" لـ"قصير فضي" بتنضيف سابق،

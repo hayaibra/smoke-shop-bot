@@ -279,6 +279,10 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("اوسكار", "اوسكار طويل"),
         ("اوسكار", "اوسكار كوين"),
         ("اوسكار", "اوسكار سليم"),
+        ("اليغانس", "اليغانس اسود كرتون"),
+        ("اليغانس", "اليغانس كوين"),
+        ("اليغانس", "اليغانس طويل فضي غ م"),
+        ("اليغانس", "اليغانس سليم مربع"),
     }
 
     def setUp(self):
@@ -329,6 +333,10 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("اوسكار", "اوسكار طويل"): 31,
             ("اوسكار", "اوسكار كوين"): 32,
             ("اوسكار", "اوسكار سليم"): 33,
+            ("اليغانس", "اليغانس اسود كرتون"): 43,
+            ("اليغانس", "اليغانس طويل فضي غ م"): 58,
+            ("اليغانس", "اليغانس كوين"): 61,
+            ("اليغانس", "اليغانس سليم مربع"): 64,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -360,6 +368,18 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "اوسكار طويل فضي", "اوسكار سليم فضي", "اوسكار كوين ازرق",
             "اوسكار طويل", "اوسكار كوين", "اوسكار سليم",
         ])
+        # وباقي أصناف "اليغانس" (٢١ صنف) ضلوا زي ما كانوا بالضبط — ولا رقم تحرك.
+        elegance_items = [item for item in self.flat_items if item["brand"] == "اليغانس"]
+        self.assertEqual([item["name"] for item in elegance_items], [
+            "اليغانس طويل فضي غ", "اليغانس قصير فضي", "اليغانس طويل اسود", "اليغانس اسود كرتون",
+            "اليغانس سليم فضي", "اليغانس سليم ازرق", "اليغانس سليم ازرق مربع",
+            "اليغانس سليم فضي مربع", "اليغانس سليم نعنع جديد", "اليغانس سليم نعنع قديم",
+            "اليغانس قصير طقتين", "اليغانس كوين ازرق طقة", "اليغانس سليم طقة موف",
+            "اليغانس سليم طقة ازرق", "اليغانس سليم شوكولا", "اليغانس سليم دهبي",
+            "اليغانس كوين ازرق جديد", "اليغانس كوين ابيض جديد", "اليغانس طويل فضي غ م",
+            "اليغانس قصير اسود", "اليغانس قصير ابيض", "اليغانس كوين",
+            "اليغانس طويل فضي مخصص", "اليغانس سليم فضي ازرق نعنع قديم", "اليغانس سليم مربع",
+        ])
 
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
@@ -368,7 +388,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 567)
+        self.assertEqual(total_variants, 563)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
