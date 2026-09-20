@@ -49,6 +49,18 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertIn("جيتان", types)
         self.assertEqual(cl.get_variants(self.catalog, "دخان", "جيتان"), ["جيتان قصير"])
 
+    def test_ekhtimar_variants_after_cleanup(self):
+        # التاجرة حذفت صنفين من "اختمار" (قصير، طويل — بلا أي وصف لون/نوع)،
+        # نفس أسلوب باقي الحذوفات: محذوفين من الكتالوج بس، ولسا موجودين
+        # بمكانهن تماماً بملف price_sheet.json.
+        variants = cl.get_variants(self.catalog, "دخان", "اختمار")
+        self.assertEqual(
+            variants,
+            ["اختمار قصير ازرق", "اختمار قصير فضي", "اختمار سليم فضي", "اختمار طويل ازرق"],
+        )
+        self.assertNotIn("اختمار قصير", variants)
+        self.assertNotIn("اختمار طويل", variants)
+
     def test_napoli_variants_after_cleanup(self):
         # التاجرة حذفت 3 أصناف مكررة/زايدة من "نابولي" (قصير ابيض، قصير بس،
         # احمر + فضي قصير) وبدّلت اسم "قصير سلفر" لـ"قصير فضي" بتنضيف سابق،

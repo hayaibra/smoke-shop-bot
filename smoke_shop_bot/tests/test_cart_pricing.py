@@ -274,6 +274,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # بلا ما تأثر ماركة "جيتان" (لحالها تماماً، لسا موجودة).
         ("جتان", "جتان قصير"),
         ("جتان", "جتان كوين"),
+        ("اختمار", "اختمار قصير"),
+        ("اختمار", "اختمار طويل"),
     }
 
     def setUp(self):
@@ -319,6 +321,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("ون شيستر", "ون شيستر سليم ابيض دهبي"): 12,
             ("جتان", "جتان قصير"): 539,
             ("جتان", "جتان كوين"): 540,
+            ("اختمار", "اختمار طويل"): 38,
+            ("اختمار", "اختمار قصير"): 39,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -338,6 +342,12 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # "جيتان" (ماركة لحالها) ما تأثرت إطلاقاً.
         gitane_items = [item for item in self.flat_items if item["brand"] == "جيتان"]
         self.assertEqual([item["name"] for item in gitane_items], ["جيتان قصير"])
+        # باقي أصناف "اختمار" (٤ أصناف) ضلوا زي ما كانوا بالضبط.
+        ekhtimar_items = [item for item in self.flat_items if item["brand"] == "اختمار"]
+        self.assertEqual([item["name"] for item in ekhtimar_items], [
+            "اختمار قصير ازرق", "اختمار قصير فضي", "اختمار سليم فضي",
+            "اختمار طويل ازرق", "اختمار طويل", "اختمار قصير",
+        ])
 
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
@@ -346,7 +356,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 572)
+        self.assertEqual(total_variants, 570)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
