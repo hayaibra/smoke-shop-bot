@@ -31,7 +31,7 @@ class TestCatalogLoading(unittest.TestCase):
         # الأنواع (types) هلق هيي براندات حقيقية من نشرة أسعار التاجر، مش بيانات تجريبية.
         self.assertIn("ماستر", cl.get_types(self.catalog, "دخان"))
         self.assertIn("اليغانس", cl.get_types(self.catalog, "دخان"))
-        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 40)
+        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 39)
         self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 14)
 
     def test_dukhan_priority_brands_appear_first_in_requested_order(self):
@@ -39,7 +39,15 @@ class TestCatalogLoading(unittest.TestCase):
         # بنفس الترتيب يلي حددتو، وباقي الماركات بعدهن (بترتيبهن القديم).
         types = cl.get_types(self.catalog, "دخان")
         self.assertEqual(types[:5], ["ماستر", "كابتن بلاك", "كلواز 8 S", "البرو", "روز"])
-        self.assertEqual(len(types), 40)  # ما ضاعت ولا انضافت ولا تكررت ولا ماركة
+        self.assertEqual(len(types), 39)  # ٤٠ ناقص "جتان" يلي انحذفت بالكامل بعدين
+
+    def test_jitane_brand_fully_removed(self):
+        # التاجرة حذفت ماركة "جتان" بالكامل (مو صنف واحد جواها — الماركة كلها)،
+        # منشان ما تلتبس مع "جيتان" (ماركة تانية لحالها، لسا موجودة وما تأثرت).
+        types = cl.get_types(self.catalog, "دخان")
+        self.assertNotIn("جتان", types)
+        self.assertIn("جيتان", types)
+        self.assertEqual(cl.get_variants(self.catalog, "دخان", "جيتان"), ["جيتان قصير"])
 
     def test_napoli_variants_after_cleanup(self):
         # التاجرة حذفت 3 أصناف مكررة/زايدة من "نابولي" (قصير ابيض، قصير بس،

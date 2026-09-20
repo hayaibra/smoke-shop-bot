@@ -1,8 +1,11 @@
 """
-اختبارات prices_state.py — بس الجزء الجديد (CATEGORY_OF_BRAND)، يلي بيربط كل
+اختبارات prices_state.py — بس الأجزاء الجديدة: CATEGORY_OF_BRAND (يلي بيربط كل
 برند بقسمه من data/catalog.json، منشان قائمة "/prices" للزبون تنعرض منظمة
-هرمياً (قسم ← برند ← صنف). باقي الملف (FLAT_ITEMS/overrides) غلاف رقيق فوق
-price_sheet_logic.py، مغطى أصلاً بـ test_price_sheet_logic.py.
+هرمياً قسم ← برند ← صنف)، و visible_flat_items() (يلي بيفلتر أي صنف "محذوف"
+[orphan] — موجود بملف price_sheet.json بس مو موجود بالكتالوج — منشان ما يظهر
+للزبون بقائمة الأسعار رغم إنه ما منقدر نبيعه عبر البوت). باقي الملف
+(FLAT_ITEMS/overrides) غلاف رقيق فوق price_sheet_logic.py، مغطى أصلاً بـ
+test_price_sheet_logic.py.
 """
 import sys
 import unittest
@@ -14,8 +17,10 @@ import prices_state
 
 
 class TestCategoryOfBrand(unittest.TestCase):
-    def test_every_brand_in_flat_items_has_a_category(self):
-        brands = {item["brand"] for item in prices_state.FLAT_ITEMS}
+    def test_every_brand_in_visible_flat_items_has_a_category(self):
+        # كل برند لسا ظاهر (يعني بالكتالوج فعلياً) لازم يكون إلو قسم — هاد يلي
+        # فعلياً منستخدمه سوا بقوائم الأسعار يلي بتوصل الزبون (شوف visible_flat_items).
+        brands = {item["brand"] for item in prices_state.visible_flat_items()}
         missing = brands - set(prices_state.CATEGORY_OF_BRAND)
         self.assertEqual(missing, set())
 
@@ -27,6 +32,40 @@ class TestCategoryOfBrand(unittest.TestCase):
         self.assertEqual(
             prices_state.CATEGORY_OF_BRAND["اراكيل الكترونية برو"], "🔋 اراكيل الكترونية"
         )
+
+
+class TestVisibleFlatItems(unittest.TestCase):
+    """
+    أصناف اتحذفت من الكتالوج بس تركناها بمكانها بملف price_sheet.json (منشان
+    ترقيم باقي الأصناف ما يتحرك، شوف tests/test_cart_pricing.py) لازم تختفي من
+    visible_flat_items() — وإلا ضلت تظهر بقائمة "/prices"/النشرة اليومية
+    كأنها لسا للبيع، رغم إنه ما منقدر نضيفها للسلة عبر البوت إطلاقاً.
+    """
+
+    def test_orphaned_items_are_excluded(self):
+        visible_pairs = {(item["brand"], item["name"]) for item in prices_state.visible_flat_items()}
+        orphans = [
+            ("نابولي", "نابولي قصير سفر"),
+            ("ون شيستر", "ونشستر سليم"),
+            ("ون شيستر", "ونشستر كوين"),
+            ("ون شيستر", "ون شيستر كوين سيلفر"),
+            ("ون شيستر", "ون شيستر سليم ابيض دهبي"),
+            ("جتان", "جتان قصير"),
+            ("جتان", "جتان كوين"),
+        ]
+        for pair in orphans:
+            self.assertNotIn(pair, visible_pairs, msg=pair)
+
+    def test_non_orphaned_items_still_present_with_original_index(self):
+        visible_by_pair = {(item["brand"], item["name"]): item for item in prices_state.visible_flat_items()}
+        self.assertIn(("نابولي", "نابولي قصير دهبي"), visible_by_pair)
+        self.assertIn(("ون شيستر", "ون شيستر كوين فضي"), visible_by_pair)
+        self.assertIn(("جيتان", "جيتان قصير"), visible_by_pair)
+        # الفهرس (index) ما تغير — لسا نفس رقمه الأصلي بملف price_sheet.json.
+        self.assertEqual(visible_by_pair[("جيتان", "جيتان قصير")]["index"], 0)
+
+    def test_visible_count_is_full_count_minus_orphans(self):
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 7)
 
 
 if __name__ == "__main__":
