@@ -2744,5 +2744,14 @@
         "default_price": 115500
       }
     ]
+  },
+  {
+    "brand": "ماستر",
+    "items": [
+      {
+        "name": "ماستر طويل",
+        "default_price": 0
+      }
+    ]
   }
 ]
