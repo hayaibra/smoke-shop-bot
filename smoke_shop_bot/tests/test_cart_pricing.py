@@ -338,6 +338,11 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("1970", "سليم نعنع 1970"),
         ("1970", "سليم ازرق 1970"),
         ("كلواز", "كلواز قصير حرة"),
+        # صنفين محذوفين من "البرو": "برو فضي طويل" و"يرو ازرق طويل" (بالاسم
+        # المطبوع بالكتالوج فعلاً، بلا تصحيح إملائي) — بعكس "برو طويل فضي"
+        # و"برو طويل ازرق" (ترتيب كلمات معاكس) يلي هني أصناف تانية وضلوا.
+        ("البرو", "برو فضي طويل"),
+        ("البرو", "يرو ازرق طويل"),
     }
 
     def setUp(self):
@@ -435,6 +440,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("1970", "سليم نعنع 1970"): 398,
             ("1970", "سليم ازرق 1970"): 399,
             ("كلواز", "كلواز قصير حرة"): 389,
+            ("البرو", "برو فضي طويل"): 432,
+            ("البرو", "يرو ازرق طويل"): 433,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -582,6 +589,18 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         klewaz_wide_items = [item for item in self.flat_items if item["brand"] == "كلواز عريض"]
         self.assertEqual([item["name"] for item in klewaz_wide_items], ["كلواز احمر عريض", "كلواز اصفر عريض"])
 
+        # "البرو": صنفين محذوفين (فهارس ٤٣٢-٤٣٣)، وباقي الـ١٦ صنف ضلوا زي ما
+        # هم بالضبط — بما فيهن الصنفين المشابهين بالاسم بس بترتيب كلمات
+        # معاكس ("برو طويل فضي"، "برو طويل ازرق").
+        bro_items = [item for item in self.flat_items if item["brand"] == "البرو"]
+        self.assertEqual([item["name"] for item in bro_items], [
+            "برو فضي طويل", "يرو ازرق طويل", "برو كوين فضي", "برو طويل شوكولا",
+            "برو طويل حليب", "برو طويل كرز", "برو كوين اسود", "برو فضي سليم",
+            "برو طويل فضي", "برو طويل ازرق", "برو كوين كيلر", "برو ازرق هابي مانغو",
+            "برو بل جيم", "برو هافانا", "برو طويل حليب ترينيدي", "برو طويل كرز موهيتو",
+            "برو كوين اسود لوف", "برو سليم فضي بحريني",
+        ])
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -589,7 +608,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 522)
+        self.assertEqual(total_variants, 520)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

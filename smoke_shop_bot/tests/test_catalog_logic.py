@@ -64,6 +64,17 @@ class TestCatalogLoading(unittest.TestCase):
             ["كلواز احمر عريض", "كلواز اصفر عريض"],
         )
 
+    def test_bro_similar_named_variants_removed_carefully(self):
+        # حذفنا "برو فضي طويل" و"يرو ازرق طويل" (بالاسم المطبوع فعلاً
+        # بالكتالوج) — بعكس "برو طويل فضي" و"برو طويل ازرق" (نفس الكلمات
+        # بترتيب معاكس) يلي هني أصناف تانية لحالهن وضلوا موجودين.
+        variants = cl.get_variants(self.catalog, "دخان", "البرو")
+        self.assertNotIn("برو فضي طويل", variants)
+        self.assertNotIn("يرو ازرق طويل", variants)
+        self.assertIn("برو طويل فضي", variants)
+        self.assertIn("برو طويل ازرق", variants)
+        self.assertEqual(len(variants), 16)
+
     def test_jitane_brand_fully_removed(self):
         # التاجرة حذفت ماركة "جتان" بالكامل (مو صنف واحد جواها — الماركة كلها)،
         # منشان ما تلتبس مع "جيتان" (ماركة تانية لحالها، لسا موجودة وما تأثرت).
