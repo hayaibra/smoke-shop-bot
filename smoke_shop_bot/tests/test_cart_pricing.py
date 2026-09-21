@@ -317,6 +317,11 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # "بلاتينيوم فضي طويل" (فضي قبل طويل) محذوف — بعكس "بلاتينيوم طويل
         # فضي" (طويل قبل فضي) يلي هو صنف تاني لحاله وضل موجود.
         ("بلاتينيوم", "بلاتينيوم فضي طويل"),
+        # ٣ أصناف "هيستوري" بالاسم المجرد (بلا فضي/ازرق) محذوفة — الأصناف
+        # المفصّلة (طويل فضي/ازرق، قصير فضي/ازرق، كوين، سليم فضي/نعنع) ضلت.
+        ("هيستوري", "هيستوري طويل"),
+        ("هيستوري", "هيستوري قصير"),
+        ("هيستوري", "هيستوري سليم"),
     }
 
     def setUp(self):
@@ -399,6 +404,9 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("كابتن بلاك", "كابتن بلاك سليم"): 254,
             ("كابتن بلاك", "كابتن بلاك مسلف"): 255,
             ("بلاتينيوم", "بلاتينيوم فضي طويل"): 288,
+            ("هيستوري", "هيستوري طويل"): 193,
+            ("هيستوري", "هيستوري قصير"): 194,
+            ("هيستوري", "هيستوري سليم"): 195,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -498,6 +506,15 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual(kept_item["index"], 307)
         self.assertEqual(kept_item["default_price"], 62500)
 
+        # "هيستوري": ٣ أصناف محذوفة (طويل/قصير/سليم المجردين — فهارس
+        # ١٩٣-١٩٥)، وباقي الـ٧ أصناف المفصّلة ضلت زي ما هي بالضبط.
+        history_items = [item for item in self.flat_items if item["brand"] == "هيستوري"]
+        self.assertEqual([item["name"] for item in history_items], [
+            "هيستوري طويل فضي", "هيستوري طويل ازرق", "هيستوري قصير فضي", "هيستوري قصير ازرق",
+            "هيستوري كوين", "هيستوري سليم فضي", "هيستوري سليم نعنع",
+            "هيستوري طويل", "هيستوري قصير", "هيستوري سليم",
+        ])
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -505,7 +522,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 537)
+        self.assertEqual(total_variants, 534)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

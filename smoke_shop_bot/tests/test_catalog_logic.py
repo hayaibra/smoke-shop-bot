@@ -221,6 +221,25 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertNotIn("بلاتينيوم فضي طويل", variants)
         self.assertIn("بلاتينيوم طويل فضي", variants)
 
+    def test_history_bare_variants_removed(self):
+        # حذفنا "هيستوري طويل/قصير/سليم" (الأسماء المجردة بلا فضي/ازرق) —
+        # الأصناف المفصّلة ضلت.
+        variants = cl.get_variants(self.catalog, "دخان", "هيستوري")
+        self.assertEqual(
+            variants,
+            [
+                "هيستوري طويل فضي",
+                "هيستوري طويل ازرق",
+                "هيستوري قصير فضي",
+                "هيستوري قصير ازرق",
+                "هيستوري كوين",
+                "هيستوري سليم فضي",
+                "هيستوري سليم نعنع",
+            ],
+        )
+        for old in ["هيستوري طويل", "هيستوري قصير", "هيستوري سليم"]:
+            self.assertNotIn(old, variants, msg=old)
+
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
         # حتى لو براند واحد بس إله صنف وحيد (متلاً "جيتان")، منشان حساب السعر
