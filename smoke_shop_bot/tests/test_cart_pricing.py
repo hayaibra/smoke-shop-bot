@@ -350,6 +350,11 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("كلواز عريض", "كلواز احمر عريض"),
         ("كلواز عريض", "كلواز اصفر عريض"),
         ("مادوكس", "مادوكس كوين"),
+        # صنف "مالبورو" العام (بقسم دخان وزاري) محذوف بعد ما صارت في أصناف
+        # مفصّلة (ابيض/احمر/كوين ازرق/كوين اسود).
+        ("مالبورو", "مالبورو"),
+        # نفس الشي لصنف "كينت" العام — محذوف بعد ما صارت فضي/ازرق.
+        ("كينت", "كينت"),
     }
 
     def setUp(self):
@@ -452,6 +457,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("كلواز عريض", "كلواز احمر عريض"): 505,
             ("كلواز عريض", "كلواز اصفر عريض"): 506,
             ("مادوكس", "مادوكس كوين"): 553,
+            ("مالبورو", "مالبورو"): 582,
+            ("كينت", "كينت"): 583,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -556,7 +563,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             self.assertEqual(item["default_price"], 0, msg=brand)
 
         # ٤ أصناف مفصّلة جداد انضافوا لماركة "مالبورو" — كمجموعة جديدة
-        # بآخر ملف الأسعار (فهارس ٥٨٦-٥٨٩)، بلا سعر بعد.
+        # بآخر ملف الأسعار (فهارس ٥٨٦-٥٨٩)، بلا سعر بعد. بعدين حذفنا الصنف
+        # العام "مالبورو" (orphan بفهرسه ٥٨٢، شوف فوق) فضل ٤ أصناف ظاهرين.
         malboro_items = [item for item in self.flat_items if item["brand"] == "مالبورو"]
         self.assertEqual([item["name"] for item in malboro_items], [
             "مالبورو", "مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود",
@@ -565,7 +573,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertTrue(all(item["default_price"] == 0 for item in malboro_items))
 
         # صنفين مفصّلين جداد انضافوا لماركة "كينت" — كمجموعة جديدة بآخر
-        # ملف الأسعار (فهارس ٥٩٠-٥٩١)، بلا سعر بعد.
+        # ملف الأسعار (فهارس ٥٩٠-٥٩١)، بلا سعر بعد. بعدين حذفنا الصنف العام
+        # "كينت" (orphan بفهرسه ٥٨٣، شوف فوق) فضل صنفين ظاهرين.
         kent_items = [item for item in self.flat_items if item["brand"] == "كينت"]
         self.assertEqual([item["name"] for item in kent_items], ["كينت", "كينت فضي", "كينت ازرق"])
         self.assertEqual([item["index"] for item in kent_items], [583, 590, 591])
@@ -668,7 +677,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 533)
+        self.assertEqual(total_variants, 531)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

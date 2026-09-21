@@ -42,19 +42,24 @@ class TestCatalogLoading(unittest.TestCase):
             self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", brand))
 
     def test_dukhan_wizari_malboro_variants_added(self):
-        # أضفنا ٤ أصناف مفصّلة لماركة "مالبورو" (بقسم "دخان وزاري") فوق
-        # الصنف العام "مالبورو" (يلي ضل زي ما هو، ما انحذف).
+        # أضفنا ٤ أصناف مفصّلة لماركة "مالبورو" (بقسم "دخان وزاري")، وبعدين
+        # حذفنا الصنف العام "مالبورو" (يلي كان placeholder) لما صارت في
+        # أصناف مفصّلة تغطيه.
         variants = cl.get_variants(self.catalog, "دخان وزاري", "مالبورو")
         self.assertEqual(
             variants,
-            ["مالبورو", "مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود"],
+            ["مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود"],
         )
+        self.assertNotIn("مالبورو", variants)
+        self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", "مالبورو"))
 
     def test_dukhan_wizari_kent_variants_added(self):
-        # أضفنا صنفين مفصّلين لماركة "كينت" (بقسم "دخان وزاري") فوق الصنف
-        # العام "كينت" (يلي ضل زي ما هو، ما انحذف).
+        # أضفنا صنفين مفصّلين لماركة "كينت" (بقسم "دخان وزاري")، وبعدين
+        # حذفنا الصنف العام "كينت" (placeholder) لما صارت في أصناف مفصّلة.
         variants = cl.get_variants(self.catalog, "دخان وزاري", "كينت")
-        self.assertEqual(variants, ["كينت", "كينت فضي", "كينت ازرق"])
+        self.assertEqual(variants, ["كينت فضي", "كينت ازرق"])
+        self.assertNotIn("كينت", variants)
+        self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", "كينت"))
 
     def test_dukhan_wizari_winston_variants_added(self):
         # أضفنا ٥ أصناف مفصّلة لماركة "ونستون" (بقسم "دخان وزاري") فوق

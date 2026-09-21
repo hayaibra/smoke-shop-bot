@@ -107,9 +107,11 @@ class TestVisibleFlatItems(unittest.TestCase):
             ("كلواز", "كلواز قصير حرة"),
             ("البرو", "برو فضي طويل"),
             ("البرو", "يرو ازرق طويل"),
+            ("مالبورو", "مالبورو"),
             ("كلواز عريض", "كلواز احمر عريض"),
             ("كلواز عريض", "كلواز اصفر عريض"),
             ("مادوكس", "مادوكس كوين"),
+            ("كينت", "كينت"),
         ]
         for pair in orphans:
             self.assertNotIn(pair, visible_pairs, msg=pair)
@@ -129,10 +131,14 @@ class TestVisibleFlatItems(unittest.TestCase):
         # صنف "مادوكس" الجديد (المضاف لماركة "كابتن بلاك" بآخر price_sheet.json) ظاهر برقمه الجديد.
         self.assertIn(("كابتن بلاك", "مادوكس"), visible_by_pair)
         self.assertEqual(visible_by_pair[("كابتن بلاك", "مادوكس")]["index"], 581)
-        # أول ٤ ماركات جوا القسم الجديد "دخان وزاري" ظاهرين بأرقامهن الجديدة.
-        for i, brand in enumerate(["مالبورو", "كينت", "ونستون", "دفيدوف"]):
+        # أول ٤ ماركات جوا القسم الجديد "دخان وزاري" ظاهرين بأرقامهن الجديدة
+        # (ما عدا الصنفين العامين "مالبورو" و"كينت" يلي انحذفوا بعدين —
+        # orphans، شوف فوق).
+        for i, brand in enumerate(["ونستون", "دفيدوف"], start=2):
             self.assertIn((brand, brand), visible_by_pair, msg=brand)
             self.assertEqual(visible_by_pair[(brand, brand)]["index"], 582 + i, msg=brand)
+        self.assertNotIn(("مالبورو", "مالبورو"), visible_by_pair)
+        self.assertNotIn(("كينت", "كينت"), visible_by_pair)
         # ٤ أصناف مفصّلة جداد جوا ماركة "مالبورو" ظاهرين بأرقامهن الجديدة.
         for i, name in enumerate(["مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود"]):
             self.assertIn(("مالبورو", name), visible_by_pair, msg=name)
@@ -147,7 +153,7 @@ class TestVisibleFlatItems(unittest.TestCase):
             self.assertEqual(visible_by_pair[("ونستون", name)]["index"], 592 + i, msg=name)
 
     def test_visible_count_is_full_count_minus_orphans(self):
-        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 64)
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 66)
 
 
 if __name__ == "__main__":
