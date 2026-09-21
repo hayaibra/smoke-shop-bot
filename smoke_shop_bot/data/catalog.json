@@ -1849,5 +1849,21 @@
         "multiplier": 1
       }
     ]
+  },
+  "دخان وزاري": {
+    "emoji": "🚬",
+    "types": {},
+    "units": [
+      {
+        "name": "🎁 كروز",
+        "fixed": false,
+        "multiplier": 1
+      },
+      {
+        "name": "🥡 نص كروز",
+        "fixed": true,
+        "multiplier": 0.5
+      }
+    ]
   }
 }
