@@ -314,6 +314,9 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("كابتن بلاك", "كابتن بلاك ذهبي"),
         ("كابتن بلاك", "كابتن بلاك سليم"),
         ("كابتن بلاك", "كابتن بلاك مسلف"),
+        # "بلاتينيوم فضي طويل" (فضي قبل طويل) محذوف — بعكس "بلاتينيوم طويل
+        # فضي" (طويل قبل فضي) يلي هو صنف تاني لحاله وضل موجود.
+        ("بلاتينيوم", "بلاتينيوم فضي طويل"),
     }
 
     def setUp(self):
@@ -395,6 +398,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("كابتن بلاك", "كابتن بلاك ذهبي"): 253,
             ("كابتن بلاك", "كابتن بلاك سليم"): 254,
             ("كابتن بلاك", "كابتن بلاك مسلف"): 255,
+            ("بلاتينيوم", "بلاتينيوم فضي طويل"): 288,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -485,6 +489,15 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "كابتن بلاك مسلف", "سيجار يلو قهوة",
         ])
 
+        # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
+        # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
+        # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
+        platinum_items = [item for item in self.flat_items if item["brand"] == "بلاتينيوم"]
+        self.assertIn("بلاتينيوم طويل فضي", [item["name"] for item in platinum_items])
+        kept_item = next(item for item in platinum_items if item["name"] == "بلاتينيوم طويل فضي")
+        self.assertEqual(kept_item["index"], 307)
+        self.assertEqual(kept_item["default_price"], 62500)
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -492,7 +505,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 538)
+        self.assertEqual(total_variants, 537)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

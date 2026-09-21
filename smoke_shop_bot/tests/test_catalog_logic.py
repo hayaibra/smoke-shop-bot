@@ -214,6 +214,13 @@ class TestCatalogLoading(unittest.TestCase):
         for old in ["كابتن بلاك ابيض", "كابتن بلاك ازرق", "كابتن بلاك ذهبي", "كابتن بلاك سليم", "كابتن بلاك مسلف"]:
             self.assertNotIn(old, variants, msg=old)
 
+    def test_platinum_fadi_tawil_removed_but_tawil_fadi_kept(self):
+        # صنفين متشابهين بالاسم بس بترتيب كلمات معاكس: "بلاتينيوم فضي طويل"
+        # (محذوف) و"بلاتينيوم طويل فضي" (ضل موجود) — لازم ننتبه ما نحذف الغلط.
+        variants = cl.get_variants(self.catalog, "دخان", "بلاتينيوم")
+        self.assertNotIn("بلاتينيوم فضي طويل", variants)
+        self.assertIn("بلاتينيوم طويل فضي", variants)
+
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
         # حتى لو براند واحد بس إله صنف وحيد (متلاً "جيتان")، منشان حساب السعر
