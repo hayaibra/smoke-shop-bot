@@ -185,8 +185,21 @@ def _reset_cart_fields(user_data: dict) -> None:
 
 
 async def _answer(update: Update, text: str | None = None, show_alert: bool = False) -> None:
+    """
+    بترد على الـ callback query (منشان تقف دوامة التحميل عند الزبون فوق الزر).
+    لو البوت كان نايم شوي (مثلاً استضافة مجانية بتنام بعد فترة خمول وبتاخد وقت
+    لتصحى) وبطّأ بالرد، تلغرام ممكن يعتبر الـ query "قديمة/منتهية الصلاحية"
+    ويرفض الرد عليها (BadRequest). قبل هالتصحيح، هالخطأ كان بيطلع من هون
+    ويوقف الكود المسؤول عن باقي الشاشة (مثلاً "أضف المختار للسلة")، يعني
+    الزبون يدوس ع الزر وما يصير أي شي إطلاقاً — لأنو الرد على الـ query نفسه
+    مجرد لباقة (يوقف دوامة التحميل)، مش شرط لإكمال باقي الشغل، فمنتجاهل
+    الخطأ ومنكمل عادي.
+    """
     if update.callback_query is not None:
-        await update.callback_query.answer(text=text, show_alert=show_alert)
+        try:
+            await update.callback_query.answer(text=text, show_alert=show_alert)
+        except (BadRequest, Forbidden):
+            pass
 
 
 async def _sync_state_best_effort(context: ContextTypes.DEFAULT_TYPE) -> None:
