@@ -2924,5 +2924,14 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "افانا",
+    "items": [
+      {
+        "name": "افانا",
+        "default_price": 0
+      }
+    ]
   }
 ]
