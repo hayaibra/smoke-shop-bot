@@ -2771,5 +2771,41 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "مالبورو",
+    "items": [
+      {
+        "name": "مالبورو",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "كينت",
+    "items": [
+      {
+        "name": "كينت",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "ونستون",
+    "items": [
+      {
+        "name": "ونستون",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "دفيدوف",
+    "items": [
+      {
+        "name": "دفيدوف",
+        "default_price": 0
+      }
+    ]
   }
 ]
