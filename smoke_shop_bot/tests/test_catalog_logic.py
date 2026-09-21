@@ -133,7 +133,8 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertIn("ماستر", cl.get_types(self.catalog, "دخان"))
         self.assertIn("اليغانس", cl.get_types(self.catalog, "دخان"))
         self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 37)
-        self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 14)
+        # ١٤ ناقص ٤ ماركات انحذفوا بالكامل بعدين (الخلة/تيرا/دينفر/ملكي).
+        self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 10)
 
     def test_dukhan_priority_brands_appear_first_in_requested_order(self):
         # التاجرة طلبت هالخمس ماركات تطلع أول شي بقائمة اختيار النوع (دخان)،
@@ -435,6 +436,13 @@ class TestCatalogLoading(unittest.TestCase):
             "كوين فضي 1970", "سليم فضي 1970", "سليم نعنع 1970", "سليم ازرق 1970",
         ]:
             self.assertNotIn(old, variants, msg=old)
+
+    def test_mesel_khalla_tera_denver_malaki_brands_fully_removed(self):
+        # ٤ ماركات معسل انحذفوا بالكامل: "معسل الخلة"، "معسل تيرا"، "معسل
+        # دينفر"، "معسل ملكي" (مو صنف واحد جواهن — الماركة كلها).
+        types = cl.get_types(self.catalog, "معسل")
+        for brand in ["معسل الخلة", "معسل تيرا", "معسل دينفر", "معسل ملكي"]:
+            self.assertNotIn(brand, types, msg=brand)
 
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل

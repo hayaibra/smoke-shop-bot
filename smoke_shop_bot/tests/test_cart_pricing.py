@@ -393,6 +393,25 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("الفاخر", "الفاخر تفاحتين احمر"),
         ("الفاخر", "الفاخر تفاحتين اسود مثلج حرة كروز"),
         ("الفاخر", "طقة بلس ازرق 1 كغ حرة"),
+        # ٤ ماركات معسل انحذفوا بالكامل (مو صنف واحد جواهن): "معسل الخلة"،
+        # "معسل تيرا"، "معسل دينفر"، "معسل ملكي".
+        ("معسل الخلة", "صلاحية كروز شهر 3"),
+        ("معسل الخلة", "كف صلاحية شهر 3"),
+        ("معسل الخلة", "معسل تفاحة كروز"),
+        ("معسل تيرا", "مزاج تيرا نعنع"),
+        ("معسل تيرا", "مزاج تيرا لوف"),
+        ("معسل تيرا", "مزاج تيرا تفاحتين"),
+        ("معسل تيرا", "فخامة تيرا بيرل ويف"),
+        ("معسل تيرا", "فخامة تيرا برينت"),
+        ("معسل تيرا", "فخامة تيرا تفاحتين"),
+        ("معسل دينفر", "معسل دينفر بولو"),
+        ("معسل دينفر", "معسل دينفر بلوبيري"),
+        ("معسل دينفر", "معسل دينفر علكة و نعنع"),
+        ("معسل دينفر", "معسل دينفر مستكة"),
+        ("معسل ملكي", "معسل ملكي تفاحتين"),
+        ("معسل ملكي", "معسل ملكي علكة"),
+        ("معسل ملكي", "معسل ملكي لوف"),
+        ("معسل ملكي", "معسل ملكي بولو"),
     }
 
     def setUp(self):
@@ -526,6 +545,23 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("الفاخر", "الفاخر تفاحتين احمر"): 364,
             ("الفاخر", "الفاخر تفاحتين اسود مثلج حرة كروز"): 365,
             ("الفاخر", "طقة بلس ازرق 1 كغ حرة"): 366,
+            ("معسل ملكي", "معسل ملكي تفاحتين"): 383,
+            ("معسل ملكي", "معسل ملكي علكة"): 384,
+            ("معسل ملكي", "معسل ملكي لوف"): 385,
+            ("معسل ملكي", "معسل ملكي بولو"): 386,
+            ("معسل الخلة", "صلاحية كروز شهر 3"): 556,
+            ("معسل الخلة", "كف صلاحية شهر 3"): 557,
+            ("معسل الخلة", "معسل تفاحة كروز"): 558,
+            ("معسل دينفر", "معسل دينفر بولو"): 569,
+            ("معسل دينفر", "معسل دينفر بلوبيري"): 570,
+            ("معسل دينفر", "معسل دينفر علكة و نعنع"): 571,
+            ("معسل دينفر", "معسل دينفر مستكة"): 572,
+            ("معسل تيرا", "مزاج تيرا نعنع"): 573,
+            ("معسل تيرا", "مزاج تيرا لوف"): 574,
+            ("معسل تيرا", "مزاج تيرا تفاحتين"): 575,
+            ("معسل تيرا", "فخامة تيرا بيرل ويف"): 576,
+            ("معسل تيرا", "فخامة تيرا برينت"): 577,
+            ("معسل تيرا", "فخامة تيرا تفاحتين"): 578,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -697,6 +733,26 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual([item["index"] for item in new_alfakher_items], list(range(601, 609)))
         self.assertTrue(all(item["default_price"] == 0 for item in new_alfakher_items))
 
+        # ٤ ماركات معسل انحذفوا بالكامل من الكتالوج — أصنافهن لسا بمكانهن
+        # الأصلي بملف الأسعار.
+        malaki_items = [item for item in self.flat_items if item["brand"] == "معسل ملكي"]
+        self.assertEqual([item["name"] for item in malaki_items], [
+            "معسل ملكي تفاحتين", "معسل ملكي علكة", "معسل ملكي لوف", "معسل ملكي بولو",
+        ])
+        khalla_items = [item for item in self.flat_items if item["brand"] == "معسل الخلة"]
+        self.assertEqual([item["name"] for item in khalla_items], [
+            "صلاحية كروز شهر 3", "كف صلاحية شهر 3", "معسل تفاحة كروز",
+        ])
+        denver_items = [item for item in self.flat_items if item["brand"] == "معسل دينفر"]
+        self.assertEqual([item["name"] for item in denver_items], [
+            "معسل دينفر بولو", "معسل دينفر بلوبيري", "معسل دينفر علكة و نعنع", "معسل دينفر مستكة",
+        ])
+        mesel_tera_items = [item for item in self.flat_items if item["brand"] == "معسل تيرا"]
+        self.assertEqual([item["name"] for item in mesel_tera_items], [
+            "مزاج تيرا نعنع", "مزاج تيرا لوف", "مزاج تيرا تفاحتين",
+            "فخامة تيرا بيرل ويف", "فخامة تيرا برينت", "فخامة تيرا تفاحتين",
+        ])
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -785,7 +841,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 514)
+        self.assertEqual(total_variants, 497)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
