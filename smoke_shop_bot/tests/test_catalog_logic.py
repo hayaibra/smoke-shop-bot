@@ -79,6 +79,21 @@ class TestCatalogLoading(unittest.TestCase):
         )
         self.assertNotIn("دفيدوف", variants)
 
+    def test_mazaya_variants_after_cleanup_and_reorder(self):
+        # حذفنا ٥ أصناف من "معسل مزايا" (فرنسي، نكهات، كف بحريني/كف بولو،
+        # كف مصري/كف لوف، فرنسي تفاحتين)، ونقلنا "مزايا بحريني" لأول القائمة
+        # (إعادة ترتيب داخل الكتالوج بس — ما بتأثر على ملف الأسعار).
+        variants = cl.get_variants(self.catalog, "معسل", "معسل مزايا")
+        self.assertEqual(variants[0], "مزايا بحريني")
+        for old in [
+            "مزايا فرنسي", "مزايا نكهات", "كف بحريني / كف بولو",
+            "كف مصري / كف لوف", "معسل مزايا فرنسي تفاحتين",
+        ]:
+            self.assertNotIn(old, variants, msg=old)
+        # "مزايا بحريني 1 كغ" (صنف تاني لحاله، بالكيلو) ما تأثر — ضل مكانه.
+        self.assertIn("مزايا بحريني 1 كغ", variants)
+        self.assertEqual(len(variants), 32)
+
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")
         self.assertEqual(cl.category_button_label(self.catalog, "معسل"), "💨 معسل")

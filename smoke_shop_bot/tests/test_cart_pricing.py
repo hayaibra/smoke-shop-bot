@@ -361,6 +361,12 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # "دفيدوف": التاجرة طلبت أصناف مفصّلة "فقط" — يعني استبدال كامل،
         # فالصنف العام "دفيدوف" محذوف.
         ("دفيدوف", "دفيدوف"),
+        # ٥ أصناف محذوفة من "معسل مزايا" (بقسم معسل).
+        ("معسل مزايا", "مزايا فرنسي"),
+        ("معسل مزايا", "مزايا نكهات"),
+        ("معسل مزايا", "كف بحريني / كف بولو"),
+        ("معسل مزايا", "كف مصري / كف لوف"),
+        ("معسل مزايا", "معسل مزايا فرنسي تفاحتين"),
     }
 
     def setUp(self):
@@ -467,6 +473,11 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("كينت", "كينت"): 583,
             ("ونستون", "ونستون"): 584,
             ("دفيدوف", "دفيدوف"): 585,
+            ("معسل مزايا", "مزايا فرنسي"): 131,
+            ("معسل مزايا", "مزايا نكهات"): 132,
+            ("معسل مزايا", "كف بحريني / كف بولو"): 133,
+            ("معسل مزايا", "كف مصري / كف لوف"): 134,
+            ("معسل مزايا", "معسل مزايا فرنسي تفاحتين"): 135,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -608,6 +619,23 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual([item["index"] for item in davidoff_items], [585, 597, 598, 599, 600])
         self.assertTrue(all(item["default_price"] == 0 for item in davidoff_items))
 
+        # "معسل مزايا": ٥ أصناف محذوفة (فهارس ١٣١-١٣٥)، وباقي الـ٣٢ صنف
+        # ضلوا زي ما هم بالضبط بملف الأسعار (بنفس الترتيب الأصلي — إعادة
+        # ترتيب الكتالوج ["مزايا بحريني" لأول القائمة] ما بتأثر على ملف
+        # الأسعار إطلاقاً، هاد بس ترتيب عرض للزبون).
+        mazaya_items = [item for item in self.flat_items if item["brand"] == "معسل مزايا"]
+        self.assertEqual([item["name"] for item in mazaya_items], [
+            "مزايا تفاحتين فرنسي", "مزايا علكة", "مزايا بولو", "مزايا عنب", "مزايا عنب ونعنع",
+            "مزايا نعنع", "مزايا علكة ونعنع", "مزايا لوف", "مزايا ماكس", "مزايا بحريني",
+            "مزايا مصري", "مزايا مستكة", "مزايا إنكليزي", "مزايا علكة مثلج",
+            "مزايا علكة و نعنع مثلج", "مزايا بلوبيري", "مزايا تفاحتين مثلج", "مزايا كاندي دروبس",
+            "مزايا كيلير كوين", "مزايا هابي مانغو", "مزايا ببل جيم", "مزايا نعنع مثلج",
+            "مزايا كف علكة", "مزايا كف مصري", "مزايا كف لوف", "مزايا كف بحريني",
+            "مزايا كف بولو", "مزايا كف تريندي", "مزايا كف روبي كراش", "مزايا ماكس 250 غ",
+            "مزايا بحريني 1 كغ", "مزايا فرنسي", "مزايا نكهات", "كف بحريني / كف بولو",
+            "كف مصري / كف لوف", "معسل مزايا فرنسي تفاحتين", "مزايا روبي كراش",
+        ])
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -696,7 +724,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 533)
+        self.assertEqual(total_variants, 528)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
