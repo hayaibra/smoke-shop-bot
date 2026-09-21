@@ -2762,5 +2762,14 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "كابتن بلاك",
+    "items": [
+      {
+        "name": "مادوكس",
+        "default_price": 0
+      }
+    ]
   }
 ]
