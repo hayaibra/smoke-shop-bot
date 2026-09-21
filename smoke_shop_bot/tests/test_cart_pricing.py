@@ -358,6 +358,9 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # نفس الشي لصنف "ونستون" العام — محذوف بعد ما صارت فضي/ازرق/احمر/
         # كوين ازرق/كوين فضي.
         ("ونستون", "ونستون"),
+        # "دفيدوف": التاجرة طلبت أصناف مفصّلة "فقط" — يعني استبدال كامل،
+        # فالصنف العام "دفيدوف" محذوف.
+        ("دفيدوف", "دفيدوف"),
     }
 
     def setUp(self):
@@ -463,6 +466,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("مالبورو", "مالبورو"): 582,
             ("كينت", "كينت"): 583,
             ("ونستون", "ونستون"): 584,
+            ("دفيدوف", "دفيدوف"): 585,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -594,6 +598,16 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual([item["index"] for item in winston_items], [584, 592, 593, 594, 595, 596])
         self.assertTrue(all(item["default_price"] == 0 for item in winston_items))
 
+        # "دفيدوف": استبدال كامل مباشرة (التاجرة طلبت "فقط") — الصنف العام
+        # "دفيدوف" لسا بمكانه الأصلي (orphan بفهرس ٥٨٥، شوف فوق)، و٤ أصناف
+        # مفصّلة جداد انضافوا كمجموعة جديدة بآخر ملف الأسعار (فهارس ٥٩٧-٦٠٠).
+        davidoff_items = [item for item in self.flat_items if item["brand"] == "دفيدوف"]
+        self.assertEqual([item["name"] for item in davidoff_items], [
+            "دفيدوف", "دفيدوف دهبي عريض", "دفيدوف ابيض عريض", "دفيدوف خمري عريض", "دفيدوف سليم",
+        ])
+        self.assertEqual([item["index"] for item in davidoff_items], [585, 597, 598, 599, 600])
+        self.assertTrue(all(item["default_price"] == 0 for item in davidoff_items))
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -682,7 +696,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 530)
+        self.assertEqual(total_variants, 533)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

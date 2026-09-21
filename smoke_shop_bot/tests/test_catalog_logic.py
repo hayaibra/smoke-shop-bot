@@ -32,14 +32,11 @@ class TestCatalogLoading(unittest.TestCase):
 
     def test_dukhan_wizari_first_four_brands_added_self_named(self):
         # أول ٤ ماركات انضافوا جوا "دخان وزاري": مالبورو/كينت/ونستون/دفيدوف
-        # — كل وحدة منهن لسا بلا تفاصيل (طويل/قصير/إلخ)، فأضفناها متل باقي
-        # الماركات المشابهة بالكتالوج (مثلاً "فان") بصنف وحيد بنفس اسم
-        # الماركة، جاهزة تنباع فوراً وبانتظار تفاصيل أكتر بعدين.
+        # — كل وحدة منهن انضافت أول شي بلا تفاصيل (متل ماركة "فان" بصنف
+        # وحيد بنفس اسم الماركة)، وبعدين كل وحدة منهن انضافلها أصناف مفصّلة
+        # (شوف الاختبارات المخصصة لكل ماركة تحت).
         types = cl.get_types(self.catalog, "دخان وزاري")
         self.assertEqual(types, ["مالبورو", "كينت", "ونستون", "دفيدوف"])
-        for brand in ["دفيدوف"]:
-            self.assertEqual(cl.get_variants(self.catalog, "دخان وزاري", brand), [brand])
-            self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", brand))
 
     def test_dukhan_wizari_malboro_variants_added(self):
         # أضفنا ٤ أصناف مفصّلة لماركة "مالبورو" (بقسم "دخان وزاري")، وبعدين
@@ -71,6 +68,16 @@ class TestCatalogLoading(unittest.TestCase):
         )
         self.assertNotIn("ونستون", variants)
         self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", "ونستون"))
+
+    def test_dukhan_wizari_davidoff_variants_replaced_only(self):
+        # التاجرة طلبت أصناف "دفيدوف" المفصّلة "فقط" — يعني استبدال كامل
+        # مباشرة (مش إضافة فوق الصنف العام زي مالبورو/كينت/ونستون قبلها).
+        variants = cl.get_variants(self.catalog, "دخان وزاري", "دفيدوف")
+        self.assertEqual(
+            variants,
+            ["دفيدوف دهبي عريض", "دفيدوف ابيض عريض", "دفيدوف خمري عريض", "دفيدوف سليم"],
+        )
+        self.assertNotIn("دفيدوف", variants)
 
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")

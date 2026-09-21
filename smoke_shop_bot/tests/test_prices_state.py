@@ -113,6 +113,7 @@ class TestVisibleFlatItems(unittest.TestCase):
             ("مادوكس", "مادوكس كوين"),
             ("كينت", "كينت"),
             ("ونستون", "ونستون"),
+            ("دفيدوف", "دفيدوف"),
         ]
         for pair in orphans:
             self.assertNotIn(pair, visible_pairs, msg=pair)
@@ -132,14 +133,16 @@ class TestVisibleFlatItems(unittest.TestCase):
         # صنف "مادوكس" الجديد (المضاف لماركة "كابتن بلاك" بآخر price_sheet.json) ظاهر برقمه الجديد.
         self.assertIn(("كابتن بلاك", "مادوكس"), visible_by_pair)
         self.assertEqual(visible_by_pair[("كابتن بلاك", "مادوكس")]["index"], 581)
-        # أول ٤ ماركات جوا القسم الجديد "دخان وزاري" ظاهرين بأرقامهن الجديدة
-        # (ما عدا الصنف العام "دفيدوف" لسا ما تأثر، بعكس مالبورو/كينت/ونستون
-        # يلي انحذفوا العام تبعهن بعدين — orphans، شوف فوق).
-        self.assertIn(("دفيدوف", "دفيدوف"), visible_by_pair)
-        self.assertEqual(visible_by_pair[("دفيدوف", "دفيدوف")]["index"], 585)
+        # أول ٤ ماركات جوا القسم الجديد "دخان وزاري": الصنف العام تبع كل
+        # وحدة منهن انحذف بعدين (مالبورو/كينت/ونستون/دفيدوف) — orphans، شوف فوق.
         self.assertNotIn(("مالبورو", "مالبورو"), visible_by_pair)
         self.assertNotIn(("كينت", "كينت"), visible_by_pair)
         self.assertNotIn(("ونستون", "ونستون"), visible_by_pair)
+        self.assertNotIn(("دفيدوف", "دفيدوف"), visible_by_pair)
+        # ٤ أصناف مفصّلة جداد جوا ماركة "دفيدوف" ظاهرين بأرقامهن الجديدة.
+        for i, name in enumerate(["دفيدوف دهبي عريض", "دفيدوف ابيض عريض", "دفيدوف خمري عريض", "دفيدوف سليم"]):
+            self.assertIn(("دفيدوف", name), visible_by_pair, msg=name)
+            self.assertEqual(visible_by_pair[("دفيدوف", name)]["index"], 597 + i, msg=name)
         # ٤ أصناف مفصّلة جداد جوا ماركة "مالبورو" ظاهرين بأرقامهن الجديدة.
         for i, name in enumerate(["مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود"]):
             self.assertIn(("مالبورو", name), visible_by_pair, msg=name)
@@ -154,7 +157,7 @@ class TestVisibleFlatItems(unittest.TestCase):
             self.assertEqual(visible_by_pair[("ونستون", name)]["index"], 592 + i, msg=name)
 
     def test_visible_count_is_full_count_minus_orphans(self):
-        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 67)
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 68)
 
 
 if __name__ == "__main__":
