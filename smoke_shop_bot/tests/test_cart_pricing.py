@@ -326,6 +326,17 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("روز", "روز طويل"),
         ("روز", "روز قصير"),
         ("روز", "روز سليم كومفورت / عادي"),
+        # ماركة "1970": ٨ أصناف بصيغة "<وصف> 1970" (1970 بآخر الاسم) محذوفة —
+        # الصيغة التانية المشابهة "1970 <وصف>" (1970 بأول الاسم) ضلت كاملة،
+        # هني أصناف مختلفة تماماً بالكتالوج رغم تشابه الاسم.
+        ("1970", "طويل فضي 1970"),
+        ("1970", "طويل ازرق 1970"),
+        ("1970", "قصير فضي 1970"),
+        ("1970", "قصير ازرق 1970"),
+        ("1970", "كوين فضي 1970"),
+        ("1970", "سليم فضي 1970"),
+        ("1970", "سليم نعنع 1970"),
+        ("1970", "سليم ازرق 1970"),
     }
 
     def setUp(self):
@@ -414,6 +425,14 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("روز", "روز طويل"): 342,
             ("روز", "روز قصير"): 343,
             ("روز", "روز سليم كومفورت / عادي"): 344,
+            ("1970", "طويل فضي 1970"): 392,
+            ("1970", "طويل ازرق 1970"): 393,
+            ("1970", "قصير فضي 1970"): 394,
+            ("1970", "قصير ازرق 1970"): 395,
+            ("1970", "كوين فضي 1970"): 396,
+            ("1970", "سليم فضي 1970"): 397,
+            ("1970", "سليم نعنع 1970"): 398,
+            ("1970", "سليم ازرق 1970"): 399,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -531,6 +550,17 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "روز طويل", "روز قصير", "روز سليم كومفورت / عادي",
         ])
 
+        # "1970": ٨ أصناف بصيغة "<وصف> 1970" محذوفة (فهارس ٣٩٢-٣٩٩)، وباقي
+        # الـ١٢ صنف بصيغة "1970 <وصف>" ضلوا زي ما هم بالضبط.
+        nineteen_seventy_items = [item for item in self.flat_items if item["brand"] == "1970"]
+        self.assertEqual([item["name"] for item in nineteen_seventy_items], [
+            "طويل فضي 1970", "طويل ازرق 1970", "قصير فضي 1970", "قصير ازرق 1970",
+            "كوين فضي 1970", "سليم فضي 1970", "سليم نعنع 1970", "سليم ازرق 1970",
+            "1970 قصير فضي", "1970 قصير ازرق", "1970 كوين ابيض", "1970 كوين ازرق",
+            "1970 كوين اسود", "1970 سليم فضي", "1970 سليم ازرق", "1970 سليم نعنع",
+            "1970 طويل فضي", "1970 طويل ازرق", "1970 كوين فضي", "1970 سليم فضي كراش",
+        ])
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -538,7 +568,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 531)
+        self.assertEqual(total_variants, 523)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
