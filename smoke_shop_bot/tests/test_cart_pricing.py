@@ -539,8 +539,13 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "كابتن سليم فضي", "كابتن سلييم ازرق", "كابتن كوين ون اسود", "كابتن كوين ون ازرق",
             "سيجار يلو عنب", "سجار يلو سلفر", "سيجار يلو فريز", "سيجار يلو كرز",
             "كابتن بلاك ابيض", "كابتن بلاك ازرق", "كابتن بلاك ذهبي", "كابتن بلاك سليم",
-            "كابتن بلاك مسلف", "سيجار يلو قهوة",
+            "كابتن بلاك مسلف", "سيجار يلو قهوة", "مادوكس",
         ])
+        # صنف جديد كلياً ("مادوكس") انضاف لماركة "كابتن بلاك" — كمجموعة
+        # جديدة بآخر ملف الأسعار (فهرس ٥٨١)، بلا سعر بعد.
+        new_captain_black_item = next(item for item in captain_black_items if item["name"] == "مادوكس")
+        self.assertEqual(new_captain_black_item["index"], 581)
+        self.assertEqual(new_captain_black_item["default_price"], 0)
 
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
@@ -630,7 +635,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 517)
+        self.assertEqual(total_variants, 518)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

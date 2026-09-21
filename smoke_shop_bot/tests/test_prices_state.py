@@ -125,6 +125,9 @@ class TestVisibleFlatItems(unittest.TestCase):
         # صنف "تيرا تركواز" الجديد (المضاف بآخر price_sheet.json) ظاهر برقمه الجديد.
         self.assertIn(("تيرا", "تيرا تركواز"), visible_by_pair)
         self.assertEqual(visible_by_pair[("تيرا", "تيرا تركواز")]["index"], 580)
+        # صنف "مادوكس" الجديد (المضاف لماركة "كابتن بلاك" بآخر price_sheet.json) ظاهر برقمه الجديد.
+        self.assertIn(("كابتن بلاك", "مادوكس"), visible_by_pair)
+        self.assertEqual(visible_by_pair[("كابتن بلاك", "مادوكس")]["index"], 581)
 
     def test_visible_count_is_full_count_minus_orphans(self):
         self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 64)
