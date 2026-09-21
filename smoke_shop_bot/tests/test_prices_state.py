@@ -133,6 +133,14 @@ class TestVisibleFlatItems(unittest.TestCase):
         for i, brand in enumerate(["مالبورو", "كينت", "ونستون", "دفيدوف"]):
             self.assertIn((brand, brand), visible_by_pair, msg=brand)
             self.assertEqual(visible_by_pair[(brand, brand)]["index"], 582 + i, msg=brand)
+        # ٤ أصناف مفصّلة جداد جوا ماركة "مالبورو" ظاهرين بأرقامهن الجديدة.
+        for i, name in enumerate(["مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود"]):
+            self.assertIn(("مالبورو", name), visible_by_pair, msg=name)
+            self.assertEqual(visible_by_pair[("مالبورو", name)]["index"], 586 + i, msg=name)
+        # صنفين مفصّلين جداد جوا ماركة "كينت" ظاهرين بأرقامهن الجديدة.
+        for i, name in enumerate(["كينت فضي", "كينت ازرق"]):
+            self.assertIn(("كينت", name), visible_by_pair, msg=name)
+            self.assertEqual(visible_by_pair[("كينت", name)]["index"], 590 + i, msg=name)
 
     def test_visible_count_is_full_count_minus_orphans(self):
         self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 64)

@@ -555,6 +555,22 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             self.assertEqual(item["index"], 582 + i, msg=brand)
             self.assertEqual(item["default_price"], 0, msg=brand)
 
+        # ٤ أصناف مفصّلة جداد انضافوا لماركة "مالبورو" — كمجموعة جديدة
+        # بآخر ملف الأسعار (فهارس ٥٨٦-٥٨٩)، بلا سعر بعد.
+        malboro_items = [item for item in self.flat_items if item["brand"] == "مالبورو"]
+        self.assertEqual([item["name"] for item in malboro_items], [
+            "مالبورو", "مالبورو ابيض", "مالبورو احمر", "مالبورو كوين ازرق", "مالبورو كوين اسود",
+        ])
+        self.assertEqual([item["index"] for item in malboro_items], [582, 586, 587, 588, 589])
+        self.assertTrue(all(item["default_price"] == 0 for item in malboro_items))
+
+        # صنفين مفصّلين جداد انضافوا لماركة "كينت" — كمجموعة جديدة بآخر
+        # ملف الأسعار (فهارس ٥٩٠-٥٩١)، بلا سعر بعد.
+        kent_items = [item for item in self.flat_items if item["brand"] == "كينت"]
+        self.assertEqual([item["name"] for item in kent_items], ["كينت", "كينت فضي", "كينت ازرق"])
+        self.assertEqual([item["index"] for item in kent_items], [583, 590, 591])
+        self.assertTrue(all(item["default_price"] == 0 for item in kent_items))
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -643,7 +659,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 522)
+        self.assertEqual(total_variants, 528)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
