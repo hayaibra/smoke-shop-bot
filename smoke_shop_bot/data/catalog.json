@@ -1345,12 +1345,12 @@
           {
             "name": "📦📦 كرتونة",
             "fixed": false,
-            "multiplier": 50
+            "multiplier": 16
           },
           {
             "name": "🥡 نص كرتونة",
             "fixed": true,
-            "multiplier": 25
+            "multiplier": 8
           },
           {
             "name": "🧮 عدد",
@@ -1362,12 +1362,12 @@
           {
             "name": "📦📦 كرتونة",
             "fixed": false,
-            "multiplier": 50
+            "multiplier": 16
           },
           {
             "name": "🥡 نص كرتونة",
             "fixed": true,
-            "multiplier": 25
+            "multiplier": 8
           },
           {
             "name": "🧮 عدد",
