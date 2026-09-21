@@ -306,6 +306,14 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("ماستر", "ماستر قصير فضي م"),
         ("ماستر", "ماستر سليم ازرق م"),
         ("تيرا", "تيرا بلو / سينا / اوسن بيرل حرة"),
+        # ٥ أصناف اتحذفوا من "كابتن بلاك" (الاسم المباشر بدون "طويل/كوين"،
+        # يعني ابيض/ازرق/ذهبي/سليم/مسلف) — باقي الماركة (طويل × ٤، كوين
+        # وسيجار يلو) ضل زي ما هو.
+        ("كابتن بلاك", "كابتن بلاك ابيض"),
+        ("كابتن بلاك", "كابتن بلاك ازرق"),
+        ("كابتن بلاك", "كابتن بلاك ذهبي"),
+        ("كابتن بلاك", "كابتن بلاك سليم"),
+        ("كابتن بلاك", "كابتن بلاك مسلف"),
     }
 
     def setUp(self):
@@ -382,6 +390,11 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("ماستر", "ماستر قصير فضي م"): 184,
             ("ماستر", "ماستر سليم ازرق م"): 185,
             ("تيرا", "تيرا بلو / سينا / اوسن بيرل حرة"): 99,
+            ("كابتن بلاك", "كابتن بلاك ابيض"): 251,
+            ("كابتن بلاك", "كابتن بلاك ازرق"): 252,
+            ("كابتن بلاك", "كابتن بلاك ذهبي"): 253,
+            ("كابتن بلاك", "كابتن بلاك سليم"): 254,
+            ("كابتن بلاك", "كابتن بلاك مسلف"): 255,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -459,6 +472,19 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual(new_tera_item["index"], 580)
         self.assertEqual(new_tera_item["default_price"], 0)
 
+        # "كابتن بلاك": ٥ أصناف محذوفة (ابيض/ازرق/ذهبي/سليم/مسلف) — لسا
+        # بمكانهن الأصلي (٢٥١-٢٥٥)، وباقي الـ١٦ صنف (طويل × ٤ + كوين/سيجار
+        # يلو) ضلوا زي ما كانوا بالضبط.
+        captain_black_items = [item for item in self.flat_items if item["brand"] == "كابتن بلاك"]
+        self.assertEqual([item["name"] for item in captain_black_items], [
+            "كابتن بلاك طويل مانجو", "كابتن بلاك طويل شوكولا", "كابتن بلاك طويل تفاح",
+            "كابتن بلاك طويل عنب", "كابتن كوين دهبي", "كابتن كوين ازرق", "كابتن كوين ون",
+            "كابتن سليم فضي", "كابتن سلييم ازرق", "كابتن كوين ون اسود", "كابتن كوين ون ازرق",
+            "سيجار يلو عنب", "سجار يلو سلفر", "سيجار يلو فريز", "سيجار يلو كرز",
+            "كابتن بلاك ابيض", "كابتن بلاك ازرق", "كابتن بلاك ذهبي", "كابتن بلاك سليم",
+            "كابتن بلاك مسلف", "سيجار يلو قهوة",
+        ])
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -466,7 +492,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 543)
+        self.assertEqual(total_variants, 538)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
