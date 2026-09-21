@@ -20,8 +20,17 @@ class TestCatalogLoading(unittest.TestCase):
     def test_categories_order(self):
         self.assertEqual(
             cl.get_categories(self.catalog),
-            ["دخان", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية", "قداحات"],
+            ["دخان", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية", "قداحات", "دخان وزاري"],
         )
+
+    def test_new_dukhan_wizari_category_added_empty(self):
+        # قسم رئيسي جديد "دخان وزاري" (بآخر القائمة، زر جديد بالقائمة
+        # الرئيسية) — لسا فاضي بلا ماركات، جاهز التاجرة تضيفلو بعدين، بنفس
+        # وحدات "دخان" العادية (كروز/نص كروز).
+        self.assertEqual(cl.category_button_label(self.catalog, "دخان وزاري"), "🚬 دخان وزاري")
+        self.assertEqual(cl.get_types(self.catalog, "دخان وزاري"), [])
+        units = cl.get_units(self.catalog, "دخان وزاري")
+        self.assertEqual({u["name"] for u in units}, {"🎁 كروز", "🥡 نص كروز"})
 
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")
