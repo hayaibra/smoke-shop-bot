@@ -44,14 +44,26 @@ def has_variants(catalog: dict, category: str, type_: str) -> bool:
     return len(get_variants(catalog, category, type_)) > 0
 
 
-def get_units(catalog: dict, category: str, type_: Optional[str] = None) -> list[dict]:
+def get_units(
+    catalog: dict, category: str, type_: Optional[str] = None, variant: Optional[str] = None
+) -> list[dict]:
     """
     كل وحدة عبارة عن {'name': ..., 'fixed': True/False}.
-    لو النوع (type_) إلو وحدات خاصة فيه (مسجلة بقسم "type_units" جوا القسم بالكتالوج)،
-    بترجع هديك بدل وحدات القسم العامة — هيك منقدر نعمل مثلاً براند معسل ما إلو "نص كيلو".
-    لو type_ ما انبعت، أو ما إلو وحدات خاصة، بترجع وحدات القسم العامة (units) زي العادة.
+    ترتيب الأولوية (الأخص أولاً):
+    1) لو الصنف نفسه (variant) إلو وحدات خاصة فيه (مسجلة بقسم "variant_units" جوا
+       القسم، مفهرسة type_ ← variant) — بترجعهن. هيك منقدر نعطي كرتونة لصنف وحد
+       محدد بس (متلاً "فحم الزعيم كيلو")، بلا ما تأثر على باقي أصناف نفس البراند
+       (متلاً "فحم الزعيم نصف كيلو").
+    2) وإلا لو النوع (type_) إلو وحدات خاصة فيه (مسجلة بقسم "type_units")، بترجعهن
+       — هيك منقدر نعمل مثلاً براند دخان كامل إلو كرتونة (كل أصنافه).
+    3) وإلا بترجع وحدات القسم العامة (units) زي العادة.
     """
     category_data = catalog.get(category, {})
+    if type_ is not None and variant is not None:
+        variant_units = category_data.get("variant_units", {})
+        by_variant = variant_units.get(type_, {})
+        if variant in by_variant:
+            return list(by_variant[variant])
     if type_ is not None:
         type_units = category_data.get("type_units", {})
         if type_ in type_units:
@@ -59,15 +71,27 @@ def get_units(catalog: dict, category: str, type_: Optional[str] = None) -> list
     return list(category_data.get("units", []))
 
 
-def get_unit_by_name(catalog: dict, category: str, unit_name: str, type_: Optional[str] = None) -> Optional[dict]:
-    for u in get_units(catalog, category, type_):
+def get_unit_by_name(
+    catalog: dict,
+    category: str,
+    unit_name: str,
+    type_: Optional[str] = None,
+    variant: Optional[str] = None,
+) -> Optional[dict]:
+    for u in get_units(catalog, category, type_, variant):
         if u["name"] == unit_name:
             return u
     return None
 
 
-def is_unit_fixed(catalog: dict, category: str, unit_name: str, type_: Optional[str] = None) -> bool:
-    unit = get_unit_by_name(catalog, category, unit_name, type_)
+def is_unit_fixed(
+    catalog: dict,
+    category: str,
+    unit_name: str,
+    type_: Optional[str] = None,
+    variant: Optional[str] = None,
+) -> bool:
+    unit = get_unit_by_name(catalog, category, unit_name, type_, variant)
     return bool(unit and unit.get("fixed"))
 
 

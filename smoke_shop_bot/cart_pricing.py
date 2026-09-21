@@ -47,7 +47,9 @@ def price_cart_item(
     if not base_price:
         return None
 
-    unit = cl.get_unit_by_name(catalog, item.get("category"), item.get("unit_name"), item.get("type"))
+    unit = cl.get_unit_by_name(
+        catalog, item.get("category"), item.get("unit_name"), item.get("type"), variant
+    )
     multiplier = (unit or {}).get("multiplier", 1)
 
     if item.get("unit_fixed"):
