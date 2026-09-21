@@ -2866,5 +2866,26 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "دفيدوف",
+    "items": [
+      {
+        "name": "دفيدوف دهبي عريض",
+        "default_price": 0
+      },
+      {
+        "name": "دفيدوف ابيض عريض",
+        "default_price": 0
+      },
+      {
+        "name": "دفيدوف خمري عريض",
+        "default_price": 0
+      },
+      {
+        "name": "دفيدوف سليم",
+        "default_price": 0
+      }
+    ]
   }
 ]
