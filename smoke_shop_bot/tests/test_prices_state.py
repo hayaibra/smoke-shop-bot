@@ -32,6 +32,7 @@ class TestCategoryOfBrand(unittest.TestCase):
         self.assertEqual(
             prices_state.CATEGORY_OF_BRAND["اراكيل الكترونية برو"], "🔋 اراكيل الكترونية"
         )
+        self.assertEqual(prices_state.CATEGORY_OF_BRAND["مالبورو"], "🚬 دخان وزاري")
 
 
 class TestVisibleFlatItems(unittest.TestCase):
@@ -128,6 +129,10 @@ class TestVisibleFlatItems(unittest.TestCase):
         # صنف "مادوكس" الجديد (المضاف لماركة "كابتن بلاك" بآخر price_sheet.json) ظاهر برقمه الجديد.
         self.assertIn(("كابتن بلاك", "مادوكس"), visible_by_pair)
         self.assertEqual(visible_by_pair[("كابتن بلاك", "مادوكس")]["index"], 581)
+        # أول ٤ ماركات جوا القسم الجديد "دخان وزاري" ظاهرين بأرقامهن الجديدة.
+        for i, brand in enumerate(["مالبورو", "كينت", "ونستون", "دفيدوف"]):
+            self.assertIn((brand, brand), visible_by_pair, msg=brand)
+            self.assertEqual(visible_by_pair[(brand, brand)]["index"], 582 + i, msg=brand)
 
     def test_visible_count_is_full_count_minus_orphans(self):
         self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 64)

@@ -547,6 +547,14 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual(new_captain_black_item["index"], 581)
         self.assertEqual(new_captain_black_item["default_price"], 0)
 
+        # قسم جديد "دخان وزاري" مع أول ٤ ماركات جواه (مالبورو/كينت/ونستون/
+        # دفيدوف)، كل وحدة بصنف وحيد بنفس اسم الماركة — انضافوا كمجموعات
+        # جديدة بآخر ملف الأسعار (فهارس ٥٨٢-٥٨٥)، بلا سعر بعد.
+        for i, brand in enumerate(["مالبورو", "كينت", "ونستون", "دفيدوف"]):
+            item = next(it for it in self.flat_items if it["brand"] == brand and it["name"] == brand)
+            self.assertEqual(item["index"], 582 + i, msg=brand)
+            self.assertEqual(item["default_price"], 0, msg=brand)
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -635,7 +643,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 518)
+        self.assertEqual(total_variants, 522)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

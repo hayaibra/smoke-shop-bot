@@ -25,12 +25,21 @@ class TestCatalogLoading(unittest.TestCase):
 
     def test_new_dukhan_wizari_category_added_empty(self):
         # قسم رئيسي جديد "دخان وزاري" (بآخر القائمة، زر جديد بالقائمة
-        # الرئيسية) — لسا فاضي بلا ماركات، جاهز التاجرة تضيفلو بعدين، بنفس
-        # وحدات "دخان" العادية (كروز/نص كروز).
+        # الرئيسية) — بنفس وحدات "دخان" العادية (كروز/نص كروز).
         self.assertEqual(cl.category_button_label(self.catalog, "دخان وزاري"), "🚬 دخان وزاري")
-        self.assertEqual(cl.get_types(self.catalog, "دخان وزاري"), [])
         units = cl.get_units(self.catalog, "دخان وزاري")
         self.assertEqual({u["name"] for u in units}, {"🎁 كروز", "🥡 نص كروز"})
+
+    def test_dukhan_wizari_first_four_brands_added_self_named(self):
+        # أول ٤ ماركات انضافوا جوا "دخان وزاري": مالبورو/كينت/ونستون/دفيدوف
+        # — كل وحدة منهن لسا بلا تفاصيل (طويل/قصير/إلخ)، فأضفناها متل باقي
+        # الماركات المشابهة بالكتالوج (مثلاً "فان") بصنف وحيد بنفس اسم
+        # الماركة، جاهزة تنباع فوراً وبانتظار تفاصيل أكتر بعدين.
+        types = cl.get_types(self.catalog, "دخان وزاري")
+        self.assertEqual(types, ["مالبورو", "كينت", "ونستون", "دفيدوف"])
+        for brand in types:
+            self.assertEqual(cl.get_variants(self.catalog, "دخان وزاري", brand), [brand])
+            self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", brand))
 
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")
