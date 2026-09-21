@@ -166,6 +166,7 @@ class TestVisibleFlatItems(unittest.TestCase):
             ("الزعيم", "فحم الزعيم 1 كغ"),
             ("فحم برو", "فحم برو"),
             ("فحم برو", "فحم برو ربع كيلو"),
+            ("ايكو نارا", "فحم إيكو نارا"),
         ]
         for pair in orphans:
             self.assertNotIn(pair, visible_pairs, msg=pair)
@@ -230,9 +231,17 @@ class TestVisibleFlatItems(unittest.TestCase):
         self.assertIn(("فحم برو", "فحم برو 1 كغ"), visible_by_pair)
         self.assertNotIn(("فحم برو", "فحم برو"), visible_by_pair)
         self.assertNotIn(("فحم برو", "فحم برو ربع كيلو"), visible_by_pair)
+        # "ايكو نارا": الصنف العام محذوف، الصنف الملون انعدّل اسمه بنفس
+        # رقمه الأصلي (225)، والصنف الجديد "احمر" ظاهر برقمه الجديد (آخر
+        # الملف).
+        self.assertNotIn(("ايكو نارا", "فحم إيكو نارا"), visible_by_pair)
+        self.assertIn(("ايكو نارا", "فحم ايكو نارا اخضر"), visible_by_pair)
+        self.assertEqual(visible_by_pair[("ايكو نارا", "فحم ايكو نارا اخضر")]["index"], 225)
+        self.assertIn(("ايكو نارا", "فحم ايكو نارا احمر"), visible_by_pair)
+        self.assertEqual(visible_by_pair[("ايكو نارا", "فحم ايكو نارا احمر")]["index"], 614)
 
     def test_visible_count_is_full_count_minus_orphans(self):
-        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 119)
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 120)
 
 
 if __name__ == "__main__":

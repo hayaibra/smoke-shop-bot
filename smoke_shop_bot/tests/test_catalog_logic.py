@@ -479,6 +479,16 @@ class TestCatalogLoading(unittest.TestCase):
         g250_units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "الزعيم", "فحم الزعيم 250 غ")}
         self.assertEqual(g250_units["📦📦 كرتونة"]["multiplier"], 50)
 
+    def test_eco_nara_general_removed_green_renamed_red_added(self):
+        # ماركة "ايكو نارا" (فحم): الصنف العام "فحم إيكو نارا" (بالهمزة)
+        # انحذف؛ الصنف "فحم ايكو نارا اخضر احمر" انعدّل اسمه لـ"فحم ايكو نارا
+        # اخضر"؛ وصنف جديد "فحم ايكو نارا احمر" انضاف (كرتونة قياسية ٥٠).
+        variants = cl.get_variants(self.catalog, "فحم", "ايكو نارا")
+        self.assertEqual(variants, ["فحم ايكو نارا اخضر", "فحم ايكو نارا احمر"])
+        for name in variants:
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "ايكو نارا", name)}
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 50, msg=name)
+
     def test_fahm_bro_general_and_quarter_kilo_variants_removed(self):
         # صنفين محذوفين من "فحم برو": الصنف العام "فحم برو" (بعد ما صارت
         # أصناف مفصّلة) و"فحم برو ربع كيلو" — باقي الماركة (250 غ و1 كغ) ضلت.
