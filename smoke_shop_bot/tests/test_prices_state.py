@@ -82,6 +82,7 @@ class TestVisibleFlatItems(unittest.TestCase):
             ("ماستر", "ماستر طقتين دبل بلوسم فيوجين"),
             ("ماستر", "ماستر قصير فضي م"),
             ("ماستر", "ماستر سليم ازرق م"),
+            ("تيرا", "تيرا بلو / سينا / اوسن بيرل حرة"),
         ]
         for pair in orphans:
             self.assertNotIn(pair, visible_pairs, msg=pair)
@@ -95,9 +96,12 @@ class TestVisibleFlatItems(unittest.TestCase):
         self.assertEqual(visible_by_pair[("جيتان", "جيتان قصير")]["index"], 0)
         # صنف "ماستر" الجديد (المضاف بآخر price_sheet.json) ظاهر برقمه الجديد.
         self.assertEqual(visible_by_pair[("ماستر", "ماستر طويل")]["index"], 579)
+        # صنف "تيرا تركواز" الجديد (المضاف بآخر price_sheet.json) ظاهر برقمه الجديد.
+        self.assertIn(("تيرا", "تيرا تركواز"), visible_by_pair)
+        self.assertEqual(visible_by_pair[("تيرا", "تيرا تركواز")]["index"], 580)
 
     def test_visible_count_is_full_count_minus_orphans(self):
-        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 37)
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 38)
 
 
 if __name__ == "__main__":

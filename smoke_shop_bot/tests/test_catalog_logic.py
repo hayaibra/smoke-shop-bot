@@ -166,6 +166,26 @@ class TestCatalogLoading(unittest.TestCase):
         ]:
             self.assertNotIn(old, variants, msg=old)
 
+    def test_tera_variants_after_cleanup_and_addition(self):
+        # حذفنا صنف "تيرا بلو / سينا / اوسن بيرل حرة" (بقي بملف الأسعار كـ
+        # orphan بنفس فهرسه الأصلي)، وأضفنا صنف جديد كلياً "تيرا تركواز".
+        variants = cl.get_variants(self.catalog, "دخان", "تيرا")
+        self.assertEqual(
+            variants,
+            [
+                "تيرا برونز",
+                "تيرا سينا",
+                "تيرا يوجين",
+                "تيرا ابرسيتي",
+                "تيرا بلو",
+                "تيرا سن بيرل",
+                "تيرا اوسس بيرل",
+                "تيرا تركواز",
+            ],
+        )
+        self.assertNotIn("تيرا بلو / سينا / اوسن بيرل حرة", variants)
+        self.assertIn("تيرا تركواز", variants)
+
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
         # حتى لو براند واحد بس إله صنف وحيد (متلاً "جيتان")، منشان حساب السعر

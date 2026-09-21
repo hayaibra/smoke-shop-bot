@@ -305,6 +305,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("ماستر", "ماستر طقتين دبل بلوسم فيوجين"),
         ("ماستر", "ماستر قصير فضي م"),
         ("ماستر", "ماستر سليم ازرق م"),
+        ("تيرا", "تيرا بلو / سينا / اوسن بيرل حرة"),
     }
 
     def setUp(self):
@@ -380,6 +381,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("ماستر", "ماستر طقتين دبل بلوسم فيوجين"): 183,
             ("ماستر", "ماستر قصير فضي م"): 184,
             ("ماستر", "ماستر سليم ازرق م"): 185,
+            ("تيرا", "تيرا بلو / سينا / اوسن بيرل حرة"): 99,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -447,6 +449,15 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         new_master_item = next(item for item in master_items if item["name"] == "ماستر طويل")
         self.assertEqual(new_master_item["index"], 579)
         self.assertEqual(new_master_item["default_price"], 0)
+
+        # "تيرا": صنف واحد محذوف ("بلو / سينا / اوسن بيرل حرة" — لسا بمكانه
+        # الأصلي فهرس ٩٩)، وصنف جديد كلياً ("تيرا تركواز") انضاف بآخر الملف
+        # (فهرس ٥٨٠)، بلا سعر بعد.
+        tera_items = [item for item in self.flat_items if item["brand"] == "تيرا"]
+        self.assertEqual(len(tera_items), 9)  # ٨ قدام (منهم واحد orphan) + ١ جديد
+        new_tera_item = next(item for item in tera_items if item["name"] == "تيرا تركواز")
+        self.assertEqual(new_tera_item["index"], 580)
+        self.assertEqual(new_tera_item["default_price"], 0)
 
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
