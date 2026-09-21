@@ -2753,5 +2753,14 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "تيرا",
+    "items": [
+      {
+        "name": "تيرا تركواز",
+        "default_price": 0
+      }
+    ]
   }
 ]
