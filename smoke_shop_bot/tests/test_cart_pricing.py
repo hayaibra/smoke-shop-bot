@@ -337,6 +337,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("1970", "سليم فضي 1970"),
         ("1970", "سليم نعنع 1970"),
         ("1970", "سليم ازرق 1970"),
+        ("كلواز", "كلواز قصير حرة"),
     }
 
     def setUp(self):
@@ -433,6 +434,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("1970", "سليم فضي 1970"): 397,
             ("1970", "سليم نعنع 1970"): 398,
             ("1970", "سليم ازرق 1970"): 399,
+            ("كلواز", "كلواز قصير حرة"): 389,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -562,8 +564,10 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ])
 
         # "كلواز 8 S" -> "كلواز": تبديل اسم الماركة نفسا (مش صنف داخلها) —
-        # الـ٥ أصناف ضلت بنفس فهارسها الأصلية (٣٨٧-٣٩١) وأسعارها، بس برند
-        # الماركة صار "كلواز". ماركة "كلواز عريض" (لحالها) ما تأثرت.
+        # الـ٥ أصناف الأصليين ضلوا بنفس فهارسهن الأصلية (٣٨٧-٣٩١) وأسعارهن
+        # بملف الأسعار، بس برند الماركة صار "كلواز". بعدين حذفنا صنف واحد
+        # منهن ("كلواز قصير حرة" — orphan بفهرسه ٣٨٩، شوف فوق) فضل ٤ أصناف
+        # ظاهرين بالكتالوج. ماركة "كلواز عريض" (لحالها) ما تأثرت.
         klewaz_items = [item for item in self.flat_items if item["brand"] == "كلواز"]
         self.assertEqual([item["name"] for item in klewaz_items], [
             "كلواز كوين أحمر 8 S", "كلواز كوين أصفر 8 S", "كلواز قصير حرة",
@@ -585,7 +589,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 523)
+        self.assertEqual(total_variants, 522)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

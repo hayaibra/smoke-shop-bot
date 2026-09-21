@@ -43,8 +43,9 @@ class TestCatalogLoading(unittest.TestCase):
 
     def test_klewaz_8s_brand_renamed_to_klewaz(self):
         # الماركة يلي كان اسما "كلواز 8 S" صار اسمها "كلواز" بس (تبديل اسم
-        # الماركة نفسا، مش صنف داخلها) — أصنافها الخمسة ضلوا زي ما هم بلا أي
-        # تغيير. ماركة "كلواز عريض" (لحالها، مختلفة) ما تأثرت إطلاقاً.
+        # الماركة نفسا، مش صنف داخلها). بعدين حذفنا منها صنف واحد ("كلواز
+        # قصير حرة")، فضل ٤ أصناف. ماركة "كلواز عريض" (لحالها، مختلفة) ما
+        # تأثرت إطلاقاً.
         self.assertNotIn("كلواز 8 S", cl.get_types(self.catalog, "دخان"))
         self.assertIn("كلواز", cl.get_types(self.catalog, "دخان"))
         self.assertEqual(
@@ -52,11 +53,11 @@ class TestCatalogLoading(unittest.TestCase):
             [
                 "كلواز كوين أحمر 8 S",
                 "كلواز كوين أصفر 8 S",
-                "كلواز قصير حرة",
                 "كلواز احمر عريض",
                 "كلواز اصفر عريض",
             ],
         )
+        self.assertNotIn("كلواز قصير حرة", cl.get_variants(self.catalog, "دخان", "كلواز"))
         self.assertIn("كلواز عريض", cl.get_types(self.catalog, "دخان"))
         self.assertEqual(
             cl.get_variants(self.catalog, "دخان", "كلواز عريض"),
