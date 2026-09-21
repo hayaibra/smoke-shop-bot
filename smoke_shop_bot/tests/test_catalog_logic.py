@@ -31,7 +31,7 @@ class TestCatalogLoading(unittest.TestCase):
         # الأنواع (types) هلق هيي براندات حقيقية من نشرة أسعار التاجر، مش بيانات تجريبية.
         self.assertIn("ماستر", cl.get_types(self.catalog, "دخان"))
         self.assertIn("اليغانس", cl.get_types(self.catalog, "دخان"))
-        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 39)
+        self.assertEqual(len(cl.get_types(self.catalog, "دخان")), 37)
         self.assertEqual(len(cl.get_types(self.catalog, "معسل")), 14)
 
     def test_dukhan_priority_brands_appear_first_in_requested_order(self):
@@ -39,13 +39,14 @@ class TestCatalogLoading(unittest.TestCase):
         # بنفس الترتيب يلي حددتو، وباقي الماركات بعدهن (بترتيبهن القديم).
         types = cl.get_types(self.catalog, "دخان")
         self.assertEqual(types[:5], ["ماستر", "كابتن بلاك", "كلواز", "البرو", "روز"])
-        self.assertEqual(len(types), 39)  # ٤٠ ناقص "جتان" يلي انحذفت بالكامل بعدين
+        # ٤٠ ناقص "جتان" و"كلواز عريض" و"مادوكس" يلي انحذفوا بالكامل بعدين.
+        self.assertEqual(len(types), 37)
 
     def test_klewaz_8s_brand_renamed_to_klewaz(self):
         # الماركة يلي كان اسما "كلواز 8 S" صار اسمها "كلواز" بس (تبديل اسم
         # الماركة نفسا، مش صنف داخلها). بعدين حذفنا منها صنف واحد ("كلواز
-        # قصير حرة")، فضل ٤ أصناف. ماركة "كلواز عريض" (لحالها، مختلفة) ما
-        # تأثرت إطلاقاً.
+        # قصير حرة")، فضل ٤ أصناف. (ماركة "كلواز عريض" انحذفت بالكامل بعدين
+        # — شوف test_klewaz_wide_and_madox_brands_fully_removed.)
         self.assertNotIn("كلواز 8 S", cl.get_types(self.catalog, "دخان"))
         self.assertIn("كلواز", cl.get_types(self.catalog, "دخان"))
         self.assertEqual(
@@ -58,11 +59,6 @@ class TestCatalogLoading(unittest.TestCase):
             ],
         )
         self.assertNotIn("كلواز قصير حرة", cl.get_variants(self.catalog, "دخان", "كلواز"))
-        self.assertIn("كلواز عريض", cl.get_types(self.catalog, "دخان"))
-        self.assertEqual(
-            cl.get_variants(self.catalog, "دخان", "كلواز عريض"),
-            ["كلواز احمر عريض", "كلواز اصفر عريض"],
-        )
 
     def test_bro_similar_named_variants_removed_carefully(self):
         # حذفنا "برو فضي طويل" و"يرو ازرق طويل" (بالاسم المطبوع فعلاً
@@ -82,6 +78,18 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertNotIn("جتان", types)
         self.assertIn("جيتان", types)
         self.assertEqual(cl.get_variants(self.catalog, "دخان", "جيتان"), ["جيتان قصير"])
+
+    def test_klewaz_wide_and_madox_brands_fully_removed(self):
+        # التاجرة حذفت ماركتين بالكامل: "كلواز عريض" و"مادوكس" (مو صنف واحد
+        # جواهن). ماركة "كلواز" (لحالها) ما تأثرت — لسا فيها نفس اسمي
+        # الأصناف ("كلواز احمر عريض"، "كلواز اصفر عريض") ضمن قائمتها هي.
+        types = cl.get_types(self.catalog, "دخان")
+        self.assertNotIn("كلواز عريض", types)
+        self.assertNotIn("مادوكس", types)
+        self.assertIn("كلواز", types)
+        klewaz_variants = cl.get_variants(self.catalog, "دخان", "كلواز")
+        self.assertIn("كلواز احمر عريض", klewaz_variants)
+        self.assertIn("كلواز اصفر عريض", klewaz_variants)
 
     def test_ekhtimar_variants_after_cleanup(self):
         # التاجرة حذفت صنفين من "اختمار" (قصير، طويل — بلا أي وصف لون/نوع)،

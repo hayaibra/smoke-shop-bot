@@ -343,6 +343,13 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # و"برو طويل ازرق" (ترتيب كلمات معاكس) يلي هني أصناف تانية وضلوا.
         ("البرو", "برو فضي طويل"),
         ("البرو", "يرو ازرق طويل"),
+        # ماركتين انحذفوا بالكامل: "كلواز عريض" و"مادوكس" (مو صنف واحد جواهن).
+        # ملاحظة: أصناف "كلواز عريض" (احمر/اصفر عريض) أسماؤها نفس أسماء
+        # أصناف موجودة بماركة "كلواز" (لسا ظاهرة هناك) — بس هني مجموعتين
+        # منفصلتين تماماً بملف الأسعار (برند مختلف)، فما في تعارض.
+        ("كلواز عريض", "كلواز احمر عريض"),
+        ("كلواز عريض", "كلواز اصفر عريض"),
+        ("مادوكس", "مادوكس كوين"),
     }
 
     def setUp(self):
@@ -442,6 +449,9 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("كلواز", "كلواز قصير حرة"): 389,
             ("البرو", "برو فضي طويل"): 432,
             ("البرو", "يرو ازرق طويل"): 433,
+            ("كلواز عريض", "كلواز احمر عريض"): 505,
+            ("كلواز عريض", "كلواز اصفر عريض"): 506,
+            ("مادوكس", "مادوكس كوين"): 553,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -574,7 +584,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # الـ٥ أصناف الأصليين ضلوا بنفس فهارسهن الأصلية (٣٨٧-٣٩١) وأسعارهن
         # بملف الأسعار، بس برند الماركة صار "كلواز". بعدين حذفنا صنف واحد
         # منهن ("كلواز قصير حرة" — orphan بفهرسه ٣٨٩، شوف فوق) فضل ٤ أصناف
-        # ظاهرين بالكتالوج. ماركة "كلواز عريض" (لحالها) ما تأثرت.
+        # ظاهرين بالكتالوج.
         klewaz_items = [item for item in self.flat_items if item["brand"] == "كلواز"]
         self.assertEqual([item["name"] for item in klewaz_items], [
             "كلواز كوين أحمر 8 S", "كلواز كوين أصفر 8 S", "كلواز قصير حرة",
@@ -586,8 +596,6 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             [78500, 78500, 112000, 112000, 112000],
         )
         self.assertFalse(any(item["brand"] == "كلواز 8 S" for item in self.flat_items))
-        klewaz_wide_items = [item for item in self.flat_items if item["brand"] == "كلواز عريض"]
-        self.assertEqual([item["name"] for item in klewaz_wide_items], ["كلواز احمر عريض", "كلواز اصفر عريض"])
 
         # "البرو": صنفين محذوفين (فهارس ٤٣٢-٤٣٣)، وباقي الـ١٦ صنف ضلوا زي ما
         # هم بالضبط — بما فيهن الصنفين المشابهين بالاسم بس بترتيب كلمات
@@ -601,6 +609,20 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "برو كوين اسود لوف", "برو سليم فضي بحريني",
         ])
 
+        # "كلواز عريض" و"مادوكس": ماركتين انحذفوا بالكامل من الكتالوج —
+        # أصنافهن لسا بمكانهن الأصلي بملف الأسعار (فهارس ٥٠٥-٥٠٦، ٥٥٣).
+        klewaz_wide_flat = [item for item in self.flat_items if item["brand"] == "كلواز عريض"]
+        self.assertEqual([item["name"] for item in klewaz_wide_flat], ["كلواز احمر عريض", "كلواز اصفر عريض"])
+        madox_items = [item for item in self.flat_items if item["brand"] == "مادوكس"]
+        self.assertEqual([item["name"] for item in madox_items], ["مادوكس كوين"])
+        # ماركة "كلواز" (لحالها) ما تأثرت — لسا فيها نفس الاسمين ("كلواز
+        # احمر/اصفر عريض") ضمن أصنافها هي.
+        klewaz_items_after = [item for item in self.flat_items if item["brand"] == "كلواز"]
+        self.assertEqual(
+            [item["name"] for item in klewaz_items_after],
+            ["كلواز كوين أحمر 8 S", "كلواز كوين أصفر 8 S", "كلواز قصير حرة", "كلواز احمر عريض", "كلواز اصفر عريض"],
+        )
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
@@ -608,7 +630,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 520)
+        self.assertEqual(total_variants, 517)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
