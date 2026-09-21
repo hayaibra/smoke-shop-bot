@@ -482,12 +482,14 @@ class TestCatalogLoading(unittest.TestCase):
     def test_eco_nara_general_removed_green_renamed_red_added(self):
         # ماركة "ايكو نارا" (فحم): الصنف العام "فحم إيكو نارا" (بالهمزة)
         # انحذف؛ الصنف "فحم ايكو نارا اخضر احمر" انعدّل اسمه لـ"فحم ايكو نارا
-        # اخضر"؛ وصنف جديد "فحم ايكو نارا احمر" انضاف (كرتونة قياسية ٥٠).
+        # اخضر"؛ وصنف جديد "فحم ايكو نارا احمر" انضاف. كرتونة "ايكو نارا"
+        # الحقيقية ١٦ علبة (استثناء موثّق عن القياسي ٥٠، أكدتها التاجرة).
         variants = cl.get_variants(self.catalog, "فحم", "ايكو نارا")
         self.assertEqual(variants, ["فحم ايكو نارا اخضر", "فحم ايكو نارا احمر"])
         for name in variants:
             units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "ايكو نارا", name)}
-            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 50, msg=name)
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 16, msg=name)
+            self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 8, msg=name)
 
     def test_fahm_bro_general_and_quarter_kilo_variants_removed(self):
         # صنفين محذوفين من "فحم برو": الصنف العام "فحم برو" (بعد ما صارت
@@ -612,7 +614,14 @@ class TestCatalogLoading(unittest.TestCase):
         # كل صنف فحم (أي برند، أي وزن) إلو خيار كرتونة/نص كرتونة بالإضافة
         # لـ"عدد" — أصناف الكيلو الكامل (كيلو/1 كغ/1000 غ) كرتونتها ١٠ علب،
         # وباقي الأوزان (نص كيلو، ربع كيلو، 250غ...) أو بلا وزن مكتوب أصلاً،
-        # كرتونتها القياسية ٥٠ (نفس القياسي المعتمد بباقي الأقسام).
+        # كرتونتها القياسية ٥٠ (نفس القياسي المعتمد بباقي الأقسام) — ما عدا
+        # الاستثناءات الموثّقة بـ custom_carton (كرتونة حقيقية مختلفة عن
+        # التاجرة لبرند معين).
+        custom_carton = {
+            # التاجرة أكدت إنو كرتونة "ايكو نارا" الحقيقية ١٦ علبة (مش ٥٠).
+            ("ايكو نارا", "فحم ايكو نارا اخضر"): 16,
+            ("ايكو نارا", "فحم ايكو نارا احمر"): 16,
+        }
         kilo_variants = {
             ("سيبروس", "فحم سيبروس كيلو"),
             ("الزعيم", "فحم الزعيم كيلو"),
@@ -626,7 +635,10 @@ class TestCatalogLoading(unittest.TestCase):
         for brand in cl.get_types(self.catalog, "فحم"):
             for variant in cl.get_variants(self.catalog, "فحم", brand):
                 units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", brand, variant)}
-                expected_carton = 10 if (brand, variant) in kilo_variants else 50
+                if (brand, variant) in custom_carton:
+                    expected_carton = custom_carton[(brand, variant)]
+                else:
+                    expected_carton = 10 if (brand, variant) in kilo_variants else 50
                 self.assertIn("📦📦 كرتونة", units, f"{brand} / {variant} ما إلها كرتونة!")
                 self.assertFalse(units["📦📦 كرتونة"]["fixed"])
                 self.assertEqual(
