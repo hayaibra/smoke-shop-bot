@@ -240,6 +240,27 @@ class TestCatalogLoading(unittest.TestCase):
         for old in ["هيستوري طويل", "هيستوري قصير", "هيستوري سليم"]:
             self.assertNotIn(old, variants, msg=old)
 
+    def test_rose_bare_variants_removed(self):
+        # حذفنا "روز طويل/قصير" المجردين و"روز سليم كومفورت / عادي" —
+        # الأصناف المفصّلة (طويل فضي/ازرق، قصير ازرق/كولد/ابيض، سليم
+        # فضي/بلوبيري، كلاسيك ابيض) ضلت.
+        variants = cl.get_variants(self.catalog, "دخان", "روز")
+        self.assertEqual(
+            variants,
+            [
+                "روز طويل فضي",
+                "روز طويل ازرق",
+                "روز سليم فضي",
+                "روز قصير ازرق",
+                "روز قصير كولد",
+                "روز قصير ابيض",
+                "روز سليم بلوبيري",
+                "روز كلاسيك ابيض",
+            ],
+        )
+        for old in ["روز طويل", "روز قصير", "روز سليم كومفورت / عادي"]:
+            self.assertNotIn(old, variants, msg=old)
+
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
         # حتى لو براند واحد بس إله صنف وحيد (متلاً "جيتان")، منشان حساب السعر
