@@ -571,6 +571,15 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertEqual([item["index"] for item in kent_items], [583, 590, 591])
         self.assertTrue(all(item["default_price"] == 0 for item in kent_items))
 
+        # ٥ أصناف مفصّلة جداد انضافوا لماركة "ونستون" — كمجموعة جديدة
+        # بآخر ملف الأسعار (فهارس ٥٩٢-٥٩٦)، بلا سعر بعد.
+        winston_items = [item for item in self.flat_items if item["brand"] == "ونستون"]
+        self.assertEqual([item["name"] for item in winston_items], [
+            "ونستون", "ونستون فضي", "ونستون ازرق", "ونستون احمر", "ونستون كوين ازرق", "ونستون كوين فضي",
+        ])
+        self.assertEqual([item["index"] for item in winston_items], [584, 592, 593, 594, 595, 596])
+        self.assertTrue(all(item["default_price"] == 0 for item in winston_items))
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -659,7 +668,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 528)
+        self.assertEqual(total_variants, 533)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):

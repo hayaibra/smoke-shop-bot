@@ -37,7 +37,7 @@ class TestCatalogLoading(unittest.TestCase):
         # الماركة، جاهزة تنباع فوراً وبانتظار تفاصيل أكتر بعدين.
         types = cl.get_types(self.catalog, "دخان وزاري")
         self.assertEqual(types, ["مالبورو", "كينت", "ونستون", "دفيدوف"])
-        for brand in ["ونستون", "دفيدوف"]:
+        for brand in ["دفيدوف"]:
             self.assertEqual(cl.get_variants(self.catalog, "دخان وزاري", brand), [brand])
             self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", brand))
 
@@ -55,6 +55,15 @@ class TestCatalogLoading(unittest.TestCase):
         # العام "كينت" (يلي ضل زي ما هو، ما انحذف).
         variants = cl.get_variants(self.catalog, "دخان وزاري", "كينت")
         self.assertEqual(variants, ["كينت", "كينت فضي", "كينت ازرق"])
+
+    def test_dukhan_wizari_winston_variants_added(self):
+        # أضفنا ٥ أصناف مفصّلة لماركة "ونستون" (بقسم "دخان وزاري") فوق
+        # الصنف العام "ونستون" (يلي ضل زي ما هو، ما انحذف).
+        variants = cl.get_variants(self.catalog, "دخان وزاري", "ونستون")
+        self.assertEqual(
+            variants,
+            ["ونستون", "ونستون فضي", "ونستون ازرق", "ونستون احمر", "ونستون كوين ازرق", "ونستون كوين فضي"],
+        )
 
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")
