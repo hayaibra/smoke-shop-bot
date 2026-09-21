@@ -444,6 +444,19 @@ class TestCatalogLoading(unittest.TestCase):
         for brand in ["معسل الخلة", "معسل تيرا", "معسل دينفر", "معسل ملكي"]:
             self.assertNotIn(brand, types, msg=brand)
 
+    def test_afana_new_charcoal_brand_added_with_standard_carton(self):
+        # ماركة فحم جديدة كلياً "افانا" — بصنف وحيد بنفس اسمها (متل باقي
+        # الماركات المشابهة زي "فحم برو")، وبكرتونة قياسية (٥٠) لأنو بلا وزن
+        # مكتوب بالاسم (مش كيلو).
+        self.assertIn("افانا", cl.get_types(self.catalog, "فحم"))
+        self.assertEqual(cl.get_variants(self.catalog, "فحم", "افانا"), ["افانا"])
+        units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "افانا", "افانا")}
+        self.assertEqual(set(units), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"})
+        self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 50)
+        self.assertFalse(units["📦📦 كرتونة"]["fixed"])
+        self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 25)
+        self.assertTrue(units["🥡 نص كرتونة"]["fixed"])
+
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
         # حتى لو براند واحد بس إله صنف وحيد (متلاً "جيتان")، منشان حساب السعر

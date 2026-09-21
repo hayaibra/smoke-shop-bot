@@ -753,6 +753,14 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "فخامة تيرا بيرل ويف", "فخامة تيرا برينت", "فخامة تيرا تفاحتين",
         ])
 
+        # ماركة فحم جديدة كلياً "افانا" (بصنف وحيد بنفس اسمها، متل باقي
+        # الماركات المشابهة) — انضافت كمجموعة جديدة بآخر ملف الأسعار (فهرس
+        # ٦٠٩)، بلا سعر بعد.
+        afana_item = next(item for item in self.flat_items if item["brand"] == "افانا")
+        self.assertEqual(afana_item["name"], "افانا")
+        self.assertEqual(afana_item["index"], 609)
+        self.assertEqual(afana_item["default_price"], 0)
+
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
         # ٣٠٧) ضل موجود بلا أي تغيير (سعر مختلف: ٦٢٥٠٠ مش ٣٩٠٠٠).
@@ -841,7 +849,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 497)
+        self.assertEqual(total_variants, 498)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
@@ -880,6 +888,7 @@ class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
         ("فحم برو", "فحم برو 250 غ"): 50,
         ("فحم برو", "فحم برو 1 كغ"): 10,
         ("فحم برو", "فحم برو ربع كيلو"): 50,
+        ("افانا", "افانا"): 50,
     }
 
     def setUp(self):
