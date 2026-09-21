@@ -2887,5 +2887,42 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "الفاخر",
+    "items": [
+      {
+        "name": "فاخر اسود",
+        "default_price": 0
+      },
+      {
+        "name": "فاخر اسود مثلج",
+        "default_price": 0
+      },
+      {
+        "name": "فاخر احمر",
+        "default_price": 0
+      },
+      {
+        "name": "فاخر احمر مثلج",
+        "default_price": 0
+      },
+      {
+        "name": "فاخر اصفر",
+        "default_price": 0
+      },
+      {
+        "name": "كف فاخر",
+        "default_price": 0
+      },
+      {
+        "name": "علبة فاخر 250 غ",
+        "default_price": 0
+      },
+      {
+        "name": "فاخر كيلو",
+        "default_price": 0
+      }
+    ]
   }
 ]
