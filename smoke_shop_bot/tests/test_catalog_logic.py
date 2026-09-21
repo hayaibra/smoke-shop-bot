@@ -449,13 +449,34 @@ class TestCatalogLoading(unittest.TestCase):
         # الماركات المشابهة زي "فحم برو")، وبكرتونة قياسية (٥٠) لأنو بلا وزن
         # مكتوب بالاسم (مش كيلو).
         self.assertIn("افانا", cl.get_types(self.catalog, "فحم"))
-        self.assertEqual(cl.get_variants(self.catalog, "فحم", "افانا"), ["افانا"])
         units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "افانا", "افانا")}
         self.assertEqual(set(units), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"})
         self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 50)
         self.assertFalse(units["📦📦 كرتونة"]["fixed"])
         self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 25)
         self.assertTrue(units["🥡 نص كرتونة"]["fixed"])
+
+    def test_afana_detailed_variants_added_with_weight_based_carton(self):
+        # أضفنا ٤ أصناف مفصّلة لـ"افانا" حسب الوزن: ربع/نص/800 غ (كرتونة
+        # قياسية ٥٠)، وكيلو (كرتونة ١٠ زي باقي أصناف الكيلو الكامل بالفحم).
+        variants = cl.get_variants(self.catalog, "فحم", "افانا")
+        self.assertEqual(variants, ["افانا", "افانا ربع", "افانا نص", "افانا 800 غ", "افانا كيلو"])
+        for name in ["افانا ربع", "افانا نص", "افانا 800 غ"]:
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "افانا", name)}
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 50, msg=name)
+        kilo_units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "افانا", "افانا كيلو")}
+        self.assertEqual(kilo_units["📦📦 كرتونة"]["multiplier"], 10)
+        self.assertEqual(kilo_units["🥡 نص كرتونة"]["multiplier"], 5)
+
+    def test_alzaeem_simplified_to_kilo_and_250g_only(self):
+        # التاجرة بسّطت "الزعيم" (فحم) من ٧ أصناف لصنفين بس: كيلو و250 غ —
+        # باقي الأوزان (نصف كيلو/500غ/400غ/1000غ/1 كغ) محذوفين.
+        variants = cl.get_variants(self.catalog, "فحم", "الزعيم")
+        self.assertEqual(variants, ["فحم الزعيم كيلو", "فحم الزعيم 250 غ"])
+        kilo_units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "الزعيم", "فحم الزعيم كيلو")}
+        self.assertEqual(kilo_units["📦📦 كرتونة"]["multiplier"], 10)
+        g250_units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "الزعيم", "فحم الزعيم 250 غ")}
+        self.assertEqual(g250_units["📦📦 كرتونة"]["multiplier"], 50)
 
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
@@ -578,13 +599,12 @@ class TestCatalogLoading(unittest.TestCase):
         kilo_variants = {
             ("سيبروس", "فحم سيبروس كيلو"),
             ("الزعيم", "فحم الزعيم كيلو"),
-            ("الزعيم", "فحم الزعيم 1000 غ"),
-            ("الزعيم", "فحم الزعيم 1 كغ"),
             ("يحيى كريستال", "فحم يحيى كريستال 1000 غ"),
             ("الاغا", "فحم الاغا 1 كغ"),
             ("كوكو 8", "فحم كوكو 8 1 كغ"),
             ("بيروتي", "فحم بيروتي 1 كغ"),
             ("فحم برو", "فحم برو 1 كغ"),
+            ("افانا", "افانا كيلو"),
         }
         for brand in cl.get_types(self.catalog, "فحم"):
             for variant in cl.get_variants(self.catalog, "فحم", brand):

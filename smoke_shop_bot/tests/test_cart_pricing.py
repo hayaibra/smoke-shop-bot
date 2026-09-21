@@ -412,6 +412,13 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("معسل ملكي", "معسل ملكي علكة"),
         ("معسل ملكي", "معسل ملكي لوف"),
         ("معسل ملكي", "معسل ملكي بولو"),
+        # التاجرة بسّطت "الزعيم" (فحم) لصنفين بس: كيلو و250 غ — باقي الـ٥
+        # أصناف (نصف كيلو/500غ/400غ/1000غ/1 كغ) محذوفين.
+        ("الزعيم", "فحم الزعيم نصف كيلو"),
+        ("الزعيم", "فحم الزعيم 500 غ"),
+        ("الزعيم", "فحم الزعيم 400 غ"),
+        ("الزعيم", "فحم الزعيم 1000 غ"),
+        ("الزعيم", "فحم الزعيم 1 كغ"),
     }
 
     def setUp(self):
@@ -756,10 +763,12 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         # ماركة فحم جديدة كلياً "افانا" (بصنف وحيد بنفس اسمها، متل باقي
         # الماركات المشابهة) — انضافت كمجموعة جديدة بآخر ملف الأسعار (فهرس
         # ٦٠٩)، بلا سعر بعد.
-        afana_item = next(item for item in self.flat_items if item["brand"] == "افانا")
-        self.assertEqual(afana_item["name"], "افانا")
-        self.assertEqual(afana_item["index"], 609)
-        self.assertEqual(afana_item["default_price"], 0)
+        afana_items = [item for item in self.flat_items if item["brand"] == "افانا"]
+        self.assertEqual([item["name"] for item in afana_items], [
+            "افانا", "افانا ربع", "افانا نص", "افانا 800 غ", "افانا كيلو",
+        ])
+        self.assertEqual([item["index"] for item in afana_items], [609, 610, 611, 612, 613])
+        self.assertTrue(all(item["default_price"] == 0 for item in afana_items))
 
         # "بلاتينيوم": صنف واحد محذوف ("فضي طويل" — فهرس ٢٨٨)، والصنف
         # التاني المشابه بالاسم بس بترتيب كلمات معاكس ("طويل فضي" — فهرس
@@ -849,7 +858,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 498)
+        self.assertEqual(total_variants, 497)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
@@ -864,13 +873,8 @@ class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
     # (برند، صنف) -> مضاعِف الكرتونة المتوقع لهالصنف بالضبط.
     EXPECTED_CARTON_MULTIPLIER = {
         ("سيبروس", "فحم سيبروس كيلو"): 10,
-        ("الزعيم", "فحم الزعيم نصف كيلو"): 50,
         ("الزعيم", "فحم الزعيم كيلو"): 10,
-        ("الزعيم", "فحم الزعيم 500 غ"): 50,
         ("الزعيم", "فحم الزعيم 250 غ"): 50,
-        ("الزعيم", "فحم الزعيم 400 غ"): 50,
-        ("الزعيم", "فحم الزعيم 1000 غ"): 10,
-        ("الزعيم", "فحم الزعيم 1 كغ"): 10,
         ("ايكو نارا", "فحم إيكو نارا"): 50,
         ("ايكو نارا", "فحم ايكو نارا اخضر احمر"): 50,
         ("هورس", "فحم هورس 250 غ"): 50,
@@ -889,6 +893,10 @@ class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
         ("فحم برو", "فحم برو 1 كغ"): 10,
         ("فحم برو", "فحم برو ربع كيلو"): 50,
         ("افانا", "افانا"): 50,
+        ("افانا", "افانا ربع"): 50,
+        ("افانا", "افانا نص"): 50,
+        ("افانا", "افانا 800 غ"): 50,
+        ("افانا", "افانا كيلو"): 10,
     }
 
     def setUp(self):

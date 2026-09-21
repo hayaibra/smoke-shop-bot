@@ -159,6 +159,11 @@ class TestVisibleFlatItems(unittest.TestCase):
             ("معسل ملكي", "معسل ملكي علكة"),
             ("معسل ملكي", "معسل ملكي لوف"),
             ("معسل ملكي", "معسل ملكي بولو"),
+            ("الزعيم", "فحم الزعيم نصف كيلو"),
+            ("الزعيم", "فحم الزعيم 500 غ"),
+            ("الزعيم", "فحم الزعيم 400 غ"),
+            ("الزعيم", "فحم الزعيم 1000 غ"),
+            ("الزعيم", "فحم الزعيم 1 كغ"),
         ]
         for pair in orphans:
             self.assertNotIn(pair, visible_pairs, msg=pair)
@@ -203,9 +208,24 @@ class TestVisibleFlatItems(unittest.TestCase):
         # ماركة فحم جديدة "افانا" (بصنف وحيد بنفس اسمها) ظاهرة برقمها الجديد.
         self.assertIn(("افانا", "افانا"), visible_by_pair)
         self.assertEqual(visible_by_pair[("افانا", "افانا")]["index"], 609)
+        # ٤ أصناف مفصّلة جداد جوا ماركة "افانا" ظاهرين بأرقامهن الجديدة.
+        for i, name in enumerate(["افانا ربع", "افانا نص", "افانا 800 غ", "افانا كيلو"]):
+            self.assertIn(("افانا", name), visible_by_pair, msg=name)
+            self.assertEqual(visible_by_pair[("افانا", name)]["index"], 610 + i, msg=name)
+        # "الزعيم" (فحم) تبسّط لصنفين بس: كيلو و250 غ ضلوا ظاهرين بأرقامهن
+        # الأصلية، باقي الأوزان انحذفوا (orphans، شوف فوق).
+        self.assertIn(("الزعيم", "فحم الزعيم كيلو"), visible_by_pair)
+        self.assertEqual(visible_by_pair[("الزعيم", "فحم الزعيم كيلو")]["index"], 213)
+        self.assertIn(("الزعيم", "فحم الزعيم 250 غ"), visible_by_pair)
+        self.assertEqual(visible_by_pair[("الزعيم", "فحم الزعيم 250 غ")]["index"], 220)
+        self.assertNotIn(("الزعيم", "فحم الزعيم نصف كيلو"), visible_by_pair)
+        self.assertNotIn(("الزعيم", "فحم الزعيم 500 غ"), visible_by_pair)
+        self.assertNotIn(("الزعيم", "فحم الزعيم 400 غ"), visible_by_pair)
+        self.assertNotIn(("الزعيم", "فحم الزعيم 1000 غ"), visible_by_pair)
+        self.assertNotIn(("الزعيم", "فحم الزعيم 1 كغ"), visible_by_pair)
 
     def test_visible_count_is_full_count_minus_orphans(self):
-        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 112)
+        self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 117)
 
 
 if __name__ == "__main__":
