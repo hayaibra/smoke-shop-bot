@@ -62,13 +62,15 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", "كينت"))
 
     def test_dukhan_wizari_winston_variants_added(self):
-        # أضفنا ٥ أصناف مفصّلة لماركة "ونستون" (بقسم "دخان وزاري") فوق
-        # الصنف العام "ونستون" (يلي ضل زي ما هو، ما انحذف).
+        # أضفنا ٥ أصناف مفصّلة لماركة "ونستون" (بقسم "دخان وزاري")، وبعدين
+        # حذفنا الصنف العام "ونستون" (placeholder) لما صارت في أصناف مفصّلة.
         variants = cl.get_variants(self.catalog, "دخان وزاري", "ونستون")
         self.assertEqual(
             variants,
-            ["ونستون", "ونستون فضي", "ونستون ازرق", "ونستون احمر", "ونستون كوين ازرق", "ونستون كوين فضي"],
+            ["ونستون فضي", "ونستون ازرق", "ونستون احمر", "ونستون كوين ازرق", "ونستون كوين فضي"],
         )
+        self.assertNotIn("ونستون", variants)
+        self.assertTrue(cl.has_variants(self.catalog, "دخان وزاري", "ونستون"))
 
     def test_category_button_label(self):
         self.assertEqual(cl.category_button_label(self.catalog, "دخان"), "🚬 دخان")

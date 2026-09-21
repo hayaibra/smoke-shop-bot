@@ -355,6 +355,9 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("مالبورو", "مالبورو"),
         # نفس الشي لصنف "كينت" العام — محذوف بعد ما صارت فضي/ازرق.
         ("كينت", "كينت"),
+        # نفس الشي لصنف "ونستون" العام — محذوف بعد ما صارت فضي/ازرق/احمر/
+        # كوين ازرق/كوين فضي.
+        ("ونستون", "ونستون"),
     }
 
     def setUp(self):
@@ -459,6 +462,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             ("مادوكس", "مادوكس كوين"): 553,
             ("مالبورو", "مالبورو"): 582,
             ("كينت", "كينت"): 583,
+            ("ونستون", "ونستون"): 584,
         }
         for key, expected_idx in expected_indexes.items():
             orphan = next(item for item in self.flat_items if (item["brand"], item["name"]) == key)
@@ -581,7 +585,8 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         self.assertTrue(all(item["default_price"] == 0 for item in kent_items))
 
         # ٥ أصناف مفصّلة جداد انضافوا لماركة "ونستون" — كمجموعة جديدة
-        # بآخر ملف الأسعار (فهارس ٥٩٢-٥٩٦)، بلا سعر بعد.
+        # بآخر ملف الأسعار (فهارس ٥٩٢-٥٩٦)، بلا سعر بعد. بعدين حذفنا الصنف
+        # العام "ونستون" (orphan بفهرسه ٥٨٤، شوف فوق) فضل ٥ أصناف ظاهرين.
         winston_items = [item for item in self.flat_items if item["brand"] == "ونستون"]
         self.assertEqual([item["name"] for item in winston_items], [
             "ونستون", "ونستون فضي", "ونستون ازرق", "ونستون احمر", "ونستون كوين ازرق", "ونستون كوين فضي",
@@ -677,7 +682,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 531)
+        self.assertEqual(total_variants, 530)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
