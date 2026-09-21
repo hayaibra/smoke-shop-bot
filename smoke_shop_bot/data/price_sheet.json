@@ -2807,5 +2807,39 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "مالبورو",
+    "items": [
+      {
+        "name": "مالبورو ابيض",
+        "default_price": 0
+      },
+      {
+        "name": "مالبورو احمر",
+        "default_price": 0
+      },
+      {
+        "name": "مالبورو كوين ازرق",
+        "default_price": 0
+      },
+      {
+        "name": "مالبورو كوين اسود",
+        "default_price": 0
+      }
+    ]
+  },
+  {
+    "brand": "كينت",
+    "items": [
+      {
+        "name": "كينت فضي",
+        "default_price": 0
+      },
+      {
+        "name": "كينت ازرق",
+        "default_price": 0
+      }
+    ]
   }
 ]
