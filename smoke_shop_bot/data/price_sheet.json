@@ -2933,5 +2933,26 @@
         "default_price": 0
       }
     ]
+  },
+  {
+    "brand": "افانا",
+    "items": [
+      {
+        "name": "افانا ربع",
+        "default_price": 0
+      },
+      {
+        "name": "افانا نص",
+        "default_price": 0
+      },
+      {
+        "name": "افانا 800 غ",
+        "default_price": 0
+      },
+      {
+        "name": "افانا كيلو",
+        "default_price": 0
+      }
+    ]
   }
 ]

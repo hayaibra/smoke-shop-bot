@@ -1187,13 +1187,8 @@
         "فحم سيبروس كيلو"
       ],
       "الزعيم": [
-        "فحم الزعيم نصف كيلو",
         "فحم الزعيم كيلو",
-        "فحم الزعيم 500 غ",
-        "فحم الزعيم 250 غ",
-        "فحم الزعيم 400 غ",
-        "فحم الزعيم 1000 غ",
-        "فحم الزعيم 1 كغ"
+        "فحم الزعيم 250 غ"
       ],
       "ايكو نارا": [
         "فحم إيكو نارا",
@@ -1237,7 +1232,11 @@
         "فحم برو ربع كيلو"
       ],
       "افانا": [
-        "افانا"
+        "افانا",
+        "افانا ربع",
+        "افانا نص",
+        "افانا 800 غ",
+        "افانا كيلو"
       ]
     },
     "units": [
@@ -1268,23 +1267,6 @@
         ]
       },
       "الزعيم": {
-        "فحم الزعيم نصف كيلو": [
-          {
-            "name": "📦📦 كرتونة",
-            "fixed": false,
-            "multiplier": 50
-          },
-          {
-            "name": "🥡 نص كرتونة",
-            "fixed": true,
-            "multiplier": 25
-          },
-          {
-            "name": "🧮 عدد",
-            "fixed": false,
-            "multiplier": 1
-          }
-        ],
         "فحم الزعيم كيلو": [
           {
             "name": "📦📦 كرتونة",
@@ -1302,23 +1284,6 @@
             "multiplier": 1
           }
         ],
-        "فحم الزعيم 500 غ": [
-          {
-            "name": "📦📦 كرتونة",
-            "fixed": false,
-            "multiplier": 50
-          },
-          {
-            "name": "🥡 نص كرتونة",
-            "fixed": true,
-            "multiplier": 25
-          },
-          {
-            "name": "🧮 عدد",
-            "fixed": false,
-            "multiplier": 1
-          }
-        ],
         "فحم الزعيم 250 غ": [
           {
             "name": "📦📦 كرتونة",
@@ -1329,57 +1294,6 @@
             "name": "🥡 نص كرتونة",
             "fixed": true,
             "multiplier": 25
-          },
-          {
-            "name": "🧮 عدد",
-            "fixed": false,
-            "multiplier": 1
-          }
-        ],
-        "فحم الزعيم 400 غ": [
-          {
-            "name": "📦📦 كرتونة",
-            "fixed": false,
-            "multiplier": 50
-          },
-          {
-            "name": "🥡 نص كرتونة",
-            "fixed": true,
-            "multiplier": 25
-          },
-          {
-            "name": "🧮 عدد",
-            "fixed": false,
-            "multiplier": 1
-          }
-        ],
-        "فحم الزعيم 1000 غ": [
-          {
-            "name": "📦📦 كرتونة",
-            "fixed": false,
-            "multiplier": 10
-          },
-          {
-            "name": "🥡 نص كرتونة",
-            "fixed": true,
-            "multiplier": 5
-          },
-          {
-            "name": "🧮 عدد",
-            "fixed": false,
-            "multiplier": 1
-          }
-        ],
-        "فحم الزعيم 1 كغ": [
-          {
-            "name": "📦📦 كرتونة",
-            "fixed": false,
-            "multiplier": 10
-          },
-          {
-            "name": "🥡 نص كرتونة",
-            "fixed": true,
-            "multiplier": 5
           },
           {
             "name": "🧮 عدد",
@@ -1712,6 +1626,74 @@
             "name": "🥡 نص كرتونة",
             "fixed": true,
             "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "افانا ربع": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "افانا نص": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "افانا 800 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 50
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 25
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "افانا كيلو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 10
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 5
           },
           {
             "name": "🧮 عدد",
