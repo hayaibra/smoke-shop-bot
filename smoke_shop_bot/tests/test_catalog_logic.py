@@ -38,8 +38,30 @@ class TestCatalogLoading(unittest.TestCase):
         # التاجرة طلبت هالخمس ماركات تطلع أول شي بقائمة اختيار النوع (دخان)،
         # بنفس الترتيب يلي حددتو، وباقي الماركات بعدهن (بترتيبهن القديم).
         types = cl.get_types(self.catalog, "دخان")
-        self.assertEqual(types[:5], ["ماستر", "كابتن بلاك", "كلواز 8 S", "البرو", "روز"])
+        self.assertEqual(types[:5], ["ماستر", "كابتن بلاك", "كلواز", "البرو", "روز"])
         self.assertEqual(len(types), 39)  # ٤٠ ناقص "جتان" يلي انحذفت بالكامل بعدين
+
+    def test_klewaz_8s_brand_renamed_to_klewaz(self):
+        # الماركة يلي كان اسما "كلواز 8 S" صار اسمها "كلواز" بس (تبديل اسم
+        # الماركة نفسا، مش صنف داخلها) — أصنافها الخمسة ضلوا زي ما هم بلا أي
+        # تغيير. ماركة "كلواز عريض" (لحالها، مختلفة) ما تأثرت إطلاقاً.
+        self.assertNotIn("كلواز 8 S", cl.get_types(self.catalog, "دخان"))
+        self.assertIn("كلواز", cl.get_types(self.catalog, "دخان"))
+        self.assertEqual(
+            cl.get_variants(self.catalog, "دخان", "كلواز"),
+            [
+                "كلواز كوين أحمر 8 S",
+                "كلواز كوين أصفر 8 S",
+                "كلواز قصير حرة",
+                "كلواز احمر عريض",
+                "كلواز اصفر عريض",
+            ],
+        )
+        self.assertIn("كلواز عريض", cl.get_types(self.catalog, "دخان"))
+        self.assertEqual(
+            cl.get_variants(self.catalog, "دخان", "كلواز عريض"),
+            ["كلواز احمر عريض", "كلواز اصفر عريض"],
+        )
 
     def test_jitane_brand_fully_removed(self):
         # التاجرة حذفت ماركة "جتان" بالكامل (مو صنف واحد جواها — الماركة كلها)،

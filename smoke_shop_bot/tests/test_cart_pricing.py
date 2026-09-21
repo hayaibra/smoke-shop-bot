@@ -561,6 +561,23 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             "1970 طويل فضي", "1970 طويل ازرق", "1970 كوين فضي", "1970 سليم فضي كراش",
         ])
 
+        # "كلواز 8 S" -> "كلواز": تبديل اسم الماركة نفسا (مش صنف داخلها) —
+        # الـ٥ أصناف ضلت بنفس فهارسها الأصلية (٣٨٧-٣٩١) وأسعارها، بس برند
+        # الماركة صار "كلواز". ماركة "كلواز عريض" (لحالها) ما تأثرت.
+        klewaz_items = [item for item in self.flat_items if item["brand"] == "كلواز"]
+        self.assertEqual([item["name"] for item in klewaz_items], [
+            "كلواز كوين أحمر 8 S", "كلواز كوين أصفر 8 S", "كلواز قصير حرة",
+            "كلواز احمر عريض", "كلواز اصفر عريض",
+        ])
+        self.assertEqual([item["index"] for item in klewaz_items], [387, 388, 389, 390, 391])
+        self.assertEqual(
+            [item["default_price"] for item in klewaz_items],
+            [78500, 78500, 112000, 112000, 112000],
+        )
+        self.assertFalse(any(item["brand"] == "كلواز 8 S" for item in self.flat_items))
+        klewaz_wide_items = [item for item in self.flat_items if item["brand"] == "كلواز عريض"]
+        self.assertEqual([item["name"] for item in klewaz_wide_items], ["كلواز احمر عريض", "كلواز اصفر عريض"])
+
     def test_total_variant_count_matches_price_sheet_item_count_minus_known_orphans(self):
         total_variants = sum(
             len(cl.get_variants(self.catalog, category, type_))
