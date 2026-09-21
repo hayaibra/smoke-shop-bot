@@ -419,6 +419,10 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
         ("الزعيم", "فحم الزعيم 400 غ"),
         ("الزعيم", "فحم الزعيم 1000 غ"),
         ("الزعيم", "فحم الزعيم 1 كغ"),
+        # صنفين محذوفين من "فحم برو": الصنف العام "فحم برو" (بعد ما صارت
+        # أصناف مفصّلة) و"فحم برو ربع كيلو" — باقي الماركة (250 غ و1 كغ) ضلت.
+        ("فحم برو", "فحم برو"),
+        ("فحم برو", "فحم برو ربع كيلو"),
     }
 
     def setUp(self):
@@ -858,7 +862,7 @@ class TestRealCatalogAndPriceSheetConsistency(unittest.TestCase):
             for type_ in cl.get_types(self.catalog, category)
         )
         self.assertEqual(total_variants, len(self.flat_items) - len(self.ORPHANED_PRICE_SHEET_ITEMS))
-        self.assertEqual(total_variants, 497)
+        self.assertEqual(total_variants, 495)
 
 
 class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
@@ -888,10 +892,8 @@ class TestRealCatalogCharcoalCartonUnits(unittest.TestCase):
         ("دراغون", "فحم دراغون ربع كيلو"): 50,
         ("ولف", "فحم ولف ربع كيلو"): 50,
         ("اتش انش", "فحم اتش انش ربع كيلو"): 50,
-        ("فحم برو", "فحم برو"): 50,
         ("فحم برو", "فحم برو 250 غ"): 50,
         ("فحم برو", "فحم برو 1 كغ"): 10,
-        ("فحم برو", "فحم برو ربع كيلو"): 50,
         ("افانا", "افانا"): 50,
         ("افانا", "افانا ربع"): 50,
         ("افانا", "افانا نص"): 50,

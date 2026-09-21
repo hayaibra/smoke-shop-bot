@@ -18,14 +18,15 @@ class TestCatalogLoading(unittest.TestCase):
         self.catalog = cl.load_catalog(CATALOG_PATH)
 
     def test_categories_order(self):
+        # "دخان وزاري" انتقل لثاني خيار (بعد "دخان") بالقائمة الرئيسية.
         self.assertEqual(
             cl.get_categories(self.catalog),
-            ["دخان", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية", "قداحات", "دخان وزاري"],
+            ["دخان", "دخان وزاري", "معسل", "فحم", "إكسسوارات", "اراكيل الكترونية", "قداحات"],
         )
 
     def test_new_dukhan_wizari_category_added_empty(self):
-        # قسم رئيسي جديد "دخان وزاري" (بآخر القائمة، زر جديد بالقائمة
-        # الرئيسية) — بنفس وحدات "دخان" العادية (كروز/نص كروز).
+        # قسم رئيسي جديد "دخان وزاري" (زر جديد بالقائمة الرئيسية، هلق ثاني
+        # خيار بعد "دخان") — بنفس وحدات "دخان" العادية (كروز/نص كروز).
         self.assertEqual(cl.category_button_label(self.catalog, "دخان وزاري"), "🚬 دخان وزاري")
         units = cl.get_units(self.catalog, "دخان وزاري")
         self.assertEqual({u["name"] for u in units}, {"🎁 كروز", "🥡 نص كروز"})
@@ -477,6 +478,12 @@ class TestCatalogLoading(unittest.TestCase):
         self.assertEqual(kilo_units["📦📦 كرتونة"]["multiplier"], 10)
         g250_units = {u["name"]: u for u in cl.get_units(self.catalog, "فحم", "الزعيم", "فحم الزعيم 250 غ")}
         self.assertEqual(g250_units["📦📦 كرتونة"]["multiplier"], 50)
+
+    def test_fahm_bro_general_and_quarter_kilo_variants_removed(self):
+        # صنفين محذوفين من "فحم برو": الصنف العام "فحم برو" (بعد ما صارت
+        # أصناف مفصّلة) و"فحم برو ربع كيلو" — باقي الماركة (250 غ و1 كغ) ضلت.
+        variants = cl.get_variants(self.catalog, "فحم", "فحم برو")
+        self.assertEqual(variants, ["فحم برو 250 غ", "فحم برو 1 كغ"])
 
     def test_every_type_has_at_least_one_real_variant(self):
         # بعكس البيانات القديمة، كل نوع (براند) هلق لازم يكون إلو صنف واحد عالأقل
