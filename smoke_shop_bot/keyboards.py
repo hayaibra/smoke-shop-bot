@@ -67,10 +67,12 @@ def build_variant_keyboard(
     return InlineKeyboardMarkup(rows)
 
 
-def build_unit_keyboard(catalog: dict, ci: int, type_: str | None = None) -> InlineKeyboardMarkup:
+def build_unit_keyboard(
+    catalog: dict, ci: int, type_: str | None = None, variant: str | None = None
+) -> InlineKeyboardMarkup:
     categories = cl.get_categories(catalog)
     category = categories[ci]
-    units = cl.get_units(catalog, category, type_)
+    units = cl.get_units(catalog, category, type_, variant)
     buttons = [
         InlineKeyboardButton(u["name"], callback_data=f"unit:{ci}:{ui}")
         for ui, u in enumerate(units)
