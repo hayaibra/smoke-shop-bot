@@ -527,16 +527,42 @@ class TestCatalogLoading(unittest.TestCase):
 
     def test_mazaya_brand_wide_carton_12_half_6(self):
         # التاجرة حددت كرتونة "معسل مزايا" = ١٢ علبة (نص كرتونة = ٦) لكل أصناف
-        # الماركة بلا استثناء (استخدمنا type_units هون بدل تكرار نفس الوحدات
-        # لكل صنف صنف، لأنو نفس القيمة بتنطبق على الماركة كلها).
+        # الماركة (استخدمنا type_units هون بدل تكرار نفس الوحدات لكل صنف صنف،
+        # لأنو نفس القيمة بتنطبق على الماركة كلها) — ما عدا أصناف "كف" يلي
+        # عندهن استثناء لاحق (شوف test_mazaya_kaf_items_got_carton_24_half_12).
+        kaf_variants = {
+            "مزايا كف علكة", "مزايا كف مصري", "مزايا كف لوف", "مزايا كف بحريني",
+            "مزايا كف بولو", "مزايا كف تريندي", "مزايا كف روبي كراش",
+        }
         variants = cl.get_variants(self.catalog, "معسل", "معسل مزايا")
         self.assertGreater(len(variants), 0)
         for name in variants:
+            if name in kaf_variants:
+                continue
             units = {u["name"]: u for u in cl.get_units(self.catalog, "معسل", "معسل مزايا", name)}
             self.assertEqual(set(units), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"}, msg=name)
             self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 12, msg=name)
             self.assertFalse(units["📦📦 كرتونة"]["fixed"], msg=name)
             self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 6, msg=name)
+            self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
+
+    def test_mazaya_kaf_items_got_carton_24_half_12(self):
+        # كل أصناف "معسل" (أي ماركة) يلي بأسمها كلمتين "كف" و"مزايا" سوا —
+        # حالياً ٧ أصناف تحت "معسل مزايا" — التاجرة حددت كرتونتهن ٢٤ علبة
+        # (نص كرتونة = ١٢)، استثناء عن الكرتونة العامة للماركة (١٢).
+        kaf_variants = [
+            "مزايا كف علكة", "مزايا كف مصري", "مزايا كف لوف", "مزايا كف بحريني",
+            "مزايا كف بولو", "مزايا كف تريندي", "مزايا كف روبي كراش",
+        ]
+        variants = cl.get_variants(self.catalog, "معسل", "معسل مزايا")
+        for name in kaf_variants:
+            self.assertIn(name, variants, msg=name)
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "معسل", "معسل مزايا", name)}
+            self.assertEqual(set(units), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"}, msg=name)
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 24, msg=name)
+            self.assertFalse(units["📦📦 كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 12, msg=name)
             self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
             self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
 
