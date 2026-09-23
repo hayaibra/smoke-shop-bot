@@ -1059,6 +1059,197 @@
           "multiplier": 50
         }
       ]
+    },
+    "variant_units": {
+      "اليغانس": {
+        "اليغانس سليم فضي": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم ازرق": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم ازرق مربع": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم فضي مربع": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم نعنع جديد": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم نعنع قديم": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم طقة موف": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم طقة ازرق": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم شوكولا": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم دهبي": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ],
+        "اليغانس سليم فضي ازرق نعنع قديم": [
+          {
+            "name": "🎁 كروز",
+            "fixed": false,
+            "multiplier": 1
+          },
+          {
+            "name": "🥡 نص كروز",
+            "fixed": true,
+            "multiplier": 0.5
+          },
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 40
+          }
+        ]
+      }
     }
   },
   "دخان وزاري": {
