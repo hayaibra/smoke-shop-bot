@@ -1290,6 +1290,25 @@
           }
         ]
       }
+    },
+    "type_units": {
+      "معسل مزايا": [
+        {
+          "name": "📦📦 كرتونة",
+          "fixed": false,
+          "multiplier": 12
+        },
+        {
+          "name": "🥡 نص كرتونة",
+          "fixed": true,
+          "multiplier": 6
+        },
+        {
+          "name": "🧮 عدد",
+          "fixed": false,
+          "multiplier": 1
+        }
+      ]
     }
   },
   "فحم": {
