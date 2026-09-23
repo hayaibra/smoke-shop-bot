@@ -1480,6 +1480,127 @@
             "multiplier": 1
           }
         ]
+      },
+      "معسل مزايا": {
+        "مزايا كف علكة": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "مزايا كف مصري": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "مزايا كف لوف": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "مزايا كف بحريني": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "مزايا كف بولو": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "مزايا كف تريندي": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "مزايا كف روبي كراش": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 24
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 12
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
       }
     },
     "type_units": {
