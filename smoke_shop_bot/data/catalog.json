@@ -1218,7 +1218,79 @@
         "fixed": false,
         "multiplier": 1
       }
-    ]
+    ],
+    "variant_units": {
+      "معسل نخلة": {
+        "نخلة صلاحية": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 25
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 13
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "كف نخلة صلاحية باركود": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 25
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 13
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "كف نخلة صلاحية شركة": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 25
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 13
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ],
+        "كيس نخلة صلاحية 250 غ": [
+          {
+            "name": "📦📦 كرتونة",
+            "fixed": false,
+            "multiplier": 25
+          },
+          {
+            "name": "🥡 نص كرتونة",
+            "fixed": true,
+            "multiplier": 13
+          },
+          {
+            "name": "🧮 عدد",
+            "fixed": false,
+            "multiplier": 1
+          }
+        ]
+      }
+    }
   },
   "فحم": {
     "emoji": "🔥",
