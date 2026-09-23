@@ -492,14 +492,12 @@ class TestCatalogLoading(unittest.TestCase):
             self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 8, msg=name)
 
     def test_nakhla_salahiya_items_got_carton_25_half_13(self):
-        # كل أصناف "معسل نخلة" يلي اسمها فيه كلمة "صلاحية" (نخلة صلاحية / كف
-        # نخلة صلاحية باركود / كف نخلة صلاحية شركة / كيس نخلة صلاحية 250 غ)
-        # — التاجرة حددت كرتونتهن = ٢٥ علبة (نص كرتونة = ١٣، لأنو ٢٥ رقم فردي
-        # وما بينقسم بالتساوي). قبل هيك هالأصناف ما كان إلها كرتونة إطلاقاً
-        # (بس "عدد").
-        salahiya_variants = [
-            "نخلة صلاحية", "كف نخلة صلاحية باركود", "كف نخلة صلاحية شركة", "كيس نخلة صلاحية 250 غ",
-        ]
+        # كل أصناف "معسل نخلة" يلي اسمها فيه كلمة "صلاحية" — التاجرة حددت
+        # كرتونتهن = ٢٥ علبة (نص كرتونة = ١٣، لأنو ٢٥ رقم فردي وما بينقسم
+        # بالتساوي). قبل هيك هالأصناف ما كان إلها كرتونة إطلاقاً (بس "عدد").
+        # ملاحظة: صنفين منهن ("كف نخلة صلاحية باركود"/"شركة") انعدّلت
+        # كرتونتهن لاحقاً لـ٤٠ — شوف test_kaf_salahiya_items_got_carton_40_half_20.
+        salahiya_variants = ["نخلة صلاحية", "كيس نخلة صلاحية 250 غ"]
         variants = cl.get_variants(self.catalog, "معسل", "معسل نخلة")
         for name in salahiya_variants:
             self.assertIn(name, variants, msg=name)
@@ -508,6 +506,22 @@ class TestCatalogLoading(unittest.TestCase):
             self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 25, msg=name)
             self.assertFalse(units["📦📦 كرتونة"]["fixed"], msg=name)
             self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 13, msg=name)
+            self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
+
+    def test_kaf_salahiya_items_got_carton_40_half_20(self):
+        # كل أصناف "معسل" (أي ماركة) يلي بأسمها كلمتين "كف" و"صلاحية" سوا —
+        # حالياً بس صنفين تحت "معسل نخلة" — التاجرة عدّلت كرتونتهن لـ٤٠ علبة
+        # (نص كرتونة = ٢٠)، بعد ما كانوا ٢٥ متل باقي أصناف "صلاحية".
+        kaf_salahiya_variants = ["كف نخلة صلاحية باركود", "كف نخلة صلاحية شركة"]
+        variants = cl.get_variants(self.catalog, "معسل", "معسل نخلة")
+        for name in kaf_salahiya_variants:
+            self.assertIn(name, variants, msg=name)
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "معسل", "معسل نخلة", name)}
+            self.assertEqual(set(units), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"}, msg=name)
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 40, msg=name)
+            self.assertFalse(units["📦📦 كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 20, msg=name)
             self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
             self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
 
