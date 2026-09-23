@@ -511,6 +511,21 @@ class TestCatalogLoading(unittest.TestCase):
             self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
             self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
 
+    def test_mazaya_brand_wide_carton_12_half_6(self):
+        # التاجرة حددت كرتونة "معسل مزايا" = ١٢ علبة (نص كرتونة = ٦) لكل أصناف
+        # الماركة بلا استثناء (استخدمنا type_units هون بدل تكرار نفس الوحدات
+        # لكل صنف صنف، لأنو نفس القيمة بتنطبق على الماركة كلها).
+        variants = cl.get_variants(self.catalog, "معسل", "معسل مزايا")
+        self.assertGreater(len(variants), 0)
+        for name in variants:
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "معسل", "معسل مزايا", name)}
+            self.assertEqual(set(units), {"📦📦 كرتونة", "🥡 نص كرتونة", "🧮 عدد"}, msg=name)
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], 12, msg=name)
+            self.assertFalse(units["📦📦 كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🥡 نص كرتونة"]["multiplier"], 6, msg=name)
+            self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
+
     def test_fahm_bro_general_and_quarter_kilo_variants_removed(self):
         # صنفين محذوفين من "فحم برو": الصنف العام "فحم برو" (بعد ما صارت
         # أصناف مفصّلة) و"فحم برو ربع كيلو" — باقي الماركة (250 غ و1 كغ) ضلت.
