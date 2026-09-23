@@ -526,6 +526,30 @@ class TestCatalogLoading(unittest.TestCase):
             self.assertTrue(units["🥡 نص كرتونة"]["fixed"], msg=name)
             self.assertEqual(units["🧮 عدد"]["multiplier"], 1, msg=name)
 
+    def test_elegance_saleem_variants_get_carton_40_others_keep_50(self):
+        # التاجرة حددت كرتونة أصناف "سليم" بس (تحت ماركة "اليغانس"، دخان) =
+        # ٤٠ علبة — باقي أصناف نفس الماركة (طويل/قصير/كوين) ضلوا على الكرتونة
+        # العامة للماركة (٥٠، عبر type_units زي ما كانت أصلاً). دخان ما بيستخدم
+        # "نص كرتونة" إطلاقاً (بس كروز/نص كروز/كرتونة)، فما ضفناها هون.
+        saleem_variants = [
+            "اليغانس سليم فضي", "اليغانس سليم ازرق", "اليغانس سليم ازرق مربع",
+            "اليغانس سليم فضي مربع", "اليغانس سليم نعنع جديد", "اليغانس سليم نعنع قديم",
+            "اليغانس سليم طقة موف", "اليغانس سليم طقة ازرق", "اليغانس سليم شوكولا",
+            "اليغانس سليم دهبي", "اليغانس سليم فضي ازرق نعنع قديم",
+        ]
+        variants = cl.get_variants(self.catalog, "دخان", "اليغانس")
+        for name in saleem_variants:
+            self.assertIn(name, variants, msg=name)
+        for name in variants:
+            units = {u["name"]: u for u in cl.get_units(self.catalog, "دخان", "اليغانس", name)}
+            self.assertEqual(set(units), {"🎁 كروز", "🥡 نص كروز", "📦📦 كرتونة"}, msg=name)
+            expected_carton = 40 if name in saleem_variants else 50
+            self.assertEqual(units["📦📦 كرتونة"]["multiplier"], expected_carton, msg=name)
+            self.assertFalse(units["📦📦 كرتونة"]["fixed"], msg=name)
+            self.assertEqual(units["🎁 كروز"]["multiplier"], 1, msg=name)
+            self.assertEqual(units["🥡 نص كروز"]["multiplier"], 0.5, msg=name)
+            self.assertTrue(units["🥡 نص كروز"]["fixed"], msg=name)
+
     def test_fahm_bro_general_and_quarter_kilo_variants_removed(self):
         # صنفين محذوفين من "فحم برو": الصنف العام "فحم برو" (بعد ما صارت
         # أصناف مفصّلة) و"فحم برو ربع كيلو" — باقي الماركة (250 غ و1 كغ) ضلت.
