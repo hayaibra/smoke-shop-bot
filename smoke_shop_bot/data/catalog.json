@@ -1970,12 +1970,12 @@
           {
             "name": "📦📦 كرتونة",
             "fixed": false,
-            "multiplier": 50
+            "multiplier": 40
           },
           {
             "name": "🥡 نص كرتونة",
             "fixed": true,
-            "multiplier": 25
+            "multiplier": 20
           },
           {
             "name": "🧮 عدد",
