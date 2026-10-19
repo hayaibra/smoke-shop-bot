@@ -768,6 +768,24 @@ async def cmd_set_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     await context.bot.send_message(chat_id, messages.SET_PRICES_INSTRUCTIONS)
 
 
+# ---------------------------------------------------------------------------
+# /usdprices — للتاجرة بس: نشرة عرض فقط (مش للتعديل من جوا تلغرام، ولا
+# للزبون، ولا للبث اليومي) بأسعار الدولار يلي عم تعبيها بملف الإكسل. بتورّي
+# كل الأصناف — حتى يلي لسا بلا سعر دولار (بعلامة ⚠️) — منشان تعرفي وين وصلتي.
+# ---------------------------------------------------------------------------
+
+async def cmd_usd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = update.effective_chat.id
+    if not _is_admin_chat(chat_id):
+        return  # ما منرد إطلاقاً لغير التاجرة
+
+    chunks = ps_logic.format_usd_admin_reference(
+        prices_state.visible_flat_items(), prices_state.USD_PRICES, prices_state.CATEGORY_OF_BRAND
+    )
+    for chunk in chunks:
+        await context.bot.send_message(chat_id, chunk)
+
+
 async def on_admin_price_sheet_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """أي رسالة نص من التاجر (مش Reply) شكلها "رقم سعر" سطر لكل صنف — بتتفهم
     كتحديث أسعار تلقائياً، بلا ما تحتاج أمر /setprices قبلها كل مرة.

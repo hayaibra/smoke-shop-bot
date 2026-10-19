@@ -20,6 +20,14 @@ FLAT_ITEMS = ps.flatten_items(GROUPS)
 
 overrides: dict[int, int] = {}
 
+# نشرة الأسعار بالدولار (/usdprices — للتاجرة بس): أسعار منفصلة كلياً عن
+# overrides فوق (يلي بالليرة)، محفوظة بملف عادي (data/usd_prices.json) مش
+# برسالة مثبتة متل أسعار الليرة — لأنو هالأسعار منحدّثها نحن (عبر ملف إكسل
+# التاجرة) مش عبر تعديل مباشر جوا تلغرام، فمافي داعي لآلية المزامنة
+# والاستعادة من الرسالة المثبتة. نفس أرقام الفهرس (index) تبع FLAT_ITEMS.
+USD_PRICES_PATH = config.PRICE_SHEET_PATH.parent / "usd_prices.json"
+USD_PRICES: dict[int, float] = ps.load_usd_prices(USD_PRICES_PATH)
+
 # {اسم البرند: "إيموجي اسم القسم"} (متلاً "ماستر" → "🚬 دخان") — مبني من نفس
 # data/catalog.json يلي بيستخدمه مسار الطلب، منشان قائمة "/prices" للزبون تنعرض
 # منظمة هرمياً (قسم ← برند ← صنف) بدل ما تطلع كل البرندات ورا بعض بلا تقسيم.

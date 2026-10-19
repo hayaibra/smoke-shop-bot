@@ -31,6 +31,17 @@ def load_price_sheet(path: Path) -> list[dict]:
         return json.load(f)
 
 
+def load_usd_prices(path: Path) -> dict[int, float]:
+    """بترجع {index: سعر بالدولار} من data/usd_prices.json. لو الملف مش موجود
+    بعد (لسا ما انحط أي سعر دولار)، بترجع قاموس فاضي بدل ما ترمي خطأ."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+    except FileNotFoundError:
+        return {}
+    return {int(idx): price for idx, price in raw.items()}
+
+
 def flatten_items(groups: list[dict]) -> list[dict]:
     """بترجع لستة مسطحة بترتيب الملف: كل عنصر {"index", "brand", "name", "default_price"}."""
     flat = []
@@ -157,6 +168,56 @@ def format_admin_reference(flat_items: list[dict], prices: dict[int, int]) -> li
             current = line
         else:
             current += line
+
+    if current.strip():
+        chunks.append(current.rstrip())
+    return chunks
+
+
+# ---------------------------------------------------------------------------
+# نشرة الأسعار بالدولار — للتاجر بس (مش للزبون ولا للبث اليومي). منبنية من
+# نفس أرقام الأصناف (index) تبع price_sheet.json، بس بسعر منفصل كلياً عن
+# الأسعار بالليرة (usd_prices: {index: سعر بالدولار}). بتورّي كل الأصناف
+# (حتى يلي لسا بلا سعر دولار) منشان التاجرة تشوف وين وصلت بتعبئة الفورم،
+# تماماً متل format_admin_reference مع السعر بالليرة.
+# ---------------------------------------------------------------------------
+
+def format_usd_admin_reference(
+    flat_items: list[dict],
+    usd_prices: dict[int, float],
+    category_of_brand: Optional[dict[str, str]] = None,
+) -> list[str]:
+    chunks: list[str] = []
+    header = "💵 نشرة الأسعار بالدولار (خاصة فيكِ بس):\n"
+    current = header
+    current_category = None
+    current_brand = None
+
+    def _append(line: str) -> None:
+        nonlocal current
+        if len(current) + len(line) > MAX_MESSAGE_CHARS:
+            chunks.append(current.rstrip())
+            current = line
+        else:
+            current += line
+
+    for item in _grouped_by_brand(flat_items):
+        idx = item["index"]
+        price = usd_prices.get(idx)
+        price_text = f"${price:,.2f}" if price else "⚠️ ما انحط سعر دولار بعد"
+        brand = item["brand"]
+
+        category = (category_of_brand or {}).get(brand)
+        if category is not None and category != current_category:
+            _append(f"\n{category}\n{'─' * 14}\n")
+            current_category = category
+            current_brand = None
+
+        if brand != current_brand:
+            _append(f"🔸 {brand}\n")
+            current_brand = brand
+
+        _append(f"   {idx}. {item['name']} — {price_text}\n")
 
     if current.strip():
         chunks.append(current.rstrip())
