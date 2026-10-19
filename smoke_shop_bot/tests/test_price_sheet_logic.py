@@ -194,5 +194,49 @@ class TestFormatting(unittest.TestCase):
             self.assertLessEqual(len(chunk), ps.MAX_MESSAGE_CHARS + 500)  # + هامش الفوتر بآخر جزء
 
 
+class TestUsdPrices(unittest.TestCase):
+    """نشرة الأسعار بالدولار (/usdprices — للتاجرة بس) — منفصلة كلياً عن أسعار
+    الليرة (overrides) فوق، ومنبنية من نفس أرقام الفهرس (index)."""
+
+    def test_load_usd_prices_round_trip(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "usd_prices.json"
+            path.write_text('{"0": 2.5, "2": 1.67}', encoding="utf-8")
+            result = ps.load_usd_prices(path)
+            self.assertEqual(result, {0: 2.5, 2: 1.67})
+
+    def test_load_usd_prices_missing_file_returns_empty_dict(self):
+        self.assertEqual(ps.load_usd_prices(Path("/tmp/does-not-exist-usd.json")), {})
+
+    def test_usd_admin_reference_shows_priced_and_missing_items(self):
+        flat = ps.flatten_items(SAMPLE_GROUPS)
+        usd_prices = {0: 2.5}  # بس جيتان قصير عندو سعر دولار
+        chunks = ps.format_usd_admin_reference(flat, usd_prices)
+        joined = "\n".join(chunks)
+        self.assertIn("جيتان قصير", joined)
+        self.assertIn("$2.50", joined)
+        self.assertIn("⚠️ ما انحط سعر دولار بعد", joined)  # تي اس (مافيها سعر دولار)
+
+    def test_usd_admin_reference_grouped_by_category_when_mapping_given(self):
+        flat = ps.flatten_items(SAMPLE_GROUPS)
+        usd_prices = {0: 2.5, 1: 1.5, 2: 1.2}
+        category_of_brand = {"جيتان": "🚬 دخان", "تي اس": "🚬 دخان"}
+        chunks = ps.format_usd_admin_reference(flat, usd_prices, category_of_brand=category_of_brand)
+        joined = "\n".join(chunks)
+        self.assertEqual(joined.count("🚬 دخان"), 1)  # قسم واحد بس حتى لو برندين تحتو
+        self.assertIn("🔸 جيتان", joined)
+        self.assertIn("🔸 تي اس", joined)
+
+    def test_usd_admin_reference_zero_price_treated_as_missing(self):
+        # سعر دولار 0 لازم يترعرض كـ "لسا ما انحط" متماشياً مع نفس قاعدة سعر
+        # الليرة (0 يعني ما انحط سعر، مش سعر حقيقي صفر).
+        flat = ps.flatten_items(SAMPLE_GROUPS)
+        chunks = ps.format_usd_admin_reference(flat, {0: 0})
+        joined = "\n".join(chunks)
+        self.assertIn("⚠️ ما انحط سعر دولار بعد", joined)
+
+
 if __name__ == "__main__":
     unittest.main()

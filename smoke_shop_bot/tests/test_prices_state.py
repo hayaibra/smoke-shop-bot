@@ -16,6 +16,21 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 import prices_state
 
 
+class TestUsdPrices(unittest.TestCase):
+    """USD_PRICES (/usdprices — نشرة عرض للتاجرة بس): مُحمّلة من data/usd_prices.json
+    منفصلة كلياً عن overrides (أسعار الليرة). كل مفتاح لازم يكون رقم فهرس حقيقي
+    من FLAT_ITEMS، منشان ما يصير عنا سعر دولار "يتيم" لصنف مش موجود أصلاً."""
+
+    def test_every_usd_price_index_exists_in_flat_items(self):
+        valid_indices = {item["index"] for item in prices_state.FLAT_ITEMS}
+        unknown = set(prices_state.USD_PRICES) - valid_indices
+        self.assertEqual(unknown, set())
+
+    def test_usd_prices_values_are_positive_numbers(self):
+        for idx, price in prices_state.USD_PRICES.items():
+            self.assertGreater(price, 0, f"صنف {idx} عندو سعر دولار غير موجب: {price}")
+
+
 class TestCategoryOfBrand(unittest.TestCase):
     def test_every_brand_in_visible_flat_items_has_a_category(self):
         # كل برند لسا ظاهر (يعني بالكتالوج فعلياً) لازم يكون إلو قسم — هاد يلي
