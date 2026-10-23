@@ -45,6 +45,17 @@ class _PriceUpdateFilter(filters.MessageFilter):
 PRICE_UPDATE_FILTER = _PriceUpdateFilter()
 
 
+class _UsdPriceUpdateFilter(filters.MessageFilter):
+    """رسالة نص من التاجرة شكلها "رقم_الصنف $سعر_جديد" سطر لكل صنف — شوف
+    price_sheet_logic.looks_like_usd_price_update و handlers.on_admin_usd_price_update."""
+
+    def filter(self, message) -> bool:
+        return price_sheet_logic.looks_like_usd_price_update(message.text or "")
+
+
+USD_PRICE_UPDATE_FILTER = _UsdPriceUpdateFilter()
+
+
 async def _post_init(application: Application) -> None:
     await application.bot.set_my_commands(_CUSTOMER_COMMANDS)
 
@@ -107,6 +118,16 @@ def _register_handlers(application: Application) -> None:
         MessageHandler(
             filters.Chat(chat_id=admin_chat_id) & ~filters.REPLY & filters.TEXT & PRICE_UPDATE_FILTER,
             handlers.on_admin_price_sheet_update,
+        )
+    )
+
+    # --- تحديث أسعار الدولار من التاجرة (رسالة "رقم $سعر" سطر لكل صنف، مش
+    #     Reply) — نفس فكرة PRICE_UPDATE_FILTER فوق بالضبط بس بالدولار، وعلامة
+    #     $ الإلزامية هي يلي بتفرّق بينهم (شوف تعليق _USD_UPDATE_LINE_PATTERN) ---
+    application.add_handler(
+        MessageHandler(
+            filters.Chat(chat_id=admin_chat_id) & ~filters.REPLY & filters.TEXT & USD_PRICE_UPDATE_FILTER,
+            handlers.on_admin_usd_price_update,
         )
     )
 

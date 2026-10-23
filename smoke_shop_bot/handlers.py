@@ -3,7 +3,9 @@
 كل معالجات (Handlers) البوت. هون بس مكان وصل منطق catalog_logic.py و storage.py
 و messages.py بمكتبة تلغرام (python-telegram-bot).
 """
+import asyncio
 import datetime as dt
+import json
 import logging
 
 import pytz
@@ -14,6 +16,7 @@ from telegram.ext import ContextTypes
 import cart_pricing
 import catalog_logic as cl
 import config
+import github_sync
 import keyboards as kb
 import messages
 import price_sheet_logic as ps_logic
@@ -769,9 +772,12 @@ async def cmd_set_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 
 # ---------------------------------------------------------------------------
-# /usdprices — للتاجرة بس: نشرة عرض فقط (مش للتعديل من جوا تلغرام، ولا
-# للزبون، ولا للبث اليومي) بأسعار الدولار يلي عم تعبيها بملف الإكسل. بتورّي
-# كل الأصناف — حتى يلي لسا بلا سعر دولار (بعلامة ⚠️) — منشان تعرفي وين وصلتي.
+# /usdprices — للتاجرة بس: نشرة أسعار الدولار (مش للزبون ولا للبث اليومي)،
+# قابلة للتعديل مباشرة من جوا تلغرام — تماماً متل /setprices بس بالدولار.
+# بتورّي كل الأصناف — حتى يلي لسا بلا سعر دولار (بعلامة ⚠️) — منشان التاجرة
+# تعرف وين وصلت بالتعبئة. التعديل (شوف on_admin_usd_price_update تحت) بيصير
+# فوراً بالبوت، وبيتحفظ بشكل دائم على GitHub مباشرة (شوف github_sync.py) —
+# منشان ما يضيع لو Render أعاد تشغيل السيرفر من الخمول.
 # ---------------------------------------------------------------------------
 
 async def cmd_usd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -784,6 +790,73 @@ async def cmd_usd_prices(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     )
     for chunk in chunks:
         await context.bot.send_message(chat_id, chunk)
+    await context.bot.send_message(chat_id, messages.USD_PRICES_INSTRUCTIONS)
+
+
+async def _sync_usd_prices_to_github() -> None:
+    """بتكتب USD_PRICES الحالية (بعد التعديل) كملف JSON وبتحفظو على GitHub
+    مباشرة — نفس شكل data/usd_prices.json بالضبط. urllib متزامن (blocking)،
+    فمنشغلها بـ run_in_executor منشان ما توقف باقي البوت وقت الطلب الشبكي."""
+    content = json.dumps(
+        {str(idx): price for idx, price in sorted(prices_state.USD_PRICES.items())},
+        ensure_ascii=False,
+        indent=1,
+    )
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(
+        None,
+        github_sync.update_file,
+        config.GITHUB_REPO,
+        config.USD_PRICES_GITHUB_PATH,
+        config.GITHUB_TOKEN,
+        content,
+        "تحديث أسعار الدولار عبر /usdprices",
+        config.GITHUB_BRANCH,
+    )
+
+
+async def on_admin_usd_price_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """أي رسالة نص من التاجرة (مش Reply) شكلها "رقم_الصنف $سعر_جديد" سطر لكل
+    صنف — تحديث أسعار الدولار (متل on_admin_price_sheet_update فوق بالضبط، بس
+    بالدولار وبعلامة $ إلزامية قبل السعر منشان ما يتلخبط مع تحديث سعر الليرة).
+    (فلترة "هل شكلها تحديث سعر دولار أصلاً" صايرة بـ app_factory.USD_PRICE_UPDATE_FILTER
+    قبل ما توصل لهون.)"""
+    text = update.message.text or ""
+    if not ps_logic.looks_like_usd_price_update(text):
+        return
+
+    chat_id = update.effective_chat.id
+    visible = prices_state.visible_flat_items()
+    updates, errors = ps_logic.parse_usd_price_update_lines(text, visible)
+
+    by_index = {item["index"]: item for item in visible}
+    confirmations = []
+    for idx, price in updates.items():
+        prices_state.USD_PRICES[idx] = price
+        name = by_index[idx]["name"]
+        confirmations.append(f"✅ {idx}. {name} → ${price:,.2f}")
+
+    reply_parts = []
+    if confirmations:
+        reply_parts.append("\n".join(confirmations))
+    if errors:
+        reply_parts.append("\n".join(errors))
+    if not reply_parts:
+        reply_parts.append("ما انحدث ولا صنف — تأكدي من الصيغة (مثال: 387 $11).")
+
+    if updates:
+        try:
+            await _sync_usd_prices_to_github()
+            reply_parts.append("☁️ تم الحفظ بشكل دائم على GitHub.")
+        except github_sync.GitHubSyncError as exc:
+            logger.warning("تعذر حفظ أسعار الدولار على GitHub: %s", exc)
+            reply_parts.append(
+                "⚠️ انحدث السعر هلق بالبوت، بس تعذر حفظو بشكل دائم على GitHub "
+                f"({exc}). ممكن يضيع لو السيرفر أعاد التشغيل — تأكدي من "
+                "GITHUB_TOKEN وGITHUB_REPO بمتغيرات البيئة، أو خبريني."
+            )
+
+    await context.bot.send_message(chat_id, "\n\n".join(reply_parts))
 
 
 async def on_admin_price_sheet_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

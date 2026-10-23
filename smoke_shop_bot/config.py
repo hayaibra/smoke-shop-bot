@@ -33,6 +33,15 @@ PENDING_REPLIES_PATH = BASE_DIR / "data" / "pending_price_replies.json"
 QUOTES_PATH = BASE_DIR / "data" / "last_quotes.json"
 ORDERS_LOG_PATH = BASE_DIR / "data" / "orders_log.jsonl"
 
+# --- حفظ تعديلات أسعار الدولار (/usdprices) بشكل دائم على GitHub ---
+# لازم تتعبى بمتغيرات البيئة (Render → Environment) — شوف github_sync.py.
+# بدونها، تعديل سعر الدولار من جوا تلغرام بيشتغل مباشرة بس ممكن يضيع لو
+# Render أعاد تشغيل السيرفر (لأنو ما رح يكون محفوظ بشكل دائم).
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
+GITHUB_REPO = os.getenv("GITHUB_REPO", "")  # مثلاً "haya123/smoke_shop_bot"
+GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
+USD_PRICES_GITHUB_PATH = "data/usd_prices.json"  # نفس مسار الملف جوا الريبو
+
 
 def get_admin_chat_id() -> int:
     """بيرجع آيدي شات التاجر كرقم. بيطلع خطأ واضح إذا ما كان معبّى صح بـ .env"""

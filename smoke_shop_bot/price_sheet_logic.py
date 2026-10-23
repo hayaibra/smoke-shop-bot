@@ -21,6 +21,12 @@ MAX_MESSAGE_CHARS = 3500
 
 _UPDATE_LINE_PATTERN = re.compile(r"^\d+\s+\d+$")
 
+# تحديث سعر الدولار: "رقم_الصنف $سعر_جديد" — لازم علامة $ قبل السعر منشان ما
+# يتلخبط مع تحديث سعر الليرة فوق (يلي رقمين بس بلا أي علامة). لو كتبنا "213 11"
+# بلا $، ما منعرف إذا قصدها 11 ل.س (غير منطقي بس تقنياً ممكن) أو 11$ — فالـ $
+# هو الفيصل الوحيد الموثوق.
+_USD_UPDATE_LINE_PATTERN = re.compile(r"^\d+\s+\$\d+(\.\d+)?$")
+
 
 # ---------------------------------------------------------------------------
 # تحميل البنية الثابتة (ماركات + أصناف + سعر افتراضي) من data/price_sheet.json
@@ -118,6 +124,41 @@ def parse_price_update_lines(
     for line in lines:
         idx_s, price_s = line.split()
         idx, price = int(idx_s), int(price_s)
+        if idx not in by_index:
+            errors.append(f"⚠️ رقم الصنف {idx} مش موجود بالقائمة — تجاهلته.")
+            continue
+        updates[idx] = price
+
+    return updates, errors
+
+
+# ---------------------------------------------------------------------------
+# فهم رسالة التاجرة لتحديث أسعار الدولار (/usdprices): سطر لكل صنف
+# "رقم_الصنف $سعر_جديد" — نفس فكرة looks_like_price_update/parse_price_update_lines
+# فوق تماماً، بس بالدولار (يسمح بفاصلة عشرية) وبعلامة $ إلزامية قبل السعر.
+# ---------------------------------------------------------------------------
+
+def looks_like_usd_price_update(text: str) -> bool:
+    lines = [ln.strip() for ln in text.strip().splitlines() if ln.strip()]
+    if not lines:
+        return False
+    return all(_USD_UPDATE_LINE_PATTERN.match(ln) for ln in lines)
+
+
+def parse_usd_price_update_lines(
+    text: str, flat_items: list[dict]
+) -> tuple[dict[int, float], list[str]]:
+    """بترجع (updates, errors). updates: {index: سعر دولار جديد} للأسطر السليمة
+    بس. errors: رسائل توضيح لأي سطر رقم الصنف فيه مش موجود بالقائمة."""
+    updates: dict[int, float] = {}
+    errors: list[str] = []
+    by_index = {item["index"]: item for item in flat_items}
+
+    lines = [ln.strip() for ln in text.strip().splitlines() if ln.strip()]
+    for line in lines:
+        idx_s, price_s = line.split()
+        idx = int(idx_s)
+        price = float(price_s.lstrip("$"))
         if idx not in by_index:
             errors.append(f"⚠️ رقم الصنف {idx} مش موجود بالقائمة — تجاهلته.")
             continue
