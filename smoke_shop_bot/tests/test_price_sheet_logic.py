@@ -99,6 +99,32 @@ class TestPriceUpdateParsing(unittest.TestCase):
         self.assertIn("999", errors[0])
 
 
+class TestUsdPriceUpdateParsing(unittest.TestCase):
+    """تحديث سعر الدولار عبر /usdprices مباشرة من تلغرام — نفس فكرة
+    TestPriceUpdateParsing فوق (أسعار الليرة) بس بعلامة $ إلزامية قبل السعر،
+    منشان نفرّق التحديثين عن بعض بشكل موثوق (شوف التعليق فوق _USD_UPDATE_LINE_PATTERN)."""
+
+    def test_looks_like_usd_price_update_requires_dollar_sign(self):
+        self.assertTrue(ps.looks_like_usd_price_update("387 $11"))
+        self.assertTrue(ps.looks_like_usd_price_update("387 $11.5\n213 $3.25"))
+        self.assertFalse(ps.looks_like_usd_price_update("387 11"))  # بلا $ — هاد تحديث ليرة
+        self.assertFalse(ps.looks_like_usd_price_update(""))
+        self.assertFalse(ps.looks_like_usd_price_update("مرحبا شو أخبارك"))
+
+    def test_parse_valid_usd_updates_with_and_without_decimals(self):
+        flat = ps.flatten_items(SAMPLE_GROUPS)
+        updates, errors = ps.parse_usd_price_update_lines("0 $11\n1 $3.5", flat)
+        self.assertEqual(updates, {0: 11.0, 1: 3.5})
+        self.assertEqual(errors, [])
+
+    def test_parse_reports_out_of_range_index_but_keeps_valid_ones(self):
+        flat = ps.flatten_items(SAMPLE_GROUPS)
+        updates, errors = ps.parse_usd_price_update_lines("0 $11\n999 $5", flat)
+        self.assertEqual(updates, {0: 11.0})
+        self.assertEqual(len(errors), 1)
+        self.assertIn("999", errors[0])
+
+
 class TestFormatting(unittest.TestCase):
     def test_admin_reference_includes_brand_headers_and_index(self):
         flat = ps.flatten_items(SAMPLE_GROUPS)
