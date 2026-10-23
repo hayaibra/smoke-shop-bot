@@ -53,7 +53,11 @@ async def _post_init(application: Application) -> None:
     try:
         admin_chat_id = config.get_admin_chat_id()
         await application.bot.set_my_commands(
-            _CUSTOMER_COMMANDS + [BotCommand("setprices", "💵 عدّل أسعار الأصناف")],
+            _CUSTOMER_COMMANDS
+            + [
+                BotCommand("setprices", "💵 عدّل أسعار الأصناف"),
+                BotCommand("usdprices", "💵 نشرة الأسعار بالدولار"),
+            ],
             scope=BotCommandScopeChat(chat_id=admin_chat_id),
         )
     except Exception:
@@ -75,15 +79,17 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(CommandHandler("prices", handlers.cmd_prices))
     application.add_handler(CommandHandler("mycart", handlers.cmd_my_cart))
     application.add_handler(CommandHandler("setprices", handlers.cmd_set_prices))
+    application.add_handler(CommandHandler("usdprices", handlers.cmd_usd_prices))
 
     # --- نفس الأوامر بالعربي (زي ما بالدليل تماماً) — تلغرام ما بيسجلها كأمر رسمي
     #     بقائمة ☰ (بس يقبل حروف إنجليزية/أرقام/underscore بأسماء الأوامر)، بس البوت
     #     لسا بيفهمها ويشتغل معها ١٠٠٪ إذا الزبون كتبها يدوياً بنفس الشات. ---
     application.add_handler(MessageHandler(filters.Regex(r"/تأكيد"), handlers.cmd_confirm))
     application.add_handler(MessageHandler(filters.Regex(r"/الغاء"), handlers.cmd_cancel))
+    application.add_handler(MessageHandler(filters.Regex(r"/اسعار_الدولار"), handlers.cmd_usd_prices))
+    application.add_handler(MessageHandler(filters.Regex(r"/تحديث_الاسعار"), handlers.cmd_set_prices))
     application.add_handler(MessageHandler(filters.Regex(r"/اسعار"), handlers.cmd_prices))
     application.add_handler(MessageHandler(filters.Regex(r"/سلتي"), handlers.cmd_my_cart))
-    application.add_handler(MessageHandler(filters.Regex(r"/تحديث_الاسعار"), handlers.cmd_set_prices))
 
     # --- رد التاجر (Reply) على إشعار استفسار السعر — لازم تسجيلها قبل معالج
     #     النصوص العام، ومحصورة بشات التاجر بس ---
