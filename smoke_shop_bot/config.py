@@ -41,6 +41,7 @@ GITHUB_TOKEN = os.getenv("GITHUB_TOKEN", "")
 GITHUB_REPO = os.getenv("GITHUB_REPO", "")  # مثلاً "haya123/smoke_shop_bot"
 GITHUB_BRANCH = os.getenv("GITHUB_BRANCH", "main")
 USD_PRICES_GITHUB_PATH = "data/usd_prices.json"  # نفس مسار الملف جوا الريبو
+USD_RATE_GITHUB_PATH = "data/usd_rate.json"  # سعر تصريف اليوم (/usdrate)
 
 
 def get_admin_chat_id() -> int:

@@ -7,11 +7,12 @@ import asyncio
 import datetime as dt
 import json
 import logging
+import time
 
 import pytz
 from telegram import Update
 from telegram.error import BadRequest, Forbidden
-from telegram.ext import ContextTypes
+from telegram.ext import ApplicationHandlerStop, ContextTypes
 
 import cart_pricing
 import catalog_logic as cl
@@ -857,6 +858,96 @@ async def on_admin_usd_price_update(update: Update, context: ContextTypes.DEFAUL
             )
 
     await context.bot.send_message(chat_id, "\n\n".join(reply_parts))
+
+
+# ---------------------------------------------------------------------------
+# /usdrate — للتاجرة بس: تحديد سعر تصريف اليوم (ليرة مقابل ١ دولار). طريقتين:
+#   ١) /usdrate  ← البوت بيسألها عن الرقم، ورسالتها الجاية (رقم بس) بتنحفظ.
+#   ٢) /usdrate 15000 ← مباشرة بنفس السطر.
+# بيتحفظ فوراً بالبوت وبشكل دائم على GitHub (data/usd_rate.json).
+# ---------------------------------------------------------------------------
+
+USD_RATE_AWAIT_SECONDS = 10 * 60  # بعد ١٠ دقايق بتتلغى حالة "بانتظار الرقم" لحالها
+
+
+def _format_rate(rate: float) -> str:
+    return f"{rate:,.0f}" if float(rate).is_integer() else f"{rate:,.2f}"
+
+
+async def _sync_usd_rate_to_github(rate: float) -> None:
+    content = json.dumps({"rate": rate}, ensure_ascii=False, indent=1)
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(
+        None,
+        github_sync.update_file,
+        config.GITHUB_REPO,
+        config.USD_RATE_GITHUB_PATH,
+        config.GITHUB_TOKEN,
+        content,
+        "تحديث سعر تصريف الدولار عبر /usdrate",
+        config.GITHUB_BRANCH,
+    )
+
+
+async def _apply_usd_rate(context: ContextTypes.DEFAULT_TYPE, chat_id: int, rate: float) -> None:
+    prices_state.USD_RATE["rate"] = rate
+    reply = messages.USD_RATE_SAVED.format(rate=_format_rate(rate))
+    try:
+        await _sync_usd_rate_to_github(rate)
+        reply += "\n☁️ تم الحفظ بشكل دائم على GitHub."
+    except github_sync.GitHubSyncError as exc:
+        logger.warning("تعذر حفظ سعر التصريف على GitHub: %s", exc)
+        reply += (
+            "\n⚠️ انحفظ هلق بالبوت، بس تعذر حفظو بشكل دائم على GitHub "
+            f"({exc}). ممكن يضيع لو السيرفر أعاد التشغيل."
+        )
+    await context.bot.send_message(chat_id, reply)
+
+
+async def cmd_usd_rate(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat_id = update.effective_chat.id
+    if not _is_admin_chat(chat_id):
+        return  # ما منرد إطلاقاً لغير التاجرة
+
+    if context.args:
+        rate = ps_logic.parse_usd_rate(" ".join(context.args))
+        if rate is None:
+            await context.bot.send_message(chat_id, messages.USD_RATE_INVALID)
+            return
+        context.user_data.pop("awaiting_usd_rate", None)
+        await _apply_usd_rate(context, chat_id, rate)
+        return
+
+    current = prices_state.USD_RATE["rate"]
+    current_text = f"{_format_rate(current)} ل.س" if current else messages.USD_RATE_NOT_SET
+    context.user_data["awaiting_usd_rate"] = time.time()
+    await context.bot.send_message(chat_id, messages.USD_RATE_PROMPT.format(current=current_text))
+
+
+async def on_admin_usd_rate_input(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """بتشتغل بمجموعة أبكر (group=-1) من باقي المعالجات: إذا التاجرة كتبت /usdrate
+    قبل شوي، رسالتها الجاية (رقم) بتنحفظ كسعر تصريف. إذا ما كانت بانتظار رقم، أو
+    الرسالة شكلها تحديث أسعار، بترجع بصمت وبتكمل باقي المعالجات عادي."""
+    started = context.user_data.get("awaiting_usd_rate")
+    if not started:
+        return
+    if time.time() - started > USD_RATE_AWAIT_SECONDS:
+        context.user_data.pop("awaiting_usd_rate", None)
+        return
+
+    text = update.message.text or ""
+    if ps_logic.looks_like_price_update(text) or ps_logic.looks_like_usd_price_update(text):
+        context.user_data.pop("awaiting_usd_rate", None)
+        return  # كانت بدها تعدّل أسعار، مش سعر تصريف
+
+    chat_id = update.effective_chat.id
+    rate = ps_logic.parse_usd_rate(text)
+    if rate is None:
+        await context.bot.send_message(chat_id, messages.USD_RATE_INVALID)
+    else:
+        context.user_data.pop("awaiting_usd_rate", None)
+        await _apply_usd_rate(context, chat_id, rate)
+    raise ApplicationHandlerStop
 
 
 async def on_admin_price_sheet_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

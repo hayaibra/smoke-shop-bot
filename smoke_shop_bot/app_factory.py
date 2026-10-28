@@ -68,6 +68,7 @@ async def _post_init(application: Application) -> None:
             + [
                 BotCommand("setprices", "💵 عدّل أسعار الأصناف"),
                 BotCommand("usdprices", "💵 نشرة الأسعار بالدولار"),
+                BotCommand("usdrate", "💱 سعر تصريف اليوم"),
             ],
             scope=BotCommandScopeChat(chat_id=admin_chat_id),
         )
@@ -91,6 +92,7 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(CommandHandler("mycart", handlers.cmd_my_cart))
     application.add_handler(CommandHandler("setprices", handlers.cmd_set_prices))
     application.add_handler(CommandHandler("usdprices", handlers.cmd_usd_prices))
+    application.add_handler(CommandHandler("usdrate", handlers.cmd_usd_rate))
 
     # --- نفس الأوامر بالعربي (زي ما بالدليل تماماً) — تلغرام ما بيسجلها كأمر رسمي
     #     بقائمة ☰ (بس يقبل حروف إنجليزية/أرقام/underscore بأسماء الأوامر)، بس البوت
@@ -101,6 +103,17 @@ def _register_handlers(application: Application) -> None:
     application.add_handler(MessageHandler(filters.Regex(r"/تحديث_الاسعار"), handlers.cmd_set_prices))
     application.add_handler(MessageHandler(filters.Regex(r"/اسعار"), handlers.cmd_prices))
     application.add_handler(MessageHandler(filters.Regex(r"/سلتي"), handlers.cmd_my_cart))
+
+    # --- إدخال سعر التصريف بعد /usdrate (رسالة رقم بس) — بمجموعة -1 منشان تشتغل
+    #     قبل باقي معالجات النصوص، وبتوقفهم (ApplicationHandlerStop) بس لما تكون
+    #     التاجرة فعلاً بانتظار رقم؛ غير هيك بترجع بصمت وكل شي بيكمل عادي ---
+    application.add_handler(
+        MessageHandler(
+            filters.Chat(chat_id=config.get_admin_chat_id()) & ~filters.REPLY & filters.TEXT & ~filters.COMMAND,
+            handlers.on_admin_usd_rate_input,
+        ),
+        group=-1,
+    )
 
     # --- رد التاجر (Reply) على إشعار استفسار السعر — لازم تسجيلها قبل معالج
     #     النصوص العام، ومحصورة بشات التاجر بس ---

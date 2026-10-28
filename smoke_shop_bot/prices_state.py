@@ -28,6 +28,12 @@ overrides: dict[int, int] = {}
 USD_PRICES_PATH = config.PRICE_SHEET_PATH.parent / "usd_prices.json"
 USD_PRICES: dict[int, float] = ps.load_usd_prices(USD_PRICES_PATH)
 
+# سعر تصريف اليوم (ليرة مقابل ١ دولار) — بيحطو التاجرة بأمر /usdrate، ومحفوظ
+# بشكل دائم عبر GitHub (data/usd_rate.json) بنفس آلية أسعار الدولار فوق.
+# قاموس بقيمة وحدة (مش متغير عادي) منشان handlers.py يعدّل عليه مباشرة.
+USD_RATE_PATH = config.PRICE_SHEET_PATH.parent / "usd_rate.json"
+USD_RATE: dict[str, "float | None"] = {"rate": ps.load_usd_rate(USD_RATE_PATH)}
+
 # {اسم البرند: "إيموجي اسم القسم"} (متلاً "ماستر" → "🚬 دخان") — مبني من نفس
 # data/catalog.json يلي بيستخدمه مسار الطلب، منشان قائمة "/prices" للزبون تنعرض
 # منظمة هرمياً (قسم ← برند ← صنف) بدل ما تطلع كل البرندات ورا بعض بلا تقسيم.

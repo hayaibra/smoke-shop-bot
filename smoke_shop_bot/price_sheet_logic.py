@@ -48,6 +48,33 @@ def load_usd_prices(path: Path) -> dict[int, float]:
     return {int(idx): price for idx, price in raw.items()}
 
 
+def load_usd_rate(path: Path) -> Optional[float]:
+    """بترجع سعر تصريف اليوم (ليرة مقابل ١ دولار) من data/usd_rate.json، أو None
+    لو لسا ما انحط (الملف مش موجود، أو فاضي/تالف)."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            raw = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return None
+    rate = raw.get("rate") if isinstance(raw, dict) else None
+    if isinstance(rate, (int, float)) and rate > 0:
+        return float(rate)
+    return None
+
+
+_ARABIC_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩٫٬،", "0123456789.,,")
+
+
+def parse_usd_rate(text: str) -> Optional[float]:
+    """بتحوّل نص زي "15000" أو "15,000" أو "١٥٠٠٠" أو "14950.5" لرقم موجب، أو None
+    إذا مش رقم صالح (فاضي، صفر، سالب، أو فيه حروف)."""
+    cleaned = (text or "").strip().translate(_ARABIC_DIGITS).replace(",", "").replace(" ", "")
+    if not re.fullmatch(r"\d+(\.\d+)?", cleaned):
+        return None
+    value = float(cleaned)
+    return value if value > 0 else None
+
+
 def flatten_items(groups: list[dict]) -> list[dict]:
     """بترجع لستة مسطحة بترتيب الملف: كل عنصر {"index", "brand", "name", "default_price"}."""
     flat = []
