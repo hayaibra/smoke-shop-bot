@@ -291,5 +291,51 @@ class TestUsdRate(unittest.TestCase):
             self.assertIsNone(ps.load_usd_rate(path))
 
 
+class TestApplyUsdRate(unittest.TestCase):
+    """دولار × سعر التصريف، مقرّب لأقرب ١٠، والدولار بيكسب على سعر الليرة."""
+
+    def test_round_to_nearest_10_half_up(self):
+        self.assertEqual(ps.round_to_nearest_10(49050), 49050)
+        self.assertEqual(ps.round_to_nearest_10(49054), 49050)
+        self.assertEqual(ps.round_to_nearest_10(49055), 49060)
+        self.assertEqual(ps.round_to_nearest_10(4), 0)
+        self.assertEqual(ps.round_to_nearest_10(5), 10)
+
+    def test_multiplies_and_rounds(self):
+        out = ps.apply_usd_rate({1: 100, 2: 200}, {1: 11, 2: 3.27}, 15000)
+        self.assertEqual(out[1], 165000)
+        self.assertEqual(out[2], 49050)
+
+    def test_rounding_uses_exact_decimal_not_float(self):
+        # 2.675 × 14000 = 37450 بالضبط -> لازم يضل 37450 (مش 37440/37460 بسبب float)
+        self.assertEqual(ps.apply_usd_rate({1: 0}, {1: 2.675}, 14000)[1], 37450)
+        # 1.005 × 15000 = 15075 -> نص بيطلع لفوق: 15080
+        self.assertEqual(ps.apply_usd_rate({1: 0}, {1: 1.005}, 15000)[1], 15080)
+
+    def test_usd_wins_over_existing_syp_price(self):
+        self.assertEqual(ps.apply_usd_rate({1: 999}, {1: 10}, 15000)[1], 150000)
+
+    def test_items_without_usd_price_unchanged(self):
+        out = ps.apply_usd_rate({1: 500, 2: 700}, {1: 10}, 15000)
+        self.assertEqual(out[2], 700)
+
+    def test_zero_usd_price_is_ignored(self):
+        self.assertEqual(ps.apply_usd_rate({1: 500}, {1: 0}, 15000)[1], 500)
+
+    def test_unknown_index_is_ignored(self):
+        out = ps.apply_usd_rate({1: 500}, {99: 10}, 15000)
+        self.assertEqual(out, {1: 500})
+
+    def test_no_rate_returns_prices_unchanged(self):
+        prices = {1: 500}
+        for rate in (None, 0, -5):
+            self.assertEqual(ps.apply_usd_rate(prices, {1: 10}, rate), {1: 500})
+
+    def test_does_not_mutate_input(self):
+        prices = {1: 500}
+        ps.apply_usd_rate(prices, {1: 10}, 15000)
+        self.assertEqual(prices, {1: 500})
+
+
 if __name__ == "__main__":
     unittest.main()

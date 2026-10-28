@@ -259,5 +259,44 @@ class TestVisibleFlatItems(unittest.TestCase):
         self.assertEqual(len(prices_state.visible_flat_items()), len(prices_state.FLAT_ITEMS) - 120)
 
 
+class TestCurrentPricesWithUsdRate(unittest.TestCase):
+    """current_prices() = المصدر الوحيد لأسعار الزبون (قائمة /prices والبث والسلة):
+    لازم يطبّق دولار × سعر التصريف."""
+
+    def setUp(self):
+        self._usd = dict(prices_state.USD_PRICES)
+        self._rate = prices_state.USD_RATE["rate"]
+        self._overrides = dict(prices_state.overrides)
+        self.idx = prices_state.visible_flat_items()[0]["index"]
+
+    def tearDown(self):
+        prices_state.USD_PRICES.clear()
+        prices_state.USD_PRICES.update(self._usd)
+        prices_state.USD_RATE["rate"] = self._rate
+        prices_state.set_overrides(self._overrides)
+
+    def test_usd_price_times_rate_rounded_wins_over_override(self):
+        prices_state.USD_PRICES.clear()
+        prices_state.USD_PRICES[self.idx] = 3.27
+        prices_state.set_overrides({self.idx: 123})
+        prices_state.USD_RATE["rate"] = 15000
+        self.assertEqual(prices_state.current_prices()[self.idx], 49050)
+
+    def test_rate_change_updates_price(self):
+        prices_state.USD_PRICES.clear()
+        prices_state.USD_PRICES[self.idx] = 10
+        prices_state.USD_RATE["rate"] = 15000
+        self.assertEqual(prices_state.current_prices()[self.idx], 150000)
+        prices_state.USD_RATE["rate"] = 15500
+        self.assertEqual(prices_state.current_prices()[self.idx], 155000)
+
+    def test_no_rate_keeps_old_syp_price(self):
+        prices_state.USD_PRICES.clear()
+        prices_state.USD_PRICES[self.idx] = 10
+        prices_state.set_overrides({self.idx: 777})
+        prices_state.USD_RATE["rate"] = None
+        self.assertEqual(prices_state.current_prices()[self.idx], 777)
+
+
 if __name__ == "__main__":
     unittest.main()
