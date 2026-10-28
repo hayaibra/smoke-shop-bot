@@ -264,5 +264,32 @@ class TestUsdPrices(unittest.TestCase):
         self.assertIn("⚠️ ما انحط سعر دولار بعد", joined)
 
 
+class TestUsdRate(unittest.TestCase):
+    def test_parse_plain_and_formatted_numbers(self):
+        self.assertEqual(ps.parse_usd_rate("15000"), 15000.0)
+        self.assertEqual(ps.parse_usd_rate("  15,000 "), 15000.0)
+        self.assertEqual(ps.parse_usd_rate("14950.5"), 14950.5)
+
+    def test_parse_arabic_indic_digits(self):
+        self.assertEqual(ps.parse_usd_rate("١٥٠٠٠"), 15000.0)
+
+    def test_parse_rejects_invalid(self):
+        for bad in ["", "abc", "0", "-5", "15000 ل.س", "12.3.4", "$15000"]:
+            self.assertIsNone(ps.parse_usd_rate(bad), bad)
+
+    def test_load_usd_rate_round_trip_and_missing(self):
+        import json, tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "usd_rate.json"
+            self.assertIsNone(ps.load_usd_rate(path))
+            path.write_text(json.dumps({"rate": 15000}), encoding="utf-8")
+            self.assertEqual(ps.load_usd_rate(path), 15000.0)
+            path.write_text("not json", encoding="utf-8")
+            self.assertIsNone(ps.load_usd_rate(path))
+            path.write_text(json.dumps({"rate": 0}), encoding="utf-8")
+            self.assertIsNone(ps.load_usd_rate(path))
+
+
 if __name__ == "__main__":
     unittest.main()
