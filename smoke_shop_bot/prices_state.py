@@ -64,7 +64,11 @@ def set_overrides(new_overrides: dict[int, int]) -> None:
 
 
 def current_prices() -> dict[int, int]:
-    return ps.effective_prices(FLAT_ITEMS, overrides)
+    """الأسعار بالليرة يلي بتنعرض للزبون وبتنحسب فيها السلة: السعر الافتراضي
+    (أو تعديل /setprices) — ولأي صنف إلو سعر دولار بيتحسب دولار × سعر التصريف
+    (/usdrate) مقرّب لأقرب ١٠، وبيكسب على سعر الليرة. بنحسبهم وقت الطلب (مش
+    مخزّنين) منشان ما نتخطى حد حجم الرسالة المثبتة بتلغرام."""
+    return ps.apply_usd_rate(ps.effective_prices(FLAT_ITEMS, overrides), USD_PRICES, USD_RATE["rate"])
 
 
 def visible_flat_items() -> list[dict]:

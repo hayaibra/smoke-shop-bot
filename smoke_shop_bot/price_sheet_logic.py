@@ -12,6 +12,7 @@
 """
 import json
 import re
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
 from typing import Optional
 
@@ -101,6 +102,26 @@ def flatten_items(groups: list[dict]) -> list[dict]:
 
 def effective_prices(flat_items: list[dict], overrides: dict[int, int]) -> dict[int, int]:
     return {item["index"]: overrides.get(item["index"], item["default_price"]) for item in flat_items}
+
+
+def round_to_nearest_10(value) -> int:
+    """بتقرّب لأقرب ١٠ ليرة (نص بيطلع لفوق: ٤٩٠٥٥ ← ٤٩٠٦٠). بنحسبها بـ Decimal
+    منشان ما تأثر أخطاء الفاصلة العائمة على أرقام زي ٣.٢٧ × ١٥٠٠٠."""
+    return int((Decimal(str(value)) / 10).quantize(Decimal("1"), rounding=ROUND_HALF_UP)) * 10
+
+
+def apply_usd_rate(prices: dict[int, int], usd_prices: dict[int, float], rate) -> dict[int, int]:
+    """بتحدّث الأسعار بالليرة: كل صنف إلو سعر دولار (> 0) بيصير سعرو = دولار × سعر
+    التصريف مقرّب لأقرب ١٠ — وسعر الدولار هو يلي بيكسب على أي سعر ليرة تانٍ
+    للصنف. الأصناف بلا سعر دولار بتضل متل ما هي. إذا لسا ما انحط سعر تصريف
+    (None أو ≤ 0) بترجع الأسعار بلا أي تغيير (نسخة)."""
+    result = dict(prices)
+    if not rate or rate <= 0:
+        return result
+    for idx, usd in usd_prices.items():
+        if idx in result and usd and usd > 0:
+            result[idx] = round_to_nearest_10(Decimal(str(usd)) * Decimal(str(rate)))
+    return result
 
 
 def encode_prices_compact(prices: dict[int, int]) -> str:

@@ -835,7 +835,11 @@ async def on_admin_usd_price_update(update: Update, context: ContextTypes.DEFAUL
     for idx, price in updates.items():
         prices_state.USD_PRICES[idx] = price
         name = by_index[idx]["name"]
-        confirmations.append(f"✅ {idx}. {name} → ${price:,.2f}")
+        line = f"✅ {idx}. {name} → ${price:,.2f}"
+        rate = prices_state.USD_RATE["rate"]
+        if rate:
+            line += f" (= {ps_logic.apply_usd_rate({idx: 0}, {idx: price}, rate)[idx]:,} ل.س للزبون)"
+        confirmations.append(line)
 
     reply_parts = []
     if confirmations:
@@ -892,6 +896,9 @@ async def _sync_usd_rate_to_github(rate: float) -> None:
 async def _apply_usd_rate(context: ContextTypes.DEFAULT_TYPE, chat_id: int, rate: float) -> None:
     prices_state.USD_RATE["rate"] = rate
     reply = messages.USD_RATE_SAVED.format(rate=_format_rate(rate))
+    visible_indices = {item["index"] for item in prices_state.visible_flat_items()}
+    converted = sum(1 for idx, usd in prices_state.USD_PRICES.items() if usd > 0 and idx in visible_indices)
+    reply += f"\n🔄 انحدثت أسعار {converted} صنف بالليرة (دولار × {_format_rate(rate)}، مقرّب لأقرب ١٠)."
     try:
         await _sync_usd_rate_to_github(rate)
         reply += "\n☁️ تم الحفظ بشكل دائم على GitHub."
@@ -969,6 +976,11 @@ async def on_admin_price_sheet_update(update: Update, context: ContextTypes.DEFA
         name = by_index[idx]["name"]
         price_text = f"{price} ل.س" if price else "بلا سعر (مخفي عن الزبون)"
         confirmations.append(f"✅ {idx}. {name} → {price_text}")
+        if prices_state.USD_PRICES.get(idx, 0) > 0:
+            if prices_state.USD_RATE["rate"]:
+                confirmations.append("   ⚠️ هاد الصنف سعرو بيتحسب من الدولار، فهالسعر ما رح يظهر للزبون.")
+            else:
+                confirmations.append("   ⚠️ هاد الصنف إلو سعر دولار، رح يتغلب على هالسعر أول ما تحطي /usdrate.")
 
     if updates:
         await _sync_state_best_effort(context)
